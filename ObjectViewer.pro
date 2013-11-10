@@ -24,7 +24,8 @@ HEADERS += \
     src/objects/camera.h \
     src/objects/abstractscene.h \
     src/ui/window.h \
-    src/ui/mainwindow.h
+    src/ui/mainwindow.h \
+    src/materials/texture.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -34,7 +35,8 @@ SOURCES += \
     src/objects/abstractscene.cpp \
     src/ui/window.cpp \
     src/ui/mainwindow.cpp \
-    src/main.cpp
+    src/main.cpp \
+    src/materials/texture.cpp
 
 RESOURCES += \
     resources.qrc
