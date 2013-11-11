@@ -2,12 +2,14 @@
 
 in VS_OUT
 {
-    vec4 color;
+    vec2 TextureCoord;
 } fs_in;
+
+uniform sampler2D texture;
 
 out vec4 color;
 
 void main()
 {
-    color = fs_in.color;
+    color = texture2D(texture, fs_in.TextureCoord.xy);
 }

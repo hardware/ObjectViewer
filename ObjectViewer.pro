@@ -1,4 +1,4 @@
-QT += core gui widgets
+QT += core gui opengl widgets
 
 RCC_DIR     = $$_PRO_FILE_PWD_/build/tmp/rcc
 UI_DIR      = $$_PRO_FILE_PWD_/build/tmp/ui

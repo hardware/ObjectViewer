@@ -2,6 +2,10 @@
     <qresource prefix="/">
         <file>resources/shaders/basic.frag</file>
         <file>resources/shaders/basic.vert</file>
-        <file>resources/images/test.png</file>
+        <file>resources/images/crate.jpg</file>
+        <file>resources/images/grass.jpg</file>
+        <file>resources/images/grass.png</file>
+        <file>resources/images/rock.png</file>
+        <file>resources/images/snowrocks.png</file>
     </qresource>
 </RCC>

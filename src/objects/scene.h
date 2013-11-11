@@ -13,6 +13,7 @@ class Camera;
 class QOpenGLVertexArrayObject;
 class QOpenGLFunctions_3_2_Core;
 class QOpenGLDebugLogger;
+class Texture;
 
 class Scene : public AbstractScene
 {
@@ -56,11 +57,14 @@ signals:
 
 private:
     Camera                    * m_camera;
+    Texture                   * m_texture;
     QOpenGLVertexArrayObject  * m_vao;
     QOpenGLFunctions_3_2_Core * m_funcs;
     QOpenGLDebugLogger        * m_logger;
     QOpenGLBuffer               m_vertexPositionBuffer;
+    QOpenGLBuffer               m_vertexTextureBuffer;
     QVector<QVector3D>          m_positionVertices;
+    QVector<QVector2D>          m_textureVertices;
     QMatrix4x4                  m_projection;
 
     ShadersPtr m_shader;

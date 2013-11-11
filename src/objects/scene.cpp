@@ -1,5 +1,6 @@
 #include "scene.h"
 #include "camera.h"
+#include "../materials/texture.h"
 
 #define _USE_MATH_DEFINES  1 // Include constants defined in math.h
 #include <math.h>
@@ -16,9 +17,11 @@
 Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
+      m_texture(new Texture(QImage(":/resources/images/grass.png"))),
       m_vao(new QOpenGLVertexArrayObject(this)),
       m_logger(new QOpenGLDebugLogger(this)),
       m_vertexPositionBuffer(QOpenGLBuffer::VertexBuffer),
+      m_vertexTextureBuffer(QOpenGLBuffer::VertexBuffer),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
       m_v(),
@@ -67,10 +70,12 @@ void Scene::initialize()
     // Initialisation du Vertex Buffer Object (VBO)
     prepareVertexBuffer();
 
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
     glFrontFace(GL_CW);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
+
+    m_texture->load();
 }
 
 void Scene::update(float t)
@@ -112,7 +117,9 @@ void Scene::render(double currentTime)
     m_shader->shader()->bind();
     m_shader->shader()->setUniformValue("mvp", mvp);
 
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    m_texture->bind(GL_TEXTURE0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 
     emit renderCycleDone();
 }
@@ -153,53 +160,21 @@ void Scene::prepareShaders()
 
 void Scene::prepareVertexBuffer()
 {
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f, -0.25f));
+    m_positionVertices.push_back(QVector3D(-10.0f, 0.0f, -10.0f));
+    m_positionVertices.push_back(QVector3D( 10.0f, 0.0f, -10.0f));
+    m_positionVertices.push_back(QVector3D( 10.0f, 0.0f,  10.0f));
 
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f, -0.25f));
+    m_positionVertices.push_back(QVector3D(-10.0f, 0.0f, -10.0f));
+    m_positionVertices.push_back(QVector3D(-10.0f, 0.0f,  10.0f));
+    m_positionVertices.push_back(QVector3D( 10.0f, 0.0f,  10.0f));
 
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f, -0.25f));
+    m_textureVertices.push_back(QVector2D(0.0f, 0.0f));
+    m_textureVertices.push_back(QVector2D(7.0f, 0.0f));
+    m_textureVertices.push_back(QVector2D(7.0f, 7.0f));
 
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f, -0.25f));
-
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f,  0.25f));
-
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f,  0.25f));
-
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f,  0.25f));
-
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f,  0.25f));
-
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f, -0.25f));
-
-    m_positionVertices.push_back(QVector3D( 0.25f, -0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f, -0.25f,  0.25f));
-
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f, -0.25f));
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f,  0.25f));
-
-    m_positionVertices.push_back(QVector3D( 0.25f,  0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f,  0.25f));
-    m_positionVertices.push_back(QVector3D(-0.25f,  0.25f, -0.25f));
+    m_textureVertices.push_back(QVector2D(0.0f, 0.0f));
+    m_textureVertices.push_back(QVector2D(0.0f, 7.0f));
+    m_textureVertices.push_back(QVector2D(7.0f, 7.0f));
 
     m_vertexPositionBuffer.create();
     m_vertexPositionBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -207,11 +182,21 @@ void Scene::prepareVertexBuffer()
     m_vertexPositionBuffer.allocate(m_positionVertices.constData(), m_positionVertices.size() * sizeof(QVector3D));
     m_vertexPositionBuffer.release();
 
+    m_vertexTextureBuffer.create();
+    m_vertexTextureBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_vertexTextureBuffer.bind();
+    m_vertexTextureBuffer.allocate(m_textureVertices.constData(), m_textureVertices.size() * sizeof(QVector2D));
+    m_vertexTextureBuffer.release();
+
     m_shader->shader()->bind();
 
     m_vertexPositionBuffer.bind();
     m_shader->shader()->enableAttributeArray("vertexPosition");
     m_shader->shader()->setAttributeBuffer("vertexPosition", GL_FLOAT, 0, 3);
+
+    m_vertexTextureBuffer.bind();
+    m_shader->shader()->enableAttributeArray("TextureCoord");
+    m_shader->shader()->setAttributeBuffer("TextureCoord", GL_FLOAT, 0, 2);
 }
 
 void Scene::onMessageLogged(QOpenGLDebugMessage message)

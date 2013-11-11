@@ -18,7 +18,7 @@ public:
         TextureCubeMap = GL_TEXTURE_CUBE_MAP
     };
 
-    Texture(TextureType type = Texture2D, const QImage& image);
+    Texture(const QImage& image, TextureType type = Texture2D);
     ~Texture();
 
     TextureType type() const { return m_type; }
@@ -27,6 +27,7 @@ public:
     void load();
     void destroy();
     void bind(GLenum textureUnit);
+    void release();
 
 private:
     QImage      m_image;
