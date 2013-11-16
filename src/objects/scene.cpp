@@ -1,9 +1,9 @@
 #include "scene.h"
 #include "camera.h"
-#include "../materials/texture.h"
+#include "mesh.h"
 
-#define _USE_MATH_DEFINES  1 // Include constants defined in math.h
-#include <math.h>
+#include "../helpers/shaders.h"
+#include "../materials/texture.h"
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLFunctions_3_2_Core>
@@ -18,6 +18,7 @@ Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
       m_texture(new Texture(QImage(":/resources/images/grass.png"))),
+      m_mesh(new Mesh()),
       m_vao(new QOpenGLVertexArrayObject(this)),
       m_logger(new QOpenGLDebugLogger(this)),
       m_vertexPositionBuffer(QOpenGLBuffer::VertexBuffer),
@@ -38,6 +39,10 @@ Scene::Scene(QObject *parent)
 
 Scene::~Scene()
 {
+    delete m_camera;
+    delete m_texture;
+    delete m_mesh;
+
     m_vao->destroy();
 }
 
@@ -76,6 +81,12 @@ void Scene::initialize()
     glDepthFunc(GL_LEQUAL);
 
     m_texture->load();
+
+    QOpenGLShaderProgramPtr shader = m_shader->shader();
+    shader->setUniformValue("gSampler", 0);
+
+    m_mesh->Init(shader);
+    m_mesh->LoadMesh("assets/tomcat/f14d.lwo");
 }
 
 void Scene::update(float t)
@@ -116,6 +127,8 @@ void Scene::render(double currentTime)
 
     m_shader->shader()->bind();
     m_shader->shader()->setUniformValue("mvp", mvp);
+
+    m_mesh->Render();
 
     m_texture->bind(GL_TEXTURE0);
 

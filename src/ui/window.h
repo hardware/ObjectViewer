@@ -20,7 +20,7 @@ class Window : public QWindow
     Q_OBJECT
 
 public:
-    Window(QScreen *screen = 0);
+    Window(QScreen* screen = 0);
 
     Scene* getScene();
 

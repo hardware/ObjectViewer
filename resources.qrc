@@ -7,5 +7,6 @@
         <file>resources/images/grass.png</file>
         <file>resources/images/rock.png</file>
         <file>resources/images/snowrocks.png</file>
+        <file>resources/images/white.png</file>
     </qresource>
 </RCC>

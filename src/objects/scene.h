@@ -4,16 +4,19 @@
 #include "abstractscene.h"
 #include "object3d.h"
 
-#include "../helpers/shaders.h"
-
 #include <QOpenGLBuffer>
 #include <QOpenGLDebugMessage>
+#include <QSharedPointer>
 
 class Camera;
+class Texture;
+class Mesh;
 class QOpenGLVertexArrayObject;
 class QOpenGLFunctions_3_2_Core;
 class QOpenGLDebugLogger;
-class Texture;
+class Shaders;
+
+typedef QSharedPointer<Shaders> ShadersPtr;
 
 class Scene : public AbstractScene
 {
@@ -58,6 +61,7 @@ signals:
 private:
     Camera                    * m_camera;
     Texture                   * m_texture;
+    Mesh                      * m_mesh;
     QOpenGLVertexArrayObject  * m_vao;
     QOpenGLFunctions_3_2_Core * m_funcs;
     QOpenGLDebugLogger        * m_logger;

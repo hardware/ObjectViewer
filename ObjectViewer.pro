@@ -1,5 +1,15 @@
 QT += core gui opengl widgets
 
+CONFIG +=  console debug
+
+win32: LIBS += -L$$PWD/libs/ -lassimp
+
+INCLUDEPATH += $$PWD/libs
+DEPENDPATH += $$PWD/libs
+
+INCLUDEPATH += $$PWD/includes
+DEPENDPATH += $$PWD/includes
+
 RCC_DIR     = $$_PRO_FILE_PWD_/build/tmp/rcc
 UI_DIR      = $$_PRO_FILE_PWD_/build/tmp/ui
 MOC_DIR     = $$_PRO_FILE_PWD_/build/tmp/moc
@@ -25,7 +35,10 @@ HEADERS += \
     src/objects/abstractscene.h \
     src/ui/window.h \
     src/ui/mainwindow.h \
-    src/materials/texture.h
+    src/materials/texture.h \
+    src/objects/mesh.h \
+    src/helpers/math_3d.h \
+    src/helpers/util.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -36,7 +49,9 @@ SOURCES += \
     src/ui/window.cpp \
     src/ui/mainwindow.cpp \
     src/main.cpp \
-    src/materials/texture.cpp
+    src/materials/texture.cpp \
+    src/objects/mesh.cpp \
+    src/helpers/math_3d.cpp
 
 RESOURCES += \
     resources.qrc
