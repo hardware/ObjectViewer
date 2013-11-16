@@ -3,7 +3,6 @@
 #include "mesh.h"
 
 #include "../helpers/shaders.h"
-#include "../materials/texture.h"
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLFunctions_3_2_Core>
@@ -17,12 +16,9 @@
 Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
-      m_texture(new Texture(QImage(":/resources/images/grass.png"))),
       m_mesh(new Mesh()),
       m_vao(new QOpenGLVertexArrayObject(this)),
       m_logger(new QOpenGLDebugLogger(this)),
-      m_vertexPositionBuffer(QOpenGLBuffer::VertexBuffer),
-      m_vertexTextureBuffer(QOpenGLBuffer::VertexBuffer),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
       m_v(),
@@ -32,7 +28,7 @@ Scene::Scene(QObject *parent)
 
 {
     // Initialisation de la position et de l'orientation de la camera
-    m_camera->setPosition(QVector3D(0.0f, 0.6f, 2.0f));
+    m_camera->setPosition(QVector3D(-8.0f, 6.0f, -7.0f));
     m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
     m_camera->setUpVector(QVector3D(0.0f, 1.0f, 0.0f));
 }
@@ -40,7 +36,6 @@ Scene::Scene(QObject *parent)
 Scene::~Scene()
 {
     delete m_camera;
-    delete m_texture;
     delete m_mesh;
 
     m_vao->destroy();
@@ -72,21 +67,18 @@ void Scene::initialize()
     // Charge, compile et link le Vertex et Fragment Shader
     prepareShaders();
 
-    // Initialisation du Vertex Buffer Object (VBO)
-    prepareVertexBuffer();
-
-    //glEnable(GL_CULL_FACE);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glFrontFace(GL_CW);
+    glCullFace(GL_FRONT);
+    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    m_texture->load();
-
     QOpenGLShaderProgramPtr shader = m_shader->shader();
-    shader->setUniformValue("gSampler", 0);
+    shader->setUniformValue("sampler", 0);
 
     m_mesh->Init(shader);
-    m_mesh->LoadMesh("assets/tomcat/f14d.lwo");
+    m_mesh->LoadMesh("assets/blackhawk/uh60.lwo");
 }
 
 void Scene::update(float t)
@@ -130,10 +122,6 @@ void Scene::render(double currentTime)
 
     m_mesh->Render();
 
-    m_texture->bind(GL_TEXTURE0);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
     emit renderCycleDone();
 }
 
@@ -169,47 +157,6 @@ void Scene::prepareShaders()
     m_shader->setFragmentShader(":/resources/shaders/basic.frag");
 
     m_shader->shader()->link();
-}
-
-void Scene::prepareVertexBuffer()
-{
-    m_positionVertices.push_back(QVector3D(-10.0f, 0.0f, -10.0f));
-    m_positionVertices.push_back(QVector3D( 10.0f, 0.0f, -10.0f));
-    m_positionVertices.push_back(QVector3D( 10.0f, 0.0f,  10.0f));
-
-    m_positionVertices.push_back(QVector3D(-10.0f, 0.0f, -10.0f));
-    m_positionVertices.push_back(QVector3D(-10.0f, 0.0f,  10.0f));
-    m_positionVertices.push_back(QVector3D( 10.0f, 0.0f,  10.0f));
-
-    m_textureVertices.push_back(QVector2D(0.0f, 0.0f));
-    m_textureVertices.push_back(QVector2D(7.0f, 0.0f));
-    m_textureVertices.push_back(QVector2D(7.0f, 7.0f));
-
-    m_textureVertices.push_back(QVector2D(0.0f, 0.0f));
-    m_textureVertices.push_back(QVector2D(0.0f, 7.0f));
-    m_textureVertices.push_back(QVector2D(7.0f, 7.0f));
-
-    m_vertexPositionBuffer.create();
-    m_vertexPositionBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    m_vertexPositionBuffer.bind();
-    m_vertexPositionBuffer.allocate(m_positionVertices.constData(), m_positionVertices.size() * sizeof(QVector3D));
-    m_vertexPositionBuffer.release();
-
-    m_vertexTextureBuffer.create();
-    m_vertexTextureBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    m_vertexTextureBuffer.bind();
-    m_vertexTextureBuffer.allocate(m_textureVertices.constData(), m_textureVertices.size() * sizeof(QVector2D));
-    m_vertexTextureBuffer.release();
-
-    m_shader->shader()->bind();
-
-    m_vertexPositionBuffer.bind();
-    m_shader->shader()->enableAttributeArray("vertexPosition");
-    m_shader->shader()->setAttributeBuffer("vertexPosition", GL_FLOAT, 0, 3);
-
-    m_vertexTextureBuffer.bind();
-    m_shader->shader()->enableAttributeArray("TextureCoord");
-    m_shader->shader()->setAttributeBuffer("TextureCoord", GL_FLOAT, 0, 2);
 }
 
 void Scene::onMessageLogged(QOpenGLDebugMessage message)

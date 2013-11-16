@@ -210,12 +210,13 @@ void MainWindow::initializeParamsArea()
     QDoubleSpinBox* cameraSpeedValue       = new QDoubleSpinBox;
     QDoubleSpinBox* cameraSensitivityValue = new QDoubleSpinBox;
 
-    cameraSpeedValue->setValue(44.7);
-    cameraSpeedValue->setMaximumSize(50, 20);
+    cameraSpeedValue->setRange(1.0, 200.0);
+    cameraSpeedValue->setValue(200.0);
+    cameraSpeedValue->setMaximumSize(60, 20);
 
     cameraSensitivityValue->setValue(0.2);
     cameraSensitivityValue->setSingleStep(0.05);
-    cameraSensitivityValue->setMaximumSize(50, 20);
+    cameraSensitivityValue->setMaximumSize(60, 20);
 
     QHBoxLayout* cameraSpeedLayout = new QHBoxLayout;
     cameraSpeedLayout->addWidget(cameraSpeedLabel);

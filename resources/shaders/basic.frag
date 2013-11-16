@@ -2,14 +2,14 @@
 
 in VS_OUT
 {
-    vec2 TextureCoord;
+    vec2 TexCoord;
 } fs_in;
 
-uniform sampler2D gSampler;
+uniform sampler2D sampler;
 
-out vec4 color;
+out vec4 FragColor;
 
 void main()
 {
-    color = texture(gSampler, fs_in.TextureCoord.xy);
+    FragColor = texture(sampler, fs_in.TexCoord.xy);
 }

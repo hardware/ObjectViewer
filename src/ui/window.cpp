@@ -18,7 +18,7 @@ Window::Window(QScreen *screen)
     : QWindow(screen),
       m_scene(new Scene(this)),
       m_leftButtonPressed(false),
-      m_cameraSpeed(44.7),
+      m_cameraSpeed(200.0),
       m_cameraSensitivity(0.2)
 {
     // On définit le type de la zone de rendu, dans notre cas il

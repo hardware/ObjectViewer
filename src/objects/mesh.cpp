@@ -132,8 +132,6 @@ bool Mesh::InitMaterials(const aiScene* pScene, const string& Filename)
     string::size_type SlashIndex = Filename.find_last_of("/");
     string Dir;
 
-    qDebug() << "Valeur de slashindex = " << SlashIndex;
-
     if(SlashIndex == string::npos) Dir = ".";
     else if(SlashIndex == 0) Dir = "/";
     else Dir = Filename.substr(0, SlashIndex);
@@ -205,6 +203,6 @@ void Mesh::Render()
             m_Textures[MaterialIndex]->bind(GL_TEXTURE0);
         }
 
-        // glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
     }
 }
