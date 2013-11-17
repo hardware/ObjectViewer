@@ -8,10 +8,7 @@
 
 Mesh::Mesh() : m_funcs(0) {}
 
-Mesh::~Mesh()
-{
-    Clear();
-}
+Mesh::~Mesh() {}
 
 Mesh::MeshEntry::MeshEntry()
     : m_vertexPositionBuffer(QOpenGLBuffer::VertexBuffer),
@@ -26,7 +23,7 @@ Mesh::MeshEntry::~MeshEntry()
     m_vertexIndexBuffer.destroy();
 }
 
-void Mesh::MeshEntry::Init(const QVector<Vertex> &Vertices, const QVector<unsigned int> &Indices)
+void Mesh::MeshEntry::Init(const QVector<Vertex>& Vertices, const QVector<unsigned int>& Indices)
 {
     NumIndices = static_cast<unsigned int>(Indices.size());
 
@@ -43,14 +40,6 @@ void Mesh::MeshEntry::Init(const QVector<Vertex> &Vertices, const QVector<unsign
     m_vertexIndexBuffer.release();
 }
 
-void Mesh::Clear()
-{
-    for(unsigned int i = 0; i < m_Textures.size(); i++)
-    {
-        SAFE_DELETE(m_Textures[i]);
-    }
-}
-
 void Mesh::Init(const QOpenGLShaderProgramPtr& shader)
 {
     QOpenGLContext* context = QOpenGLContext::currentContext();
@@ -65,11 +54,9 @@ void Mesh::Init(const QOpenGLShaderProgramPtr& shader)
 
 void Mesh::LoadMesh(const string& Filename)
 {
-    Clear();
-
     Assimp::Importer Importer;
 
-    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals);
+    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 
     if(pScene)
         InitFromScene(pScene, Filename);
@@ -106,9 +93,9 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-        Vertex v(Vector3f(pPos->x, pPos->y, pPos->z),
-                 Vector2f(pTexCoord->x, pTexCoord->y),
-                 Vector3f(pNormal->x, pNormal->y, pNormal->z));
+        Vertex v(QVector3D(pPos->x, pPos->y, pPos->z),
+                 QVector2D(pTexCoord->x, pTexCoord->y),
+                 QVector3D(pNormal->x, pNormal->y, pNormal->z));
 
         Vertices.push_back(v);
     }
@@ -127,7 +114,7 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
     m_Entries[Index].Init(Vertices, Indices);
 }
 
-bool Mesh::InitMaterials(const aiScene* pScene, const string& Filename)
+void Mesh::InitMaterials(const aiScene* pScene, const string& Filename)
 {
     string::size_type SlashIndex = Filename.find_last_of("/");
     string Dir;
@@ -135,8 +122,6 @@ bool Mesh::InitMaterials(const aiScene* pScene, const string& Filename)
     if(SlashIndex == string::npos) Dir = ".";
     else if(SlashIndex == 0) Dir = "/";
     else Dir = Filename.substr(0, SlashIndex);
-
-    bool Ret = true;
 
     for(unsigned int i = 0; i < pScene->mNumMaterials; i++)
     {
@@ -155,7 +140,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const string& Filename)
 
                 if(image.load(QString(FullPath.c_str())))
                 {
-                    m_Textures[i] = new Texture(image);
+                    m_Textures.insert(m_Textures.begin() + i, unique_ptr<Texture>(new Texture(image)));
                     m_Textures[i]->load();
 
                     qDebug() << "Loaded texture :" << FullPath.c_str();
@@ -163,19 +148,16 @@ bool Mesh::InitMaterials(const aiScene* pScene, const string& Filename)
                 else
                 {
                     qDebug() << "Error loading texture :" << FullPath.c_str();
-                    Ret = false;
                 }
             }
         }
 
         if( ! m_Textures[i] )
         {
-            m_Textures[i] = new Texture(QImage(":/resources/images/white.png"));
+            m_Textures.insert(m_Textures.begin() + i, unique_ptr<Texture>(new Texture(QImage(":/resources/images/white.png"))));
             m_Textures[i]->load();
         }
     }
-
-    return Ret;
 }
 
 void Mesh::Render()

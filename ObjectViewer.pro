@@ -36,9 +36,7 @@ HEADERS += \
     src/ui/window.h \
     src/ui/mainwindow.h \
     src/materials/texture.h \
-    src/objects/mesh.h \
-    src/helpers/math_3d.h \
-    src/helpers/util.h
+    src/objects/mesh.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
