@@ -48,8 +48,7 @@ SOURCES += \
     src/ui/mainwindow.cpp \
     src/main.cpp \
     src/materials/texture.cpp \
-    src/objects/mesh.cpp \
-    src/helpers/math_3d.cpp
+    src/objects/mesh.cpp
 
 RESOURCES += \
     resources.qrc
