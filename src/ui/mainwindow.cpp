@@ -514,18 +514,18 @@ void MainWindow::initializeParamsArea()
     QObject::connect(perspective, SIGNAL(toggled(bool)), this, SLOT(setViewProperties(bool)));
 
     // View
-    QObject::connect(fovValue, SIGNAL(valueChanged(double)), this, SLOT(updateFieldOfView(double)));
+    QObject::connect(fovValue,       SIGNAL(valueChanged(double)), this, SLOT(updateFieldOfView(double)));
     QObject::connect(nearPlaneValue, SIGNAL(valueChanged(double)), this, SLOT(updateNearPlane(double)));
-    QObject::connect(farPlaneValue, SIGNAL(valueChanged(double)), this, SLOT(updateFarPlane(double)));
-    QObject::connect(leftValue, SIGNAL(valueChanged(double)), this, SLOT(updateLeft(double)));
-    QObject::connect(rightValue, SIGNAL(valueChanged(double)), this, SLOT(updateRight(double)));
-    QObject::connect(bottomValue, SIGNAL(valueChanged(double)), this, SLOT(updateBottom(double)));
-    QObject::connect(topValue, SIGNAL(valueChanged(double)), this, SLOT(updateTop(double)));
+    QObject::connect(farPlaneValue,  SIGNAL(valueChanged(double)), this, SLOT(updateFarPlane(double)));
+    QObject::connect(leftValue,      SIGNAL(valueChanged(double)), this, SLOT(updateLeft(double)));
+    QObject::connect(rightValue,     SIGNAL(valueChanged(double)), this, SLOT(updateRight(double)));
+    QObject::connect(bottomValue,    SIGNAL(valueChanged(double)), this, SLOT(updateBottom(double)));
+    QObject::connect(topValue,       SIGNAL(valueChanged(double)), this, SLOT(updateTop(double)));
 
     // Camera
-    QObject::connect(cameraSpeedValue, SIGNAL(valueChanged(double)), m_openglArea.data(), SLOT(setCameraSpeed(double)));
+    QObject::connect(cameraSpeedValue,       SIGNAL(valueChanged(double)), m_openglArea.data(), SLOT(setCameraSpeed(double)));
     QObject::connect(cameraSensitivityValue, SIGNAL(valueChanged(double)), m_openglArea.data(), SLOT(setCameraSensitivity(double)));
-    QObject::connect(resetCamera, SIGNAL(clicked()), m_camera, SLOT(resetCamera()));
+    QObject::connect(resetCamera,            SIGNAL(clicked()),            m_camera,            SLOT(resetCamera()));
 
     // Object
     QObject::connect(translationX, SIGNAL(valueChanged(int)), m_object3D, SLOT(setObjectXPosition(int)));
@@ -624,8 +624,8 @@ void MainWindow::updateMatrix()
 
     if(count == 15) // Mise à jour des matrices toutes les 1/4 de secondes
     {
-        const float* modelMatrixData = m_object3D->modelMatrix().data();
-        const float* viewMatrixData  = m_scene->getCamera()->viewMatrix().data();
+        const float* modelMatrixData      = m_object3D->modelMatrix().data();
+        const float* viewMatrixData       = m_scene->getCamera()->viewMatrix().data();
         const float* projectionMatrixData = m_scene->getCamera()->projectionMatrix().data();
 
         modelMatrix00->setNum(modelMatrixData[0]);

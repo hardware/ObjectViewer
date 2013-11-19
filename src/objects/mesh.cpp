@@ -66,6 +66,9 @@ void Mesh::loadMesh(const string& filename)
 
 void Mesh::initFromScene(const aiScene* pScene, const string& filename)
 {
+    qDebug() << "Meshes : " << pScene->mNumMeshes;
+    qDebug() << "Materials : " << pScene->mNumMaterials;
+
     m_entries.resize(pScene->mNumMeshes);
     m_textures.resize(pScene->mNumMaterials);
 
