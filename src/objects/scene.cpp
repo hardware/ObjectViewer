@@ -155,8 +155,8 @@ void Scene::prepareShaders()
 {
     m_shader = ShadersPtr(new Shaders);
 
-    m_shader->setVertexShader(":/resources/shaders/per-fragment-blinn-phong.vert");
-    m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
+    m_shader->setVertexShader(":/resources/shaders/rim-lighting.vert");
+    m_shader->setFragmentShader(":/resources/shaders/rim-lighting.frag");
 
     m_shader->shader()->link();
 }

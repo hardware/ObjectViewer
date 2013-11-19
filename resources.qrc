@@ -14,5 +14,7 @@
         <file>resources/shaders/per-vertex-phong.vert</file>
         <file>resources/shaders/per-fragment-blinn-phong.frag</file>
         <file>resources/shaders/per-fragment-blinn-phong.vert</file>
+        <file>resources/shaders/rim-lighting.frag</file>
+        <file>resources/shaders/rim-lighting.vert</file>
     </qresource>
 </RCC>

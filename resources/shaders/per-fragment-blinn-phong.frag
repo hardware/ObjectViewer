@@ -35,7 +35,7 @@ void main()
     vec3 H = normalize(L + V);
 
     // Compute the diffuse and specular components for each fragment
-    vec3 diffuse = max(dot(N, L), 0.0) * diffuseAlbedo;
+    vec3 diffuse  = max(dot(N, L), 0.0) * diffuseAlbedo;
     vec3 specular = pow(max(dot(N, H), 0.0), specularPower) * specularAlbedo;
 
     // Write final color to the framebuffer
