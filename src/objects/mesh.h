@@ -46,34 +46,34 @@ public:
     Mesh();
     ~Mesh();
 
-    void Init(const QOpenGLShaderProgramPtr& shader);
-    void LoadMesh(const string& Filename);
-    void Render();
+    void init(const QOpenGLShaderProgramPtr& shader);
+    void loadMesh(const string& filename);
+    void render();
 
 private:
-    void InitFromScene(const aiScene* pScene, const string& Filename);
-    void InitMaterials(const aiScene* pScene, const string& Filename);
-    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
+    void initFromScene(const aiScene* pScene, const string& filename);
+    void initMaterials(const aiScene* pScene, const string& filename);
+    void initMesh(unsigned int index, const aiMesh* paiMesh);
 
     struct MeshEntry
     {
         MeshEntry();
         ~MeshEntry();
 
-        void Init(const QVector<Vertex>& Vertices, const QVector<unsigned int>& Indices);
+        void init(const QVector<Vertex>& vertices, const QVector<unsigned int>& indices);
 
         QOpenGLBuffer m_vertexPositionBuffer;
         QOpenGLBuffer m_vertexIndexBuffer;
 
-        unsigned int NumIndices;
-        unsigned int MaterialIndex;
+        unsigned int numIndices;
+        unsigned int materialIndex;
     };
 
     QOpenGLFunctions*       m_funcs;
     QOpenGLShaderProgramPtr m_shader;
 
-    vector<MeshEntry> m_Entries;
-    vector<unique_ptr<Texture>> m_Textures;
+    vector<MeshEntry> m_entries;
+    vector<unique_ptr<Texture>> m_textures;
 
 };
 

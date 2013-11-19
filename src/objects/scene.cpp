@@ -79,8 +79,8 @@ void Scene::initialize()
     QOpenGLShaderProgramPtr shader = m_shader->shader();
     shader->setUniformValue("sampler", 0);
 
-    m_mesh->Init(shader);
-    m_mesh->LoadMesh("assets/blackhawk/uh60.lwo");
+    m_mesh->init(shader);
+    m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
 }
 
 void Scene::update(float t)
@@ -113,16 +113,16 @@ void Scene::render(double currentTime)
 
     if(currentTime > 0)
     {
-        m_spinningCube.rotateY(currentTime/0.02f);
+        m_model.rotateY(currentTime/0.02f);
     }
 
-    QMatrix4x4 mv_matrix = m_camera->viewMatrix() * m_spinningCube.modelMatrix();
+    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_model.modelMatrix();
 
     m_shader->shader()->bind();
-    m_shader->shader()->setUniformValue("modelViewMatrix", mv_matrix);
+    m_shader->shader()->setUniformValue("modelViewMatrix", modelViewMatrix);
     m_shader->shader()->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
 
-    m_mesh->Render();
+    m_mesh->render();
 
     emit renderCycleDone();
 }
@@ -196,7 +196,7 @@ void Scene::togglePoints(bool state)
 
 Object3D* Scene::getObject()
 {
-    return &m_spinningCube;
+    return &m_model;
 }
 
 Camera* Scene::getCamera()

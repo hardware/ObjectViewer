@@ -63,7 +63,7 @@ private:
     QOpenGLDebugLogger        * m_logger;
 
     ShadersPtr m_shader;
-    Object3D   m_spinningCube;
+    Object3D   m_model;
     QVector3D  m_v;
 
     bool m_viewCenterFixed;
