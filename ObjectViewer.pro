@@ -24,7 +24,13 @@ CONFIG(release, debug|release) {
 
 OTHER_FILES += \
     resources/shaders/basic.vert \
-    resources/shaders/basic.frag
+    resources/shaders/basic.frag \
+    resources/shaders/per-vertex-phong.vert \
+    resources/shaders/per-vertex-phong.frag \
+    resources/shaders/per-fragment-phong.vert \
+    resources/shaders/per-fragment-phong.frag \
+    resources/shaders/per-fragment-blinn-phong.frag \
+    resources/shaders/per-fragment-blinn-phong.vert
 
 HEADERS += \
     src/helpers/shaders.h \

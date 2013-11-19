@@ -1,18 +1,18 @@
 #version 430 core
 
-in vec3 Position;
-in vec2 TexCoord;
-in vec3 Normal;
+in vec3 position;
+in vec2 texCoord;
+in vec3 normal;
 
 out VS_OUT
 {
-    vec2 TexCoord;
+    vec2 texCoord;
 } vs_out;
 
 uniform mat4 mvp;
 
 void main()
 {
-    gl_Position = mvp * vec4(Position, 1.0);
-    vs_out.TexCoord = TexCoord;
+    gl_Position = mvp * vec4(position, 1.0);
+    vs_out.texCoord = texCoord;
 }

@@ -73,6 +73,8 @@ void Scene::initialize()
     // glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     QOpenGLShaderProgramPtr shader = m_shader->shader();
     shader->setUniformValue("sampler", 0);
@@ -114,11 +116,11 @@ void Scene::render(double currentTime)
         m_spinningCube.rotateY(currentTime/0.02f);
     }
 
-    QMatrix4x4 mvp = m_camera->viewProjectionMatrix() *
-                     m_spinningCube.modelMatrix();
+    QMatrix4x4 mv_matrix = m_camera->viewMatrix() * m_spinningCube.modelMatrix();
 
     m_shader->shader()->bind();
-    m_shader->shader()->setUniformValue("mvp", mvp);
+    m_shader->shader()->setUniformValue("modelViewMatrix", mv_matrix);
+    m_shader->shader()->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
 
     m_mesh->Render();
 
@@ -153,8 +155,8 @@ void Scene::prepareShaders()
 {
     m_shader = ShadersPtr(new Shaders);
 
-    m_shader->setVertexShader(":/resources/shaders/basic.vert");
-    m_shader->setFragmentShader(":/resources/shaders/basic.frag");
+    m_shader->setVertexShader(":/resources/shaders/per-fragment-blinn-phong.vert");
+    m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
 
     m_shader->shader()->link();
 }

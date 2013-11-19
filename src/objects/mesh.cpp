@@ -168,13 +168,13 @@ void Mesh::Render()
     {
         m_Entries[i].m_vertexPositionBuffer.bind();
 
-        m_shader->enableAttributeArray("Position");
-        m_shader->enableAttributeArray("TexCoord");
-        m_shader->enableAttributeArray("Normal");
+        m_shader->enableAttributeArray("position");
+        m_shader->enableAttributeArray("texCoord");
+        m_shader->enableAttributeArray("normal");
 
-        m_shader->setAttributeBuffer("Position", GL_FLOAT, 0,  3, sizeof(Vertex));
-        m_shader->setAttributeBuffer("TexCoord", GL_FLOAT, 12, 2, sizeof(Vertex));
-        m_shader->setAttributeBuffer("Normal",   GL_FLOAT, 20, 3, sizeof(Vertex));
+        m_shader->setAttributeBuffer("position", GL_FLOAT, 0,  3, sizeof(Vertex));
+        m_shader->setAttributeBuffer("texCoord", GL_FLOAT, 12, 2, sizeof(Vertex));
+        m_shader->setAttributeBuffer("normal",   GL_FLOAT, 20, 3, sizeof(Vertex));
 
         m_Entries[i].m_vertexIndexBuffer.bind();
 

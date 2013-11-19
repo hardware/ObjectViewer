@@ -8,5 +8,11 @@
         <file>resources/images/rock.png</file>
         <file>resources/images/snowrocks.png</file>
         <file>resources/images/white.png</file>
+        <file>resources/shaders/per-fragment-phong.frag</file>
+        <file>resources/shaders/per-fragment-phong.vert</file>
+        <file>resources/shaders/per-vertex-phong.frag</file>
+        <file>resources/shaders/per-vertex-phong.vert</file>
+        <file>resources/shaders/per-fragment-blinn-phong.frag</file>
+        <file>resources/shaders/per-fragment-blinn-phong.vert</file>
     </qresource>
 </RCC>
