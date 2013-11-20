@@ -106,9 +106,11 @@ void Scene::render(double currentTime)
 
     QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_model.modelMatrix();
 
-    m_shader->shader()->bind();
-    m_shader->shader()->setUniformValue("modelViewMatrix", modelViewMatrix);
-    m_shader->shader()->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
+    QOpenGLShaderProgramPtr shader = m_shader->shader();
+
+    shader->bind();
+    shader->setUniformValue("modelViewMatrix", modelViewMatrix);
+    shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
 
     m_mesh->render();
 
