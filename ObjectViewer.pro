@@ -3,12 +3,19 @@ QT += core gui opengl widgets
 CONFIG +=  console debug
 
 win32: LIBS += -L$$PWD/libs/ -lassimp
+unix:!macx: LIBS += -L$$PWD/libs/ -lassimp
 
-INCLUDEPATH += $$PWD/libs
-DEPENDPATH += $$PWD/libs
+INCLUDEPATH += \
+    $$PWD/libs \
+    $$PWD/includes
 
-INCLUDEPATH += $$PWD/includes
-DEPENDPATH += $$PWD/includes
+DEPENDPATH += \
+    $$PWD/libs \
+    $$PWD/includes
+
+# GCC FLAGS
+QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
 
 RCC_DIR     = $$_PRO_FILE_PWD_/build/tmp/rcc
 UI_DIR      = $$_PRO_FILE_PWD_/build/tmp/ui
