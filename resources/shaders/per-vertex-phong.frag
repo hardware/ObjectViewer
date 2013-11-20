@@ -8,9 +8,9 @@ in VS_OUT
 
 out vec4 FragColor;
 
-uniform sampler2D sampler;
+uniform sampler2D texColor;
 
 void main()
 {
-    FragColor = texture(sampler, fs_in.texCoord.xy) * vec4(fs_in.light, 1.0);
+    FragColor = texture(texColor, fs_in.texCoord.xy) * vec4(fs_in.light, 1.0);
 }

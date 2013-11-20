@@ -16,7 +16,7 @@ in VS_OUT
 out vec4 FragColor;
 
 // Texture sampler
-uniform sampler2D sampler;
+uniform sampler2D texColor;
 
 // Material properties
 uniform vec3 diffuseAlbedo  = vec3(1.0, 1.0, 1.0);
@@ -59,5 +59,5 @@ void main()
     vec3 rim      = calculateRim(N, V);
 
     // Write final color to the framebuffer
-    FragColor = texture(sampler, fs_in.texCoord.xy) * vec4(diffuse + specular + rim, 1.0);
+    FragColor = texture(texColor, fs_in.texCoord.xy) * vec4(diffuse + specular + rim, 1.0);
 }

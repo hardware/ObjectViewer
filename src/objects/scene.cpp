@@ -3,6 +3,7 @@
 #include "mesh.h"
 
 #include "../helpers/shaders.h"
+#include "../materials/texture.h"
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLDebugLogger>
@@ -16,6 +17,7 @@ Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
       m_mesh(new Mesh()),
+      m_normalMap(new Texture(QImage("assets/box/normal_map.jpg"))),
       m_vao(new QOpenGLVertexArrayObject(this)),
       m_logger(new QOpenGLDebugLogger(this)),
       m_panAngle(0.0f),
@@ -36,6 +38,7 @@ Scene::~Scene()
 {
     delete m_camera;
     delete m_mesh;
+    delete m_normalMap;
 
     m_vao->destroy();
 }
@@ -65,10 +68,17 @@ void Scene::initialize()
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     QOpenGLShaderProgramPtr shader = m_shader->shader();
-    shader->setUniformValue("sampler", 0);
+
+    shader->bind();
+    shader->setUniformValue("texColor", 0);
+    shader->setUniformValue("texNormal", 1);
 
     m_mesh->init(shader);
-    m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
+    m_mesh->loadMesh("assets/box/box.obj");
+//    m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
+
+    m_normalMap->load();
+    m_normalMap->bind(GL_TEXTURE1);
 }
 
 void Scene::update(float t)
@@ -145,8 +155,8 @@ void Scene::prepareShaders()
 {
     m_shader = ShadersPtr(new Shaders);
 
-    m_shader->setVertexShader(":/resources/shaders/rim-lighting.vert");
-    m_shader->setFragmentShader(":/resources/shaders/rim-lighting.frag");
+    m_shader->setVertexShader(":/resources/shaders/normal-mapping.vert");
+    m_shader->setFragmentShader(":/resources/shaders/normal-mapping.frag");
 
     m_shader->shader()->link();
 }

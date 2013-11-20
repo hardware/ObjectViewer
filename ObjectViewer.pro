@@ -39,7 +39,9 @@ OTHER_FILES += \
     resources/shaders/per-fragment-blinn-phong.frag \
     resources/shaders/per-fragment-blinn-phong.vert \
     resources/shaders/rim-lighting.vert \
-    resources/shaders/rim-lighting.frag
+    resources/shaders/rim-lighting.frag \
+    resources/shaders/normal-mapping.vert \
+    resources/shaders/normal-mapping.frag
 
 HEADERS += \
     src/helpers/shaders.h \

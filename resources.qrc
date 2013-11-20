@@ -16,5 +16,7 @@
         <file>resources/shaders/per-fragment-blinn-phong.vert</file>
         <file>resources/shaders/rim-lighting.frag</file>
         <file>resources/shaders/rim-lighting.vert</file>
+        <file>resources/shaders/normal-mapping.frag</file>
+        <file>resources/shaders/normal-mapping.vert</file>
     </qresource>
 </RCC>

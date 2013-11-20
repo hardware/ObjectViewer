@@ -9,6 +9,7 @@
 
 class Camera;
 class Mesh;
+class Texture;
 class QOpenGLVertexArrayObject;
 class QOpenGLDebugLogger;
 class Shaders;
@@ -55,8 +56,9 @@ signals:
     void renderCycleDone();
 
 private:
-    Camera * m_camera;
-    Mesh   * m_mesh;
+    Camera  * m_camera;
+    Mesh    * m_mesh;
+    Texture * m_normalMap;
 
     QOpenGLVertexArrayObject * m_vao;
     QOpenGLDebugLogger       * m_logger;

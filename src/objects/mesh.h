@@ -25,14 +25,16 @@ struct Vertex
     QVector3D m_pos;
     QVector2D m_tex;
     QVector3D m_normal;
+    QVector3D m_tangent;
 
     Vertex() {}
 
-    Vertex(const QVector3D& pos, const QVector2D& tex, const QVector3D& normal)
+    Vertex(const QVector3D& pos, const QVector2D& tex, const QVector3D& normal, const QVector3D& tangent)
     {
-        m_pos    = pos;
-        m_tex    = tex;
-        m_normal = normal;
+        m_pos     = pos;
+        m_tex     = tex;
+        m_normal  = normal;
+        m_tangent = tangent;
     }
 };
 

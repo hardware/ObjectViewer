@@ -95,10 +95,12 @@ void Mesh::initMesh(unsigned int index, const aiMesh* paiMesh)
         const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &zero3D;
+        const aiVector3D* pTangent  = &(paiMesh->mTangents[i]);
 
         Vertex v(QVector3D(pPos->x, pPos->y, pPos->z),
                  QVector2D(pTexCoord->x, pTexCoord->y),
-                 QVector3D(pNormal->x, pNormal->y, pNormal->z));
+                 QVector3D(pNormal->x, pNormal->y, pNormal->z),
+                 QVector3D(pTangent->x, pTangent->y, pTangent->z));
 
         vertices.push_back(v);
     }
@@ -174,10 +176,12 @@ void Mesh::render()
         m_shader->enableAttributeArray("position");
         m_shader->enableAttributeArray("texCoord");
         m_shader->enableAttributeArray("normal");
+        m_shader->enableAttributeArray("tangent");
 
         m_shader->setAttributeBuffer("position", GL_FLOAT, 0,  3, sizeof(Vertex));
         m_shader->setAttributeBuffer("texCoord", GL_FLOAT, 12, 2, sizeof(Vertex));
         m_shader->setAttributeBuffer("normal",   GL_FLOAT, 20, 3, sizeof(Vertex));
+        m_shader->setAttributeBuffer("tangent",  GL_FLOAT, 32, 3, sizeof(Vertex));
 
         m_entries[i].m_vertexIndexBuffer.bind();
 
