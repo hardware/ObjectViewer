@@ -6,7 +6,7 @@ Shaders::Shaders()
 
 Shaders::~Shaders()
 {
-    m_shader->release();
+    // m_shader->release(); -> VALGRIND ERROR : Invalid read of size 8
 }
 
 void Shaders::setVertexShader(const QString &vertexShader)

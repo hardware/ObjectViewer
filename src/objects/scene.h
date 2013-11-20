@@ -10,7 +10,6 @@
 class Camera;
 class Mesh;
 class QOpenGLVertexArrayObject;
-class QOpenGLFunctions_3_2_Core;
 class QOpenGLDebugLogger;
 class Shaders;
 
@@ -56,11 +55,11 @@ signals:
     void renderCycleDone();
 
 private:
-    Camera                    * m_camera;
-    Mesh                      * m_mesh;
-    QOpenGLVertexArrayObject  * m_vao;
-    QOpenGLFunctions_3_2_Core * m_funcs;
-    QOpenGLDebugLogger        * m_logger;
+    Camera * m_camera;
+    Mesh   * m_mesh;
+
+    QOpenGLVertexArrayObject * m_vao;
+    QOpenGLDebugLogger       * m_logger;
 
     ShadersPtr m_shader;
     Object3D   m_model;

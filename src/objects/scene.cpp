@@ -5,7 +5,6 @@
 #include "../helpers/shaders.h"
 
 #include <QOpenGLVertexArrayObject>
-#include <QOpenGLFunctions_3_2_Core>
 #include <QOpenGLDebugLogger>
 
 /**
@@ -43,17 +42,6 @@ Scene::~Scene()
 
 void Scene::initialize()
 {
-    // Récupération des fonctions d'OpenGL 3.2
-    m_funcs = m_context->versionFunctions<QOpenGLFunctions_3_2_Core>();
-
-    if ( ! m_funcs )
-    {
-        qFatal("Requires OpenGL >= 3.2");
-        exit(1);
-    }
-
-    m_funcs->initializeOpenGLFunctions();
-
     // Initialisation du système de logging
     connect(m_logger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this, SLOT(onMessageLogged(QOpenGLDebugMessage)), Qt::DirectConnection);
 

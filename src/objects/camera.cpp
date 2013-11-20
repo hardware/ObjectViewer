@@ -6,6 +6,11 @@ Camera::Camera(QObject* parent)
     , d_ptr(new CameraPrivate(this))
 {}
 
+Camera::~Camera()
+{
+    delete d_ptr;
+}
+
 Camera::ProjectionType Camera::projectionType() const
 {
     Q_D(const Camera);

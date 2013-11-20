@@ -16,6 +16,7 @@
  */
 Window::Window(QScreen *screen)
     : QWindow(screen),
+      m_context(new QOpenGLContext),
       m_scene(new Scene(this)),
       m_leftButtonPressed(false),
       m_cameraSpeed(200.0),
@@ -42,13 +43,12 @@ Window::Window(QScreen *screen)
     setTitle("ObjectViewer");
 
     // On créer le contexte OpenGL et on définit son format
-    m_context = new QOpenGLContext;
     m_context->setFormat(format);
     m_context->create();
     m_context->makeCurrent(this);
 
     // On définit le contexte OpenGL de la scène
-    m_scene->setContext(m_context);
+    m_scene->setContext(m_context.data());
 
     m_renderTimer.invalidate(); // Timer pour la zone de rendu (animation... etc)
     m_updateTimer.start(); // Timer pour la mise à jour de la scène (camera... etc)
@@ -65,6 +65,8 @@ Window::Window(QScreen *screen)
     connect(timer, SIGNAL(timeout()), this, SLOT(updateScene()));
     timer->start(16); // f = 1 / 16.10e-3 = 60Hz
 }
+
+Window::~Window() {}
 
 /**
  * @brief Initialisation de la zone de rendu

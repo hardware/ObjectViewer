@@ -31,6 +31,7 @@ class Camera : public QObject
 
 public:
     explicit Camera(QObject *parent = 0);
+    ~Camera();
 
     enum ProjectionType
     {

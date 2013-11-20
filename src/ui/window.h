@@ -21,6 +21,7 @@ class Window : public QWindow
 
 public:
     Window(QScreen* screen = 0);
+    ~Window();
 
     Scene* getScene();
 
@@ -48,9 +49,9 @@ signals:
     void updateFramerate();
 
 private:
-    QElapsedTimer    m_renderTimer, m_updateTimer;
-    QOpenGLContext * m_context;
-    AbstractScene  * m_scene;
+    QElapsedTimer  m_renderTimer, m_updateTimer;
+    AbstractScene* m_scene;
+    QScopedPointer<QOpenGLContext> m_context;
 
     QPoint m_prevPos;
     QPoint m_pos;
