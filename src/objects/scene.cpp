@@ -74,8 +74,7 @@ void Scene::initialize()
     shader->setUniformValue("texNormal", 1);
 
     m_mesh->init(shader);
-    m_mesh->loadMesh("assets/box/box.obj");
-//    m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
+    m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
 
     m_normalMap->load();
     m_normalMap->bind(GL_TEXTURE1);
@@ -155,8 +154,8 @@ void Scene::prepareShaders()
 {
     m_shader = ShadersPtr(new Shaders);
 
-    m_shader->setVertexShader(":/resources/shaders/normal-mapping.vert");
-    m_shader->setFragmentShader(":/resources/shaders/normal-mapping.frag");
+    m_shader->setVertexShader(":/resources/shaders/per-fragment-blinn-phong.vert");
+    m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
 
     m_shader->shader()->link();
 }
