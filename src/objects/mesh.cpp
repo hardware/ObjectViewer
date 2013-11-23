@@ -79,8 +79,8 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
     m_textures.resize(pScene->mNumMaterials);
 
     QVector<QVector3D> positions;
-    QVector<QVector3D> normals;
     QVector<QVector2D> texCoords;
+    QVector<QVector3D> normals;
     QVector<QVector3D> tangents;
     QVector<unsigned int> indices;
 
@@ -107,8 +107,8 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
 
     // Reserve space in the vectors for the vertex attributes and indices
     positions.reserve(numVertices);
-    normals.reserve(numVertices);
     texCoords.reserve(numVertices);
+    normals.reserve(numVertices);
     tangents.reserve(numVertices);
     indices.reserve(numIndices);
 
@@ -179,9 +179,9 @@ void Mesh::initMesh(const aiMesh* paiMesh,
     for(unsigned int i = 0; i < paiMesh->mNumVertices; i++)
     {
         const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
-        const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
-        const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &zero3D;
-        const aiVector3D* pTangent  = &(paiMesh->mTangents[i]);
+        const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0)        ? &(paiMesh->mTextureCoords[0][i]) : &zero3D;
+        const aiVector3D* pNormal   = paiMesh->HasNormals()               ? &(paiMesh->mNormals[i])          : &zero3D;
+        const aiVector3D* pTangent  = paiMesh->HasTangentsAndBitangents() ? &(paiMesh->mTangents[i])         : &zero3D;
 
         positions.push_back(QVector3D(pPos->x, pPos->y, pPos->z));
         texCoords.push_back(QVector2D(pTexCoord->x, pTexCoord->y));
