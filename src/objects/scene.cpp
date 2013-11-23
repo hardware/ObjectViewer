@@ -16,6 +16,7 @@ Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
       m_mesh(new Mesh()),
+      m_mesh2(new Mesh()),
       // m_normalMap(new Texture(QImage("assets/box/normal_map.jpg"))),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
@@ -43,6 +44,7 @@ Scene::~Scene()
 {
     delete m_camera;
     delete m_mesh;
+    delete m_mesh2;
     // delete m_normalMap;
 }
 
@@ -78,7 +80,9 @@ void Scene::initialize()
 
     m_mesh->init(shader);
     m_mesh->loadMesh("assets/tomcat/f14d.lwo");
-    // m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
+
+    m_mesh2->init(shader);
+    m_mesh2->loadMesh("assets/blackhawk/uh60.lwo");
 
     // m_normalMap->load();
     // m_normalMap->bind(GL_TEXTURE1);
@@ -112,19 +116,29 @@ void Scene::render(double currentTime)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if(currentTime > 0) m_model.rotateY(currentTime/0.02f);
-
-    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_model.modelMatrix();
-    QOpenGLShaderProgramPtr shader = m_shader->shader();
-    shader->bind();
-
     // Set the fragment shader light mode subroutine
     m_funcs->glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &m_lightModeSubroutines[m_lightMode]);
 
+    if(currentTime > 0)
+    {
+        m_model.rotateY(currentTime/0.02f);
+        m_model2.rotateY(currentTime/0.02f);
+    }
+
+    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_model.modelMatrix();
+    QOpenGLShaderProgramPtr shader = m_shader->shader();
+
+    shader->bind();
     shader->setUniformValue("modelViewMatrix", modelViewMatrix);
     shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
 
     m_mesh->render();
+
+    m_model2.setPosition(10.0f, 5.0f, 0.0f);
+    modelViewMatrix = m_camera->viewMatrix() * m_model2.modelMatrix();
+    shader->setUniformValue("modelViewMatrix", modelViewMatrix);
+
+    m_mesh2->render();
 
     emit renderCycleDone();
 }

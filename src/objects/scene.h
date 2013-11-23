@@ -70,11 +70,11 @@ signals:
 
 private:
     Camera  * m_camera;
-    Mesh    * m_mesh;
+    Mesh    * m_mesh, * m_mesh2;
     // Texture * m_normalMap;
 
     ShadersPtr m_shader;
-    Object3D   m_model;
+    Object3D   m_model, m_model2;
     QVector3D  m_v;
 
     LightMode       m_lightMode;
