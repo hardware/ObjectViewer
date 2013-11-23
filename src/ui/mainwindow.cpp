@@ -36,14 +36,23 @@ void MainWindow::initializeMenuBar()
     fullscreenAction->setCheckable(true);
     fullscreenAction->setShortcut(QKeySequence(Qt::Key_F11));
 
+    QAction *msaaAction = new QAction("&MSAA x4", this);
+    msaaAction->setCheckable(true);
+    msaaAction->setChecked(true);
+    msaaAction->setShortcut(QKeySequence(Qt::Key_M));
+
     QMenu *fileMenu = menuBar()->addMenu("&File");
     fileMenu->addAction(exitAction);
 
     QMenu *windowMenu = menuBar()->addMenu("&Window");
     windowMenu->addAction(fullscreenAction);
 
-    QObject::connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-    QObject::connect(fullscreenAction, SIGNAL(triggered(bool)), this, SLOT(setFullScreen(bool)));
+    QMenu *antialiasingMenu = menuBar()->addMenu("&Anti-aliasing");
+    antialiasingMenu->addAction(msaaAction);
+
+    QObject::connect(exitAction,       SIGNAL(triggered()),     qApp,    SLOT(quit()));
+    QObject::connect(fullscreenAction, SIGNAL(triggered(bool)), this,    SLOT(setFullScreen(bool)));
+    QObject::connect(msaaAction,       SIGNAL(triggered(bool)), m_scene, SLOT(toggleAA(bool)));
 }
 
 void MainWindow::initializeParamsArea()

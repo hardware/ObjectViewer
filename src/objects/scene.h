@@ -65,6 +65,8 @@ public slots:
     void toggleBlinnPhong(bool state);
     void toggleRimLighting(bool state);
 
+    void toggleAA(bool state);
+
 signals:
     void renderCycleDone();
 

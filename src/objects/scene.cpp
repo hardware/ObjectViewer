@@ -220,6 +220,11 @@ void Scene::toggleRimLighting(bool state)
     if(state) m_lightMode = RimLighting;
 }
 
+void Scene::toggleAA(bool state)
+{
+    (state) ? glEnable(GL_MULTISAMPLE) : glDisable(GL_MULTISAMPLE);
+}
+
 Object3D* Scene::getObject()
 {
     return &m_model;
