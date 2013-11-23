@@ -61,7 +61,7 @@ void Scene::initialize()
     // Charge, compile et link le Vertex et Fragment Shader
     prepareShaders();
 
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.39f, 0.39f, 0.39f, 0.0f);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_CULL_FACE);

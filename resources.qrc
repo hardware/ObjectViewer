@@ -18,5 +18,6 @@
         <file>resources/shaders/rim-lighting.vert</file>
         <file>resources/shaders/normal-mapping.frag</file>
         <file>resources/shaders/normal-mapping.vert</file>
+        <file>resources/images/splash.png</file>
     </qresource>
 </RCC>
