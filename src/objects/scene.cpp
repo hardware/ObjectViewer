@@ -19,7 +19,7 @@ Scene::Scene(QObject *parent)
       m_camera(new Camera(this)),
       m_mesh(new Mesh()),
       m_normalMap(new Texture(QImage("assets/box/normal_map.jpg"))),
-      m_vao(new QOpenGLVertexArrayObject(this)),
+//      m_vao(new QOpenGLVertexArrayObject(this)),
       m_logger(new QOpenGLDebugLogger(this)),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
@@ -49,7 +49,7 @@ Scene::~Scene()
     delete m_mesh;
     delete m_normalMap;
 
-    m_vao->destroy();
+//    m_vao->destroy();
 }
 
 void Scene::initialize()
@@ -58,7 +58,7 @@ void Scene::initialize()
 
     if ( ! m_funcs )
     {
-        qFatal("Requires OpenGL >= 3.3");
+        qFatal("Requires OpenGL >= 4.0");
         exit(1);
     }
 
@@ -71,8 +71,8 @@ void Scene::initialize()
         m_logger->enableMessages();
 
     // Création du Vertex Array Object
-    m_vao->create();
-    m_vao->bind();
+//    m_vao->create();
+//    m_vao->bind();
 
     // Charge, compile et link le Vertex et Fragment Shader
     prepareShaders();

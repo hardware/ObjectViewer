@@ -1,7 +1,6 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <vector>
 #include <string>
 #include <memory>
 
@@ -25,21 +24,22 @@ struct Vertex
     QVector3D m_pos;
     QVector2D m_tex;
     QVector3D m_normal;
-    QVector3D m_tangent;
+    // QVector3D m_tangent;
 
     Vertex() {}
 
-    Vertex(const QVector3D& pos, const QVector2D& tex, const QVector3D& normal, const QVector3D& tangent)
+    Vertex(const QVector3D& pos, const QVector2D& tex, const QVector3D& normal /*, const QVector3D& tangent*/)
     {
         m_pos     = pos;
         m_tex     = tex;
         m_normal  = normal;
-        m_tangent = tangent;
+        // m_tangent = tangent;
     }
 };
 
 class Texture;
-class QOpenGLFunctions;
+class QOpenGLFunctions_3_2_Core;
+class QOpenGLVertexArrayObject;
 
 class Mesh
 {
@@ -55,24 +55,33 @@ public:
 private:
     void initFromScene(const aiScene* pScene, const string& filename);
     void initMaterials(const aiScene* pScene, const string& filename);
-    void initMesh(unsigned int index, const aiMesh* paiMesh);
+
+    void initMesh(const aiMesh* paiMesh,
+                  QVector<QVector3D>& positions,
+                  QVector<QVector2D>& texCoords,
+                  QVector<QVector3D>& normals,
+                  QVector<unsigned int>& indices);
+
+    QOpenGLVertexArrayObject* m_vao;
+
+    QOpenGLBuffer m_vertexPositionBuffer;
+    QOpenGLBuffer m_vertexTexCoordBuffer;
+    QOpenGLBuffer m_vertexNormalBuffer;
+    QOpenGLBuffer m_indexBuffer;
 
     struct MeshEntry
     {
         MeshEntry();
         ~MeshEntry();
 
-        void init(const QVector<Vertex>& vertices, const QVector<unsigned int>& indices);
-
-        QOpenGLBuffer m_vertexPositionBuffer;
-        QOpenGLBuffer m_vertexIndexBuffer;
-
         unsigned int numIndices;
+        unsigned int baseVertex;
+        unsigned int baseIndex;
         unsigned int materialIndex;
     };
 
-    QOpenGLFunctions*       m_funcs;
-    QOpenGLShaderProgramPtr m_shader;
+    QOpenGLFunctions_3_2_Core* m_funcs;
+    QOpenGLShaderProgramPtr    m_shader;
 
     vector<MeshEntry> m_entries;
     vector<unique_ptr<Texture>> m_textures;
