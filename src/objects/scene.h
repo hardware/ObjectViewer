@@ -4,16 +4,14 @@
 #include "abstractscene.h"
 #include "object3d.h"
 
-#include <QOpenGLDebugMessage>
+#include <qopengl.h>
 #include <QSharedPointer>
 
 class Camera;
 class Mesh;
-class Texture;
+// class Texture;
 class Shaders;
 
-class QOpenGLVertexArrayObject;
-class QOpenGLDebugLogger;
 class QOpenGLFunctions_4_0_Core;
 
 typedef QSharedPointer<Shaders> ShadersPtr;
@@ -59,8 +57,6 @@ private:
     void prepareShaders();
 
 public slots:
-    void onMessageLogged(QOpenGLDebugMessage message);
-
     void toggleFill(bool state);
     void toggleWireframe(bool state);
     void togglePoints(bool state);
@@ -75,10 +71,7 @@ signals:
 private:
     Camera  * m_camera;
     Mesh    * m_mesh;
-    Texture * m_normalMap;
-
-    QOpenGLVertexArrayObject * m_vao;
-    QOpenGLDebugLogger       * m_logger;
+    // Texture * m_normalMap;
 
     ShadersPtr m_shader;
     Object3D   m_model;

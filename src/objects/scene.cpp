@@ -5,8 +5,6 @@
 #include "../helpers/shaders.h"
 #include "../materials/texture.h"
 
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLDebugLogger>
 #include <QOpenGLFunctions_4_0_Core>
 
 /**
@@ -18,9 +16,7 @@ Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
       m_mesh(new Mesh()),
-      m_normalMap(new Texture(QImage("assets/box/normal_map.jpg"))),
-//      m_vao(new QOpenGLVertexArrayObject(this)),
-      m_logger(new QOpenGLDebugLogger(this)),
+      // m_normalMap(new Texture(QImage("assets/box/normal_map.jpg"))),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
       m_v(),
@@ -47,16 +43,14 @@ Scene::~Scene()
 {
     delete m_camera;
     delete m_mesh;
-    delete m_normalMap;
-
-//    m_vao->destroy();
+    // delete m_normalMap;
 }
 
 void Scene::initialize()
 {
     m_funcs = m_context->versionFunctions<QOpenGLFunctions_4_0_Core>();
 
-    if ( ! m_funcs )
+    if( ! m_funcs )
     {
         qFatal("Requires OpenGL >= 4.0");
         exit(1);
@@ -64,27 +58,17 @@ void Scene::initialize()
 
     m_funcs->initializeOpenGLFunctions();
 
-    // Initialisation du système de logging
-    connect(m_logger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this, SLOT(onMessageLogged(QOpenGLDebugMessage)), Qt::DirectConnection);
-
-    if(m_logger->initialize())
-        m_logger->enableMessages();
-
-    // Création du Vertex Array Object
-//    m_vao->create();
-//    m_vao->bind();
-
     // Charge, compile et link le Vertex et Fragment Shader
     prepareShaders();
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
     // glFrontFace(GL_CW);
     // glCullFace(GL_FRONT);
     // glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glEnable(GL_BLEND);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     QOpenGLShaderProgramPtr shader = m_shader->shader();
 
@@ -95,8 +79,8 @@ void Scene::initialize()
     m_mesh->init(shader);
     m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
 
-    m_normalMap->load();
-    m_normalMap->bind(GL_TEXTURE1);
+    // m_normalMap->load();
+    // m_normalMap->bind(GL_TEXTURE1);
 }
 
 void Scene::update(float t)
@@ -127,10 +111,7 @@ void Scene::render(double currentTime)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if(currentTime > 0)
-    {
-        m_model.rotateY(currentTime/0.02f);
-    }
+    if(currentTime > 0) m_model.rotateY(currentTime/0.02f);
 
     QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_model.modelMatrix();
     QOpenGLShaderProgramPtr shader = m_shader->shader();
@@ -179,11 +160,6 @@ void Scene::prepareShaders()
     m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
 
     m_shader->shader()->link();
-}
-
-void Scene::onMessageLogged(QOpenGLDebugMessage message)
-{
-    qDebug() << message;
 }
 
 void Scene::toggleFill(bool state)

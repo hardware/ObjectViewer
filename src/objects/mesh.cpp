@@ -13,6 +13,7 @@ Mesh::Mesh()
       m_vertexPositionBuffer(QOpenGLBuffer::VertexBuffer),
       m_vertexTexCoordBuffer(QOpenGLBuffer::VertexBuffer),
       m_vertexNormalBuffer(QOpenGLBuffer::VertexBuffer),
+      m_vertexTangentBuffer(QOpenGLBuffer::VertexBuffer),
       m_indexBuffer(QOpenGLBuffer::IndexBuffer)
 {}
 
@@ -21,6 +22,7 @@ Mesh::~Mesh()
     m_vertexPositionBuffer.destroy();
     m_vertexTexCoordBuffer.destroy();
     m_vertexNormalBuffer.destroy();
+    m_vertexTangentBuffer.destroy();
     m_indexBuffer.destroy();
 
     m_vao->destroy();
@@ -68,8 +70,10 @@ void Mesh::loadMesh(const string& filename)
 
 void Mesh::initFromScene(const aiScene* pScene, const string& filename)
 {
-    qDebug() << "Meshes : " << pScene->mNumMeshes;
-    qDebug() << "Materials : " << pScene->mNumMaterials;
+    qDebug() << endl << "############### MODEL INFOS ###############";
+    qDebug() << "Model path :" << filename.c_str();
+    qDebug() << "Meshes :"     << pScene->mNumMeshes;
+    qDebug() << "Materials :"  << pScene->mNumMaterials;
 
     m_entries.resize(pScene->mNumMeshes);
     m_textures.resize(pScene->mNumMaterials);
@@ -77,9 +81,11 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
     QVector<QVector3D> positions;
     QVector<QVector3D> normals;
     QVector<QVector2D> texCoords;
+    QVector<QVector3D> tangents;
     QVector<unsigned int> indices;
 
     unsigned int numVertices = 0;
+    unsigned int numFaces    = 0;
     unsigned int numIndices  = 0;
 
     // Count the number of vertices and indices
@@ -91,20 +97,26 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
         m_entries[i].baseIndex     = numIndices;
 
         numVertices += pScene->mMeshes[i]->mNumVertices;
+        numFaces    += pScene->mMeshes[i]->mNumFaces;
         numIndices  += m_entries[i].numIndices;
     }
+
+    qDebug() << "Vertices :" << numVertices;
+    qDebug() << "Faces :"    << numFaces;
+    qDebug() << "Indices :"  << numIndices;
 
     // Reserve space in the vectors for the vertex attributes and indices
     positions.reserve(numVertices);
     normals.reserve(numVertices);
     texCoords.reserve(numVertices);
+    tangents.reserve(numVertices);
     indices.reserve(numIndices);
 
     // Initialize the meshes in the scene one by one
     for (unsigned int i = 0; i < m_entries.size() ; i++)
     {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        initMesh(paiMesh, positions, texCoords, normals, indices);
+        initMesh(paiMesh, positions, texCoords, normals, tangents, indices);
     }
 
     initMaterials(pScene, filename);
@@ -125,6 +137,11 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
     m_vertexNormalBuffer.bind();
     m_vertexNormalBuffer.allocate(normals.constData(), normals.size() * sizeof(QVector3D));
 
+    m_vertexTangentBuffer.create();
+    m_vertexTangentBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_vertexTangentBuffer.bind();
+    m_vertexTangentBuffer.allocate(tangents.constData(), tangents.size() * sizeof(QVector3D));
+
     m_indexBuffer.create();
     m_indexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_indexBuffer.bind();
@@ -143,12 +160,17 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
     m_vertexNormalBuffer.bind();
     m_shader->enableAttributeArray("normal");
     m_shader->setAttributeBuffer("normal", GL_FLOAT, 0, 3);
+
+    m_vertexTangentBuffer.bind();
+    m_shader->enableAttributeArray("tangent");
+    m_shader->setAttributeBuffer("tangent", GL_FLOAT, 0, 3);
 }
 
 void Mesh::initMesh(const aiMesh* paiMesh,
                     QVector<QVector3D>& positions,
                     QVector<QVector2D>& texCoords,
                     QVector<QVector3D>& normals,
+                    QVector<QVector3D>& tangents,
                     QVector<unsigned int>& indices)
 {
     const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
@@ -159,10 +181,12 @@ void Mesh::initMesh(const aiMesh* paiMesh,
         const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &zero3D;
+        const aiVector3D* pTangent  = &(paiMesh->mTangents[i]);
 
         positions.push_back(QVector3D(pPos->x, pPos->y, pPos->z));
         texCoords.push_back(QVector2D(pTexCoord->x, pTexCoord->y));
           normals.push_back(QVector3D(pNormal->x, pNormal->y, pNormal->z));
+         tangents.push_back(QVector3D(pTangent->x, pTangent->y, pTangent->z));
     }
 
     // Populate the index buffer
@@ -222,6 +246,8 @@ void Mesh::initMaterials(const aiScene* pScene, const string& filename)
             m_textures[i]->load();
         }
     }
+
+    qDebug() << "###########################################" << endl;
 }
 
 void Mesh::render()

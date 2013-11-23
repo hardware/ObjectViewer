@@ -24,16 +24,16 @@ struct Vertex
     QVector3D m_pos;
     QVector2D m_tex;
     QVector3D m_normal;
-    // QVector3D m_tangent;
+    QVector3D m_tangent;
 
     Vertex() {}
 
-    Vertex(const QVector3D& pos, const QVector2D& tex, const QVector3D& normal /*, const QVector3D& tangent*/)
+    Vertex(const QVector3D& pos, const QVector2D& tex, const QVector3D& normal , const QVector3D& tangent)
     {
         m_pos     = pos;
         m_tex     = tex;
         m_normal  = normal;
-        // m_tangent = tangent;
+        m_tangent = tangent;
     }
 };
 
@@ -60,6 +60,7 @@ private:
                   QVector<QVector3D>& positions,
                   QVector<QVector2D>& texCoords,
                   QVector<QVector3D>& normals,
+                  QVector<QVector3D>& tangents,
                   QVector<unsigned int>& indices);
 
     QOpenGLVertexArrayObject* m_vao;
@@ -67,6 +68,7 @@ private:
     QOpenGLBuffer m_vertexPositionBuffer;
     QOpenGLBuffer m_vertexTexCoordBuffer;
     QOpenGLBuffer m_vertexNormalBuffer;
+    QOpenGLBuffer m_vertexTangentBuffer;
     QOpenGLBuffer m_indexBuffer;
 
     struct MeshEntry
