@@ -7,6 +7,7 @@
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLDebugLogger>
+#include <QOpenGLFunctions_4_0_Core>
 
 /**
  * @brief Constructeur paramétré
@@ -25,13 +26,21 @@ Scene::Scene(QObject *parent)
       m_v(),
       m_viewCenterFixed(false),
       m_metersToUnits(0.05f),
-      m_time(0.0f)
+      m_time(0.0f),
+      m_lightMode(PerFragmentBlinnPhong),
+      m_lightModeSubroutines(LightModeCount),
+      m_funcs(0)
 
 {
     // Initialisation de la position et de l'orientation de la camera
     m_camera->setPosition(QVector3D(-8.0f, 6.0f, -7.0f));
     m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
     m_camera->setUpVector(QVector3D(0.0f, 1.0f, 0.0f));
+
+    for(int i = 1; i < LightModeCount; i++)
+    {
+        m_lightModeSubroutines[i] = i;
+    }
 }
 
 Scene::~Scene()
@@ -45,6 +54,16 @@ Scene::~Scene()
 
 void Scene::initialize()
 {
+    m_funcs = m_context->versionFunctions<QOpenGLFunctions_4_0_Core>();
+
+    if ( ! m_funcs )
+    {
+        qFatal("Requires OpenGL >= 3.3");
+        exit(1);
+    }
+
+    m_funcs->initializeOpenGLFunctions();
+
     // Initialisation du système de logging
     connect(m_logger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this, SLOT(onMessageLogged(QOpenGLDebugMessage)), Qt::DirectConnection);
 
@@ -114,10 +133,12 @@ void Scene::render(double currentTime)
     }
 
     QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_model.modelMatrix();
-
     QOpenGLShaderProgramPtr shader = m_shader->shader();
-
     shader->bind();
+
+    // Set the fragment shader light mode subroutine
+    m_funcs->glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &m_lightModeSubroutines[m_lightMode]);
+
     shader->setUniformValue("modelViewMatrix", modelViewMatrix);
     shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
 
@@ -191,6 +212,21 @@ void Scene::togglePoints(bool state)
         glPointSize(2.0f);
         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     }
+}
+
+void Scene::togglePhong(bool state)
+{
+    if(state) m_lightMode = PerFragmentPhong;
+}
+
+void Scene::toggleBlinnPhong(bool state)
+{
+    if(state) m_lightMode = PerFragmentBlinnPhong;
+}
+
+void Scene::toggleRimLighting(bool state)
+{
+    if(state) m_lightMode = RimLighting;
 }
 
 Object3D* Scene::getObject()

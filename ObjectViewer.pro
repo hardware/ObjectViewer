@@ -14,8 +14,8 @@ DEPENDPATH += \
     $$PWD/includes
 
 # GCC FLAGS
-QMAKE_CXXFLAGS += -std=c++0x
-QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
+# QMAKE_CXXFLAGS += -std=c++0x
+# QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
 
 RCC_DIR     = $$_PRO_FILE_PWD_/build/tmp/rcc
 UI_DIR      = $$_PRO_FILE_PWD_/build/tmp/ui

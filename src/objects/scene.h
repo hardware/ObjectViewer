@@ -10,9 +10,11 @@
 class Camera;
 class Mesh;
 class Texture;
+class Shaders;
+
 class QOpenGLVertexArrayObject;
 class QOpenGLDebugLogger;
-class Shaders;
+class QOpenGLFunctions_4_0_Core;
 
 typedef QSharedPointer<Shaders> ShadersPtr;
 
@@ -42,6 +44,17 @@ public:
     Object3D* getObject();
     Camera*   getCamera();
 
+    enum LightMode
+    {
+        PerFragmentBlinnPhong = 1,
+        PerFragmentPhong,
+        RimLighting,
+        LightModeCount
+    };
+
+    void setLightMode(LightMode lightMode) { m_lightMode = lightMode; }
+    LightMode lightMode() const { return m_lightMode; }
+
 private:
     void prepareShaders();
 
@@ -51,6 +64,10 @@ public slots:
     void toggleFill(bool state);
     void toggleWireframe(bool state);
     void togglePoints(bool state);
+
+    void togglePhong(bool state);
+    void toggleBlinnPhong(bool state);
+    void toggleRimLighting(bool state);
 
 signals:
     void renderCycleDone();
@@ -67,6 +84,9 @@ private:
     Object3D   m_model;
     QVector3D  m_v;
 
+    LightMode       m_lightMode;
+    QVector<GLuint> m_lightModeSubroutines;
+
     bool m_viewCenterFixed;
 
     float m_panAngle;
@@ -74,6 +94,8 @@ private:
     float m_time;
 
     const float m_metersToUnits;
+
+    QOpenGLFunctions_4_0_Core* m_funcs;
 };
 
 #endif // SCENE_H

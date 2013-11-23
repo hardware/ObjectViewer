@@ -63,11 +63,13 @@ void MainWindow::initializeParamsArea()
 
     QTabWidget* tab = new QTabWidget;
 
+    QWidget* lightTab   = new QWidget;
     QWidget* objectTab  = new QWidget;
     QWidget* optionsTab = new QWidget;
 
     tab->addTab(optionsTab, "Options");
     tab->addTab(objectTab, "Object");
+    tab->addTab(lightTab, "Light");
 
     QVBoxLayout* paramsLayout = new QVBoxLayout;
     paramsLayout->addWidget(fpsCounter);
@@ -307,6 +309,24 @@ void MainWindow::initializeParamsArea()
     QGroupBox* rotationGroupBox = new QGroupBox("ROTATION");
     rotationGroupBox->setLayout(rotationLayout);
 
+    // ############ LIGHT TAB - LIGHT EFFECT GROUPBOX ############
+
+    QRadioButton* PVPhong      = new QRadioButton("Per-vertex Phong");
+    QRadioButton* PVBlinnPhong = new QRadioButton("Per-vertex Blinn-Phong");
+    QRadioButton* RimLighting  = new QRadioButton("Rim lighting");
+
+    PVBlinnPhong->setChecked(true);
+
+    QVBoxLayout* lightEffectLayout = new QVBoxLayout;
+    lightEffectLayout->addWidget(PVPhong);
+    lightEffectLayout->addWidget(PVBlinnPhong);
+    lightEffectLayout->addWidget(RimLighting);
+
+    QGroupBox* lightEffectGroupBox = new QGroupBox("Light effect");
+    lightEffectGroupBox->setLayout(lightEffectLayout);
+
+    // ###########################################################
+
     QVBoxLayout* optionsTabLayout = new QVBoxLayout;
     optionsTabLayout->addWidget(renderingModeGroupBox);
     optionsTabLayout->addWidget(projectionTypeGroupBox);
@@ -323,6 +343,12 @@ void MainWindow::initializeParamsArea()
     objectTabLayout->addStretch();
 
     objectTab->setLayout(objectTabLayout);
+
+    QVBoxLayout* lightTabLayout = new QVBoxLayout;
+    lightTabLayout->addWidget(lightEffectGroupBox);
+    lightTabLayout->addStretch();
+
+    lightTab->setLayout(lightTabLayout);
 
     // ############ DOCK LEFT ############
 
@@ -535,6 +561,11 @@ void MainWindow::initializeParamsArea()
     QObject::connect(rotationX, SIGNAL(valueChanged(int)), m_object3D, SLOT(setObjectXRotation(int)));
     QObject::connect(rotationY, SIGNAL(valueChanged(int)), m_object3D, SLOT(setObjectYRotation(int)));
     QObject::connect(rotationZ, SIGNAL(valueChanged(int)), m_object3D, SLOT(setObjectZRotation(int)));
+
+    // Light Effect
+    QObject::connect(PVPhong,      SIGNAL(toggled(bool)), m_scene, SLOT(togglePhong(bool)));
+    QObject::connect(PVBlinnPhong, SIGNAL(toggled(bool)), m_scene, SLOT(toggleBlinnPhong(bool)));
+    QObject::connect(RimLighting,  SIGNAL(toggled(bool)), m_scene, SLOT(toggleRimLighting(bool)));
 
     // Update framerate
     QObject::connect(m_openglArea.data(), SIGNAL(updateFramerate()), this, SLOT(setFramerate()));

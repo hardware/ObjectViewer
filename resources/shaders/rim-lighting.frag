@@ -24,10 +24,6 @@ uniform vec3 specularAlbedo = vec3(0.7);
 
 uniform float specularPower = 64.0;
 
-// Rim effect properties
-uniform vec3  rimColor = vec3(0.93, 0.09, 0.14);
-uniform float rimPower = 5.0;
-
 vec3 calculateRim(vec3 N, vec3 V)
 {
     // Calculate the rim factor
