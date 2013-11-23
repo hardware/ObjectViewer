@@ -64,9 +64,9 @@ void Scene::initialize()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
+    glEnable(GL_CULL_FACE);
     // glFrontFace(GL_CW);
     // glCullFace(GL_FRONT);
-    // glEnable(GL_CULL_FACE);
     // glEnable(GL_BLEND);
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -78,6 +78,7 @@ void Scene::initialize()
 
     m_mesh->init(shader);
     m_mesh->loadMesh("assets/tomcat/f14d.lwo");
+    // m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
 
     // m_normalMap->load();
     // m_normalMap->bind(GL_TEXTURE1);
