@@ -7,7 +7,7 @@
 #if !defined (Magick_Color_header)
 #define Magick_Color_header
 
-#include "Magick++/Include.h"
+#include "Include.h"
 #include <string>
 
 namespace Magick

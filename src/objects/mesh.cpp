@@ -223,19 +223,17 @@ void Mesh::initMaterials(const aiScene* pScene, const string& filename)
 
             if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
             {
-                QImage image;
                 string fullPath = dir + "/" + path.data;
+                m_textures.insert(m_textures.begin() + i, unique_ptr<Texture>(new Texture(fullPath.c_str())));
+                m_textures[i]->init();
 
-                if(image.load(QString(fullPath.c_str())))
+                if( ! m_textures[i]->load() )
                 {
-                    m_textures.insert(m_textures.begin() + i, unique_ptr<Texture>(new Texture(image)));
-                    m_textures[i]->load();
-
-                    qDebug() << "Loaded texture :" << fullPath.c_str();
+                    qDebug() << "Error loading texture :" << fullPath.c_str();
                 }
                 else
                 {
-                    qDebug() << "Error loading texture :" << fullPath.c_str();
+                    qDebug() << "Loaded texture :" << fullPath.c_str();
                 }
             }
         }
@@ -247,6 +245,7 @@ void Mesh::initMaterials(const aiScene* pScene, const string& filename)
         if( ! m_textures[i] )
         {
             m_textures.insert(m_textures.begin() + i, unique_ptr<Texture>(new Texture(QImage(":/resources/images/white.png"))));
+            m_textures[i]->init();
             m_textures[i]->load();
         }
     }

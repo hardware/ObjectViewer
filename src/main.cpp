@@ -3,8 +3,13 @@
 #include <QPixmap>
 #include <QSplashScreen>
 
+#include "ImageMagick/Magick++.h"
+
+using namespace Magick;
+
 int main(int argc, char *argv[])
 {
+    InitializeMagick(*argv);
     QApplication a(argc, argv);
 
     QPixmap pixmap(":/resources/images/splash.png");

@@ -11,8 +11,8 @@
 #if !defined(Magick_ImageRef_header)
 #define Magick_ImageRef_header
 
-#include "Magick++/Include.h"
-#include "Magick++/Thread.h"
+#include "Include.h"
+#include "Thread.h"
 
 namespace Magick
 {

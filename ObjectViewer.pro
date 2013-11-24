@@ -1,8 +1,11 @@
 QT += core gui opengl widgets
 
-CONFIG +=  console debug
+CONFIG += console debug
 
-win32: LIBS += -L$$PWD/libs/ -lassimp
+win32: LIBS += \
+    -L$$PWD/libs/ -lassimp \
+    -L$$PWD/libs/ -lCORE_RL_Magick++_
+
 unix:!macx: LIBS += -L$$PWD/libs/ -lassimp
 
 INCLUDEPATH += \

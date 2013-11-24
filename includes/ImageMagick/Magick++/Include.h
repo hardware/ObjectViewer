@@ -38,8 +38,8 @@
 //
 namespace MagickCore
 {
-#include <magick/MagickCore.h>
-#include <wand/MagickWand.h>
+#include "magick/MagickCore.h"
+#include "wand/MagickWand.h"
 #undef inline // Remove possible definition from config.h
 
 #undef class
@@ -698,7 +698,7 @@ namespace Magick
   using MagickCore::RightTopOrientation;
   using MagickCore::RightBottomOrientation;
   using MagickCore::LeftBottomOrientation;
-  
+
   // Paint methods
   using MagickCore::PaintMethod;
   using MagickCore::UndefinedMethod;
@@ -766,7 +766,7 @@ namespace Magick
   using MagickCore::PerceptualIntent;
   using MagickCore::AbsoluteIntent;
   using MagickCore::RelativeIntent;
-  
+
   // Resource types
   using MagickCore::MemoryResource;
 

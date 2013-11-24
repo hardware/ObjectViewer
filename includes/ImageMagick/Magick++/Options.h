@@ -14,11 +14,11 @@
 #if !defined(Magick_Options_header)
 #define Magick_Options_header
 
-#include "Magick++/Include.h"
+#include "Include.h"
 #include <string>
-#include "Magick++/Color.h"
-#include "Magick++/Geometry.h"
-#include "Magick++/Drawable.h"
+#include "Color.h"
+#include "Geometry.h"
+#include "Drawable.h"
 
 namespace Magick
 {

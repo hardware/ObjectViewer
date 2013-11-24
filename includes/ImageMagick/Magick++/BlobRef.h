@@ -11,9 +11,9 @@
 #if !defined(Magick_Blob_header)
 #define Magick_Blob_header
 
-#include "Magick++/Include.h"
-#include "Magick++/Thread.h"
-#include "Magick++/Blob.h"
+#include "Include.h"
+#include "Thread.h"
+#include "Blob.h"
 
 namespace Magick
 {

@@ -9,7 +9,7 @@
 #if !defined(Magick_Functions_header)
 #define Magick_Functions_header
 
-#include "Magick++/Include.h"
+#include "Include.h"
 #include <string>
 
 namespace Magick

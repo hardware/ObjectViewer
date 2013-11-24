@@ -8,7 +8,7 @@
 #if !defined(Magick_BlobRef_header)
 #define Magick_BlobRef_header
 
-#include "Magick++/Include.h"
+#include "Include.h"
 #include <string>
 
 namespace Magick

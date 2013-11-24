@@ -8,15 +8,15 @@
 #if !defined(Magick_Image_header)
 #define Magick_Image_header
 
-#include "Magick++/Include.h"
+#include "Include.h"
 #include <string>
 #include <list>
-#include "Magick++/Blob.h"
-#include "Magick++/Color.h"
-#include "Magick++/Drawable.h"
-#include "Magick++/Exception.h"
-#include "Magick++/Geometry.h"
-#include "Magick++/TypeMetric.h"
+#include "Blob.h"
+#include "Color.h"
+#include "Drawable.h"
+#include "Exception.h"
+#include "Geometry.h"
+#include "TypeMetric.h"
 
 namespace Magick
 {
@@ -96,7 +96,7 @@ namespace Magick
 
     /// Copy constructor
     Image ( const Image & image_ );
-    
+
     // Assignment operator
     Image& operator= ( const Image &image_ );
 
@@ -120,7 +120,7 @@ namespace Magick
     void            adaptiveResize ( const Geometry &geometry_ );
 
     // Adaptively sharpens the image by sharpening more intensely near image
-    // edges and less intensely far from edges. We sharpen the image with a 
+    // edges and less intensely far from edges. We sharpen the image with a
     // Gaussian operator of the given radius and standard deviation (sigma).
     // For reasonable results, radius should be larger than sigma.
     void            adaptiveSharpen ( const double radius_ = 0.0,
@@ -569,7 +569,7 @@ namespace Magick
 
     // Magnify image by integral size
     void            magnify ( void );
-    
+
     // Remap image colors with closest color from reference image
     void            map ( const Image &mapImage_,
                           const bool dither_ = false );
@@ -640,7 +640,7 @@ namespace Magick
     // columns(), rows(), and fileSize() attributes after invoking
     // ping.  The image data is not valid after calling ping.
     void            ping ( const std::string &imageSpec_ );
-    
+
     // Ping is similar to read except only enough of the image is read
     // to determine the image columns, rows, and filesize.  Access the
     // columns(), rows(), and fileSize() attributes after invoking
@@ -684,7 +684,7 @@ namespace Magick
     // 3-D raised or lowered effect)
     void            raise ( const Geometry &geometry_ = raiseGeometryDefault,
           const bool raisedFlag_ = false );
-    
+
     // Random threshold image.
     //
     // Changes the value of individual pixels based on the intensity
@@ -698,7 +698,7 @@ namespace Magick
     void            randomThreshold( const Geometry &thresholds_ );
     void            randomThresholdChannel( const Geometry &thresholds_,
                                             const ChannelType channel_ );
-    
+
     // Read single image frame into current object
     void            read ( const std::string &imageSpec_ );
 
@@ -744,7 +744,7 @@ namespace Magick
     // Reduce noise in image using a noise peak elimination filter
     void            reduceNoise ( void );
     void            reduceNoise ( const double order_ );
-    
+
     // Resize image to specified size.
     void            resize ( const Geometry &geometry_ );
 
@@ -753,23 +753,23 @@ namespace Magick
     void            roll ( const Geometry &roll_ );
     void            roll ( const size_t columns_,
          const size_t rows_ );
-    
+
     // Rotate image counter-clockwise by specified number of degrees.
     void            rotate ( const double degrees_ );
-    
+
     // Resize image by using pixel sampling algorithm
     void            sample ( const Geometry &geometry_ );
-    
+
     // Resize image by using simple ratio algorithm
     void            scale ( const Geometry &geometry_ );
-    
+
     // Segment (coalesce similar image components) by analyzing the
     // histograms of the color components and identifying units that
     // are homogeneous with the fuzzy c-means technique.  Also uses
     // QuantizeColorSpace and Verbose image attributes
-    void            segment ( const double clusterThreshold_ = 1.0, 
+    void            segment ( const double clusterThreshold_ = 1.0,
             const double smoothingThreshold_ = 1.5 );
-    
+
     // Shade image using distant light source
     void            shade ( const double azimuth_ = 30,
           const double elevation_ = 30,
@@ -780,7 +780,7 @@ namespace Magick
                              const double sigma_ = 0.5,
                              const ssize_t x_ = 5,
                              const ssize_t y_ = 5 );
-    
+
     // Sharpen pixels in image
     // The radius_ parameter specifies the radius of the Gaussian, in
     // pixels, not counting the center pixel.  The sigma_ parameter
@@ -793,24 +793,24 @@ namespace Magick
 
     // Shave pixels from image edges.
     void            shave ( const Geometry &geometry_ );
-    
+
     // Shear image (create parallelogram by sliding image by X or Y axis)
     void            shear ( const double xShearAngle_,
           const double yShearAngle_ );
-    
+
     // adjust the image contrast with a non-linear sigmoidal contrast algorithm
     void            sigmoidalContrast ( const size_t sharpen_, const double contrast, const double midpoint = QuantumRange / 2.0 );
 
     // Solarize image (similar to effect seen when exposing a
     // photographic film to light during the development process)
     void            solarize ( const double factor_ = 50.0 );
-    
+
     // Splice the background color into the image.
     void            splice ( const Geometry &geometry_ );
 
     // Spread pixels randomly within image by specified ammount
     void            spread ( const size_t amount_ = 3 );
-    
+
     // Sparse color image, given a set of coordinates, interpolates the colors
     // found at those coordinates, across the whole image, using various
     // methods.
@@ -821,23 +821,23 @@ namespace Magick
 
     // Add a digital watermark to the image (based on second image)
     void            stegano ( const Image &watermark_ );
-    
+
     // Create an image which appears in stereo when viewed with
     // red-blue glasses (Red image on left, blue on right)
     void            stereo ( const Image &rightImage_ );
-    
+
     // Strip strips an image of all profiles and comments.
     void            strip ( void );
 
     // Swirl image (image pixels are rotated by degrees)
     void            swirl ( const double degrees_ );
-    
+
     // Channel a texture on image background
     void            texture ( const Image &texture_ );
-    
+
     // Threshold image
     void            threshold ( const double threshold_ );
-    
+
     // Transform image based on image and crop geometries
     // Crop geometry is optional
     void            transform ( const Geometry &imageGeometry_ );
@@ -847,7 +847,7 @@ namespace Magick
     // Add matte image to image, setting pixels matching color to
     // transparent
     void            transparent ( const Color &color_ );
-    
+
     // Add matte image to image, for all the pixels that lies in between
     // the given two color
     void transparentChroma ( const Color &colorLow_, const Color &colorHigh_);
@@ -929,16 +929,16 @@ namespace Magick
     // Join images into a single multi-image file
     void            adjoin ( const bool flag_ );
     bool            adjoin ( void ) const;
-    
+
     // Anti-alias Postscript and TrueType fonts (default true)
     void            antiAlias( const bool flag_ );
     bool            antiAlias( void );
-    
+
     // Time in 1/100ths of a second which must expire before
     // displaying the next image in an animated sequence.
     void            animationDelay ( const size_t delay_ );
     size_t    animationDelay ( void ) const;
-    
+
     // Number of iterations to loop an animation (e.g. Netscape loop
     // extension) for.
     void            animationIterations ( const size_t iterations_ );
@@ -948,24 +948,24 @@ namespace Magick
     void            attribute ( const std::string name_,
                                 const std::string value_ );
     std::string     attribute ( const std::string name_ );
-    
+
     // Image background color
     void            backgroundColor ( const Color &color_ );
     Color           backgroundColor ( void ) const;
-    
+
     // Name of texture image to tile onto the image background
     void            backgroundTexture (const std::string &backgroundTexture_ );
     std::string     backgroundTexture ( void ) const;
-    
+
     // Base image width (before transformations)
     size_t    baseColumns ( void ) const;
-    
+
     // Base image filename (before transformations)
     std::string     baseFilename ( void ) const;
-    
+
     // Base image height (before transformations)
     size_t    baseRows ( void ) const;
-    
+
     // Image border color
     void            borderColor ( const Color &color_ );
     Color           borderColor ( void ) const;
@@ -974,7 +974,7 @@ namespace Magick
     // current fuzz value is used when discriminating between pixels.
     // This is the crop bounding box used by crop(Geometry(0,0));
     Geometry        boundingBox ( void ) const;
-    
+
     // Text bounding-box base color (default none)
     void            boxColor ( const Color &boxColor_ );
     Color           boxColor ( void ) const;
@@ -983,23 +983,23 @@ namespace Magick
     // is exceeded, all subsequent pixels cache operations are to/from
     // disk.  This setting is shared by all Image objects.
     static void     cacheThreshold ( const size_t threshold_ );
-    
+
     // Chromaticity blue primary point (e.g. x=0.15, y=0.06)
     void            chromaBluePrimary ( const double x_, const double y_ );
     void            chromaBluePrimary ( double *x_, double *y_ ) const;
-    
+
     // Chromaticity green primary point (e.g. x=0.3, y=0.6)
     void            chromaGreenPrimary ( const double x_, const double y_ );
     void            chromaGreenPrimary ( double *x_, double *y_ ) const;
-    
+
     // Chromaticity red primary point (e.g. x=0.64, y=0.33)
     void            chromaRedPrimary ( const double x_, const double y_ );
     void            chromaRedPrimary ( double *x_, double *y_ ) const;
-    
+
     // Chromaticity white point (e.g. x=0.3127, y=0.329)
     void            chromaWhitePoint ( const double x_, const double y_ );
     void            chromaWhitePoint ( double *x_, double *y_ ) const;
-    
+
     // Image class (DirectClass or PseudoClass)
     // NOTE: setting a DirectClass image to PseudoClass will result in
     // the loss of color information if the number of colors in the
@@ -1014,11 +1014,11 @@ namespace Magick
     // existing clip mask.
     void            clipMask ( const Image & clipMask_ );
     Image           clipMask ( void  ) const;
-    
+
     // Colors within this distance are considered equal
     void            colorFuzz ( const double fuzz_ );
     double          colorFuzz ( void ) const;
-    
+
     // Color at colormap position index_
     void            colorMap ( const size_t index_,
                                const Color &color_ );
@@ -1095,7 +1095,7 @@ namespace Magick
 
     // Exif profile (BLOB)
     void exifProfile( const Blob& exifProfile_ );
-    Blob exifProfile( void ) const; 
+    Blob exifProfile( void ) const;
 
     // Image file name
     void            fileName ( const std::string &fileName_ );
@@ -1185,7 +1185,7 @@ typedef struct _ImageChannelStatistics
    /* Skewness */
    double skewness;
  } ImageChannelStatistics;
-                                                                                
+
 typedef struct _ImageStatistics
  {
    ImageChannelStatistics red;
@@ -1204,15 +1204,15 @@ typedef struct _ImageStatistics
     // File type magick identifier (.e.g "GIF")
     void            magick ( const std::string &magick_ );
     std::string     magick ( void ) const;
-    
+
     // Image supports transparency (matte channel)
     void            matte ( const bool matteFlag_ );
     bool            matte ( void ) const;
-    
+
     // Transparent color
     void            matteColor ( const Color &matteColor_ );
     Color           matteColor ( void ) const;
-    
+
     // The mean error per pixel computed when an image is color reduced
     double          meanErrorPerPixel ( void ) const;
 
@@ -1276,15 +1276,15 @@ typedef struct _ImageStatistics
     // JPEG/MIFF/PNG compression level (default 75).
     void            quality ( const size_t quality_ );
     size_t    quality ( void ) const;
-    
+
     // Maximum number of colors to quantize to
     void            quantizeColors ( const size_t colors_ );
     size_t    quantizeColors ( void ) const;
-    
+
     // Colorspace to quantize in.
     void            quantizeColorSpace ( const ColorspaceType colorSpace_ );
     ColorspaceType  quantizeColorSpace ( void ) const;
-    
+
     // Dither image during quantization (default true).
     void            quantizeDither ( const bool ditherFlag_ );
     bool            quantizeDither ( void ) const;
@@ -1313,7 +1313,7 @@ typedef struct _ImageStatistics
     // modified.
     std::string     signature ( const bool force_ = false ) const;
 
-    // Width and height of a raw image 
+    // Width and height of a raw image
     void            size ( const Geometry &geometry_ );
     Geometry        size ( void ) const;
 
@@ -1346,7 +1346,7 @@ typedef struct _ImageStatistics
     // RoundCap, and SquareCap.
     void            strokeLineCap ( const LineCap lineCap_ );
     LineCap         strokeLineCap ( void ) const;
-    
+
     // Specify the shape to be used at the corners of paths (or other
     // vector shapes) when they are stroked. Values of LineJoin are
     // UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
@@ -1417,7 +1417,7 @@ typedef struct _ImageStatistics
     // Print detailed information about the image
     void            verbose ( const bool verboseFlag_ );
     bool            verbose ( void ) const;
-    
+
     // FlashPix viewing parameters
     void            view ( const std::string &view_ );
     std::string     view ( void ) const;
@@ -1437,7 +1437,7 @@ typedef struct _ImageStatistics
     // y resolution of the image
     double          yResolution ( void ) const;
 
-    //////////////////////////////////////////////////////////////////////    
+    //////////////////////////////////////////////////////////////////////
     //
     // Low-level Pixel Access Routines
     //
@@ -1482,14 +1482,14 @@ typedef struct _ImageStatistics
     // Used to support image decoders.
     void readPixels ( const QuantumType quantum_,
           const unsigned char *source_ );
-    
+
     // Transfers one or more pixel components from the image pixel
     // cache to a buffer or file.
     // Used to support image encoders.
     void writePixels ( const QuantumType quantum_,
            unsigned char *destination_ );
 
-    //////////////////////////////////////////////////////////////////////    
+    //////////////////////////////////////////////////////////////////////
     //
     // No user-serviceable parts beyond this point
     //
