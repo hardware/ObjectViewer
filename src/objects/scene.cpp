@@ -16,7 +16,6 @@ Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
       m_mesh(new Mesh()),
-      m_mesh2(new Mesh()),
       // m_normalMap(new Texture(QImage("assets/box/normal_map.jpg"))),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
@@ -44,7 +43,6 @@ Scene::~Scene()
 {
     delete m_camera;
     delete m_mesh;
-    delete m_mesh2;
     // delete m_normalMap;
 }
 
@@ -79,10 +77,7 @@ void Scene::initialize()
     shader->setUniformValue("texNormal", 1);
 
     m_mesh->init(shader);
-    m_mesh->loadMesh("assets/tomcat/f14d.lwo");
-
-    m_mesh2->init(shader);
-    m_mesh2->loadMesh("assets/blackhawk/uh60.lwo");
+    m_mesh->loadMesh("assets/MercedesBenzSLSAMG/sls_amg.lwo");
 
     // m_normalMap->load();
     // m_normalMap->bind(GL_TEXTURE1);
@@ -122,7 +117,6 @@ void Scene::render(double currentTime)
     if(currentTime > 0)
     {
         m_model.rotateY(currentTime/0.02f);
-        m_model2.rotateY(currentTime/0.02f);
     }
 
     QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_model.modelMatrix();
@@ -133,12 +127,6 @@ void Scene::render(double currentTime)
     shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
 
     m_mesh->render();
-
-    m_model2.setPosition(10.0f, 5.0f, 0.0f);
-    modelViewMatrix = m_camera->viewMatrix() * m_model2.modelMatrix();
-    shader->setUniformValue("modelViewMatrix", modelViewMatrix);
-
-    m_mesh2->render();
 
     emit renderCycleDone();
 }
@@ -200,7 +188,6 @@ void Scene::togglePoints(bool state)
     if(state)
     {
         glDisable(GL_CULL_FACE);
-        glPointSize(2.0f);
         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     }
 }

@@ -194,7 +194,7 @@ void Mesh::initMesh(const aiMesh* paiMesh,
     {
         const aiFace& face = paiMesh->mFaces[i];
 
-        Q_ASSERT(face.mNumIndices == 3);
+        // Q_ASSERT(face.mNumIndices == 3);
 
         indices.push_back(face.mIndices[0]);
         indices.push_back(face.mIndices[1]);
@@ -238,6 +238,10 @@ void Mesh::initMaterials(const aiScene* pScene, const string& filename)
                     qDebug() << "Error loading texture :" << fullPath.c_str();
                 }
             }
+        }
+        else
+        {
+            qDebug() << "Not DIFFUSE texture";
         }
 
         if( ! m_textures[i] )
