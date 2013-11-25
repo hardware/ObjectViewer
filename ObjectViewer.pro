@@ -6,19 +6,25 @@ win32: LIBS += \
     -L$$PWD/libs/ -lassimp \
     -L$$PWD/libs/ -lCORE_RL_Magick++_
 
-unix:!macx: LIBS += -L$$PWD/libs/ -lassimp
+unix:!macx: LIBS += \
+    -L/usr/lib/ -lassimp \
+    -L/usr/lib/ -lMagick++-6.Q16HDRI
 
 INCLUDEPATH += \
     $$PWD/libs \
-    $$PWD/includes
+    $$PWD/includes \
+    /usr/lib \
+    /usr/include
 
 DEPENDPATH += \
     $$PWD/libs \
-    $$PWD/includes
+    $$PWD/includes \
+    /usr/lib \
+    /usr/include
 
 # GCC FLAGS
-# QMAKE_CXXFLAGS += -std=c++0x
-# QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
+QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
 
 RCC_DIR     = $$_PRO_FILE_PWD_/build/tmp/rcc
 UI_DIR      = $$_PRO_FILE_PWD_/build/tmp/ui

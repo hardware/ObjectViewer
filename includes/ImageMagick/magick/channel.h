@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-#include "magick/image.h"
+#include "image.h"
 
 extern MagickExport Image
   *CombineImages(const Image *,const ChannelType,ExceptionInfo *),

@@ -12,7 +12,7 @@ class Mesh;
 // class Texture;
 class Shaders;
 
-class QOpenGLFunctions_4_0_Core;
+class QOpenGLFunctions_4_3_Core;
 
 typedef QSharedPointer<Shaders> ShadersPtr;
 
@@ -90,7 +90,7 @@ private:
 
     const float m_metersToUnits;
 
-    QOpenGLFunctions_4_0_Core* m_funcs;
+    QOpenGLFunctions_4_3_Core* m_funcs;
 };
 
 #endif // SCENE_H

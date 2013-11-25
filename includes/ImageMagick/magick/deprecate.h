@@ -1,12 +1,12 @@
 /*
   Copyright 1999-2013 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
-  
+
   You may not use this file except in compliance with the License.
   obtain a copy of the License at
-  
+
     http://www.imagemagick.org/script/license.php
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,16 +25,16 @@ extern "C" {
 #if !defined(MAGICKCORE_EXCLUDE_DEPRECATED)
 
 #include <stdarg.h>
-#include "magick/blob.h"
-#include "magick/cache-view.h"
-#include "magick/draw.h"
-#include "magick/constitute.h"
-#include "magick/magick-config.h"
-#include "magick/pixel.h"
-#include "magick/quantize.h"
-#include "magick/quantum.h"
-#include "magick/registry.h"
-#include "magick/semaphore.h"
+#include "blob.h"
+#include "cache-view.h"
+#include "draw.h"
+#include "constitute.h"
+#include "magick-config.h"
+#include "pixel.h"
+#include "quantize.h"
+#include "quantum.h"
+#include "registry.h"
+#include "semaphore.h"
 
 #if !defined(magick_attribute)
 #  if !defined(__GNUC__)
@@ -81,10 +81,10 @@ typedef struct _ImageAttribute
   char
     *key,
     *value;
-                                                                                
+
   MagickBooleanType
     compression;
-                                                                                
+
   struct _ImageAttribute
     *previous,
     *next;  /* deprecated */

@@ -45,37 +45,42 @@ bool Texture::load()
 
     if( ! m_fileName.empty() )
     {
-//        try {
-        m_image.read(m_fileName);
-        m_image.magick("RGBA");
-        m_image.write(&m_blob);
-//        } catch (Magick::Error& e) {
-//            qDebug() << "Error loading texture '" << m_fileName.c_str() << "': " << e.what();
-//            destroy();
-//            return false;
-//        }
+        try
+        {
+            m_image.read(m_fileName);
+            m_image.magick("RGBA");
+            m_image.write(&m_blob);
+        }
+        catch (Magick::Error& e)
+        {
+            qDebug() << "Error loading texture '" << m_fileName.c_str() << "': " << e.what();
+            destroy();
+            return false;
+        }
 
         glTexImage2D(m_type,
-                     0,
-                     GL_RGBA,
-                     static_cast<GLsizei>(m_image.columns()),
-                     static_cast<GLsizei>(m_image.rows()),
-                     0,
-                     GL_RGBA,
-                     GL_UNSIGNED_BYTE,
-                     m_blob.data());
+            0,
+            GL_RGBA,
+            static_cast<GLsizei>(m_image.columns()),
+            static_cast<GLsizei>(m_image.rows()),
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            m_blob.data()
+        );
     }
     else
     {
         glTexImage2D(m_type,
-                     0,
-                     GL_RGBA,
-                     m_qimage.width(),
-                     m_qimage.height(),
-                     0,
-                     GL_RGBA,
-                     GL_UNSIGNED_BYTE,
-                     m_qimage.bits());
+            0,
+            GL_RGBA,
+            m_qimage.width(),
+            m_qimage.height(),
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            m_qimage.bits()
+        );
     }
 
     glTexParameterf(m_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

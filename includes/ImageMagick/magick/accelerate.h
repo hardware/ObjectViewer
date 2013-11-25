@@ -22,10 +22,10 @@
 extern "C" {
 #endif
 
-#include "magick/morphology.h"
-#include "magick/resample.h"
-#include "magick/resize.h"
-#include "magick/statistic.h"
+#include "morphology.h"
+#include "resample.h"
+#include "resize.h"
+#include "statistic.h"
 
 extern MagickExport MagickBooleanType
   AccelerateContrastImage(Image *,const MagickBooleanType,ExceptionInfo *),

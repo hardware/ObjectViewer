@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-#include "magick/magick-config.h"
+#include "magick-config.h"
 
 #if !defined(MAGICKCORE_QUANTUM_DEPTH)
 #define MAGICKCORE_QUANTUM_DEPTH  16

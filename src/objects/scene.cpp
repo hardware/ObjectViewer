@@ -5,7 +5,7 @@
 #include "../helpers/shaders.h"
 #include "../materials/texture.h"
 
-#include <QOpenGLFunctions_4_0_Core>
+#include <QOpenGLFunctions_4_3_Core>
 
 /**
  * @brief Constructeur paramétré
@@ -48,11 +48,11 @@ Scene::~Scene()
 
 void Scene::initialize()
 {
-    m_funcs = m_context->versionFunctions<QOpenGLFunctions_4_0_Core>();
+    m_funcs = m_context->versionFunctions<QOpenGLFunctions_4_3_Core>();
 
     if( ! m_funcs )
     {
-        qFatal("Requires OpenGL >= 4.0");
+        qFatal("Requires OpenGL >= 4.3");
         exit(1);
     }
 
@@ -77,7 +77,7 @@ void Scene::initialize()
     shader->setUniformValue("texNormal", 1);
 
     m_mesh->init(shader);
-    m_mesh->loadMesh("assets/MercedesBenzSLSAMG/sls_amg.lwo");
+    m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
 
     // m_normalMap->load();
     // m_normalMap->bind(GL_TEXTURE1);

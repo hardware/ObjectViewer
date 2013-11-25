@@ -26,6 +26,8 @@ Mesh::~Mesh()
     m_indexBuffer.destroy();
 
     m_vao->destroy();
+
+    delete m_vao;
 }
 
 Mesh::MeshEntry::MeshEntry()
@@ -57,7 +59,7 @@ void Mesh::loadMesh(const string& filename)
 
     Assimp::Importer Importer;
 
-    const aiScene* pScene = Importer.ReadFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+    const aiScene* pScene = Importer.ReadFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality |  aiProcess_FlipUVs);
 
     if(pScene)
         initFromScene(pScene, filename);

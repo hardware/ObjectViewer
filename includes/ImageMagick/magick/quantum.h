@@ -22,8 +22,8 @@
 extern "C" {
 #endif
 
-#include "magick/image.h"
-#include "magick/semaphore.h"
+#include "image.h"
+#include "semaphore.h"
 
 #define RoundToQuantum(quantum)  ClampToQuantum(quantum)
 
