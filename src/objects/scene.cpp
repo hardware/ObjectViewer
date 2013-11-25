@@ -77,7 +77,7 @@ void Scene::initialize()
     shader->setUniformValue("texNormal", 1);
 
     m_mesh->init(shader);
-    m_mesh->loadMesh("assets/blackhawk/uh60.lwo");
+    m_mesh->loadMesh("assets/MercedesBenzSLSAMG/sls_amg.lwo");
 
     // m_normalMap->load();
     // m_normalMap->bind(GL_TEXTURE1);

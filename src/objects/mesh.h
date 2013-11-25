@@ -15,27 +15,9 @@
 
 #define INVALID_MATERIAL 0xFFFFFFFF
 
-typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
-
 using namespace std;
 
-struct Vertex
-{
-    QVector3D m_pos;
-    QVector2D m_tex;
-    QVector3D m_normal;
-    QVector3D m_tangent;
-
-    Vertex() {}
-
-    Vertex(const QVector3D& pos, const QVector2D& tex, const QVector3D& normal , const QVector3D& tangent)
-    {
-        m_pos     = pos;
-        m_tex     = tex;
-        m_normal  = normal;
-        m_tangent = tangent;
-    }
-};
+typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
 
 class Texture;
 class QOpenGLFunctions_3_2_Core;
@@ -58,6 +40,7 @@ private:
 
     void initMesh(const aiMesh* paiMesh,
                   QVector<QVector3D>& positions,
+                  QVector<QVector4D>& colors,
                   QVector<QVector2D>& texCoords,
                   QVector<QVector3D>& normals,
                   QVector<QVector3D>& tangents,
@@ -66,6 +49,7 @@ private:
     QOpenGLVertexArrayObject* m_vao;
 
     QOpenGLBuffer m_vertexPositionBuffer;
+    QOpenGLBuffer m_vertexColorBuffer;
     QOpenGLBuffer m_vertexTexCoordBuffer;
     QOpenGLBuffer m_vertexNormalBuffer;
     QOpenGLBuffer m_vertexTangentBuffer;

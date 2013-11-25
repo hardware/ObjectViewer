@@ -11,6 +11,7 @@ in VS_OUT
     vec3 V;
 
     vec2 texCoord;
+    vec4 color;
 } fs_in;
 
 out vec4 FragColor;
@@ -87,5 +88,5 @@ void main()
     vec3 diffuse  = max(dot(N, L), 0.0) * diffuseAlbedo;
 
     // Write final color to the framebuffer
-    FragColor = texture(texColor, fs_in.texCoord.xy) * vec4(ambient + diffuse + GenlightColor(N, L, V), 1.0);
+    FragColor = texture(texColor, fs_in.texCoord.xy) * fs_in.color * vec4(ambient + diffuse + GenlightColor(N, L, V), 1.0);
 }

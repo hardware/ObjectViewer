@@ -11,6 +11,7 @@ Mesh::Mesh()
     : m_funcs(0),
       m_vao(new QOpenGLVertexArrayObject),
       m_vertexPositionBuffer(QOpenGLBuffer::VertexBuffer),
+      m_vertexColorBuffer(QOpenGLBuffer::VertexBuffer),
       m_vertexTexCoordBuffer(QOpenGLBuffer::VertexBuffer),
       m_vertexNormalBuffer(QOpenGLBuffer::VertexBuffer),
       m_vertexTangentBuffer(QOpenGLBuffer::VertexBuffer),
@@ -20,6 +21,7 @@ Mesh::Mesh()
 Mesh::~Mesh()
 {
     m_vertexPositionBuffer.destroy();
+    m_vertexColorBuffer.destroy();
     m_vertexTexCoordBuffer.destroy();
     m_vertexNormalBuffer.destroy();
     m_vertexTangentBuffer.destroy();
@@ -59,7 +61,12 @@ void Mesh::loadMesh(const string& filename)
 
     Assimp::Importer Importer;
 
-    const aiScene* pScene = Importer.ReadFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality |  aiProcess_FlipUVs);
+    const aiScene* pScene = Importer.ReadFile(
+                                        filename.c_str(),
+                                        aiProcess_Triangulate |
+                                        aiProcess_GenSmoothNormals |
+                                        aiProcess_FlipUVs
+                            ); // aiProcessPreset_TargetRealtime_MaxQuality
 
     if(pScene)
         initFromScene(pScene, filename);
@@ -81,6 +88,7 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
     m_textures.resize(pScene->mNumMaterials);
 
     QVector<QVector3D> positions;
+    QVector<QVector4D> colors;
     QVector<QVector2D> texCoords;
     QVector<QVector3D> normals;
     QVector<QVector3D> tangents;
@@ -109,6 +117,7 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
 
     // Reserve space in the vectors for the vertex attributes and indices
     positions.reserve(numVertices);
+    colors.reserve(numVertices);
     texCoords.reserve(numVertices);
     normals.reserve(numVertices);
     tangents.reserve(numVertices);
@@ -118,7 +127,7 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
     for (unsigned int i = 0; i < m_entries.size() ; i++)
     {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        initMesh(paiMesh, positions, texCoords, normals, tangents, indices);
+        initMesh(paiMesh, positions, colors, texCoords, normals, tangents, indices);
     }
 
     initMaterials(pScene, filename);
@@ -128,6 +137,11 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
     m_vertexPositionBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_vertexPositionBuffer.bind();
     m_vertexPositionBuffer.allocate(positions.constData(), positions.size() * sizeof(QVector3D));
+
+    m_vertexColorBuffer.create();
+    m_vertexColorBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_vertexColorBuffer.bind();
+    m_vertexColorBuffer.allocate(colors.constData(), colors.size() * sizeof(QVector4D));
 
     m_vertexTexCoordBuffer.create();
     m_vertexTexCoordBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -155,6 +169,10 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
     m_shader->enableAttributeArray("position");
     m_shader->setAttributeBuffer("position", GL_FLOAT, 0, 3);
 
+    m_vertexColorBuffer.bind();
+    m_shader->enableAttributeArray("color");
+    m_shader->setAttributeBuffer("color", GL_FLOAT, 0, 4);
+
     m_vertexTexCoordBuffer.bind();
     m_shader->enableAttributeArray("texCoord");
     m_shader->setAttributeBuffer("texCoord", GL_FLOAT, 0, 2);
@@ -170,22 +188,26 @@ void Mesh::initFromScene(const aiScene* pScene, const string& filename)
 
 void Mesh::initMesh(const aiMesh* paiMesh,
                     QVector<QVector3D>& positions,
+                    QVector<QVector4D>& colors,
                     QVector<QVector2D>& texCoords,
                     QVector<QVector3D>& normals,
                     QVector<QVector3D>& tangents,
                     QVector<unsigned int>& indices)
 {
     const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
+    const aiColor4D  zeroColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Populate the vertex attribute vectors
     for(unsigned int i = 0; i < paiMesh->mNumVertices; i++)
     {
-        const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
-        const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0)        ? &(paiMesh->mTextureCoords[0][i]) : &zero3D;
-        const aiVector3D* pNormal   = paiMesh->HasNormals()               ? &(paiMesh->mNormals[i])          : &zero3D;
-        const aiVector3D* pTangent  = paiMesh->HasTangentsAndBitangents() ? &(paiMesh->mTangents[i])         : &zero3D;
+        const aiVector3D * pPos      = &(paiMesh->mVertices[i]);
+        const aiColor4D  * pColor    = paiMesh->HasVertexColors(0)         ? &(paiMesh->mColors[0][i])        : &zeroColor;
+        const aiVector3D * pTexCoord = paiMesh->HasTextureCoords(0)        ? &(paiMesh->mTextureCoords[0][i]) : &zero3D;
+        const aiVector3D * pNormal   = paiMesh->HasNormals()               ? &(paiMesh->mNormals[i])          : &zero3D;
+        const aiVector3D * pTangent  = paiMesh->HasTangentsAndBitangents() ? &(paiMesh->mTangents[i])         : &zero3D;
 
         positions.push_back(QVector3D(pPos->x, pPos->y, pPos->z));
+           colors.push_back(QVector4D(pColor->r, pColor->g, pColor->b, pColor->a));
         texCoords.push_back(QVector2D(pTexCoord->x, pTexCoord->y));
           normals.push_back(QVector3D(pNormal->x, pNormal->y, pNormal->z));
          tangents.push_back(QVector3D(pTangent->x, pTangent->y, pTangent->z));
@@ -196,7 +218,7 @@ void Mesh::initMesh(const aiMesh* paiMesh,
     {
         const aiFace& face = paiMesh->mFaces[i];
 
-        // Q_ASSERT(face.mNumIndices == 3);
+        Q_ASSERT(face.mNumIndices == 3);
 
         indices.push_back(face.mIndices[0]);
         indices.push_back(face.mIndices[1]);
@@ -223,7 +245,7 @@ void Mesh::initMaterials(const aiScene* pScene, const string& filename)
         {
             aiString path;
 
-            if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+            if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
             {
                 string fullPath = dir + "/" + path.data;
                 m_textures.insert(m_textures.begin() + i, unique_ptr<Texture>(new Texture(fullPath.c_str())));
@@ -239,17 +261,13 @@ void Mesh::initMaterials(const aiScene* pScene, const string& filename)
                 }
             }
         }
-        else
-        {
-            qDebug() << "Not DIFFUSE texture";
-        }
 
-        if( ! m_textures[i] )
-        {
-            m_textures.insert(m_textures.begin() + i, unique_ptr<Texture>(new Texture(QImage(":/resources/images/white.png"))));
-            m_textures[i]->init();
-            m_textures[i]->load();
-        }
+//        if( ! m_textures[i] )
+//        {
+//            m_textures.insert(m_textures.begin() + i, unique_ptr<Texture>(new Texture(QImage(":/resources/images/white.png"))));
+//            m_textures[i]->init();
+//            m_textures[i]->load();
+//        }
     }
 
     qDebug() << "###########################################" << endl;
