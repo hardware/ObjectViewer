@@ -22,9 +22,9 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
 
     Assimp::Importer Importer;
     const aiScene* scene = Importer.ReadFile(filename.c_str(),
-                                              aiProcessPreset_TargetRealtime_MaxQuality ^
-                                              aiProcess_JoinIdenticalVertices ^
-                                              aiProcess_FindInvalidData);
+                                             aiProcessPreset_TargetRealtime_MaxQuality ^
+                                             aiProcess_JoinIdenticalVertices ^
+                                             aiProcess_FindInvalidData);
 
     if(scene == nullptr)
     {

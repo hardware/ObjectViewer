@@ -1,11 +1,18 @@
 #include "scene.h"
 #include "camera.h"
+#include "model.h"
+
+#include "abstractmodelmanager.h"
 #include "abstractmeshmanager.h"
+#include "modelmanager.h"
+#include "meshmanager.h"
 
 #include "../materials/abstractmaterialmanager.h"
 #include "../materials/abstracttexturemanager.h"
-#include "../helpers/shaders.h"
+#include "../materials/materialmanager.h"
+#include "../materials/texturemanager.h"
 
+#include "../helpers/shaders.h"
 
 #include <QOpenGLFunctions_4_3_Core>
 
@@ -17,6 +24,8 @@
 Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
+      m_model(new Model(this)),
+      m_modelManager(new ModelManager(this)),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
       m_v(),
@@ -73,6 +82,12 @@ void Scene::initialize()
     shader->bind();
     shader->setUniformValue("texColor", 0);
     shader->setUniformValue("texNormal", 1);
+
+    m_materialManager = unique_ptr<AbstractMaterialManager>(new MaterialManager(shader));
+    m_textureManager  = unique_ptr<AbstractTextureManager>(new TextureManager(shader));
+    m_meshManager     = unique_ptr<AbstractMeshManager>(new MeshManager(shader));
+
+    m_modelManager->loadModel("SLSAMG", "assets/MercedesBenzSLSAMG/sls_amg.lwo");
 }
 
 void Scene::update(float t)
@@ -108,15 +123,17 @@ void Scene::render(double currentTime)
 
     if(currentTime > 0)
     {
-        m_model.rotateY(currentTime/0.02f);
+        m_object3D.rotateY(currentTime/0.02f);
     }
 
-    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_model.modelMatrix();
+    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_object3D.modelMatrix();
     QOpenGLShaderProgramPtr shader = m_shader->shader();
 
     shader->bind();
     shader->setUniformValue("modelViewMatrix", modelViewMatrix);
     shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
+
+    m_model->render(shader);
 
     emit renderCycleDone();
 }
@@ -204,7 +221,7 @@ void Scene::toggleAA(bool state)
 
 Object3D* Scene::getObject()
 {
-    return &m_model;
+    return &m_object3D;
 }
 
 Camera* Scene::getCamera()

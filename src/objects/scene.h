@@ -13,10 +13,12 @@ using namespace std;
 
 class Camera;
 class Shaders;
+class AbstractModel;
 
 class AbstractMeshManager;
 class AbstractMaterialManager;
 class AbstractTextureManager;
+class AbstractModelManager;
 
 class QOpenGLFunctions_4_3_Core;
 
@@ -83,12 +85,15 @@ signals:
 private:
     Camera* m_camera;
 
+    AbstractModel        * m_model;
+    AbstractModelManager * m_modelManager;
+
     unique_ptr<AbstractMeshManager>     m_meshManager;
     unique_ptr<AbstractMaterialManager> m_materialManager;
     unique_ptr<AbstractTextureManager>  m_textureManager;
 
     ShadersPtr m_shader;
-    Object3D   m_model;
+    Object3D   m_object3D;
     QVector3D  m_v;
 
     LightMode       m_lightMode;
