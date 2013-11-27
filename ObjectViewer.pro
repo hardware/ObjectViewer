@@ -69,7 +69,8 @@ HEADERS += \
     src/materials/abstractmaterialmanager.h \
     src/materials/materialmanager.h \
     src/materials/abstracttexturemanager.h \
-    src/materials/texturemanager.h
+    src/materials/texturemanager.h \
+    src/objects/abstractmodel.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -88,7 +89,8 @@ SOURCES += \
     src/materials/abstractmaterialmanager.cpp \
     src/materials/materialmanager.cpp \
     src/materials/abstracttexturemanager.cpp \
-    src/materials/texturemanager.cpp
+    src/materials/texturemanager.cpp \
+    src/objects/abstractmodel.cpp
 
 RESOURCES += \
     resources.qrc
