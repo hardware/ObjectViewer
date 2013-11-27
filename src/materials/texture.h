@@ -23,7 +23,6 @@ public:
         TextureCubeMap = GL_TEXTURE_CUBE_MAP
     };
 
-
     Texture(const string& fileName, TextureType type = Texture2D);
     Texture(const QImage& image, TextureType type = Texture2D);
     ~Texture();
