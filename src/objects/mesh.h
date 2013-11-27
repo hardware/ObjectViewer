@@ -1,76 +1,60 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <string>
-#include <memory>
+#include <QString>
+#include <QVector>
+#include <QVector3D>
 
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
-
-#include <qopengl.h>
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QSharedPointer>
 
-#define INVALID_MATERIAL 0xFFFFFFFF
-
-using namespace std;
-
 typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
 
-class Texture;
-class QOpenGLFunctions_3_2_Core;
+class QOpenGLFunctions_4_3_Core;
 class QOpenGLVertexArrayObject;
 
 class Mesh
 {
 
 public:
-    Mesh();
+    Mesh(const QString& name,
+         const QVector<QVector3D>& positions,
+         const QVector<QVector4D>& colors,
+         const QVector<QVector2D>& texCoords,
+         const QVector<QVector3D>& normals,
+         const QVector<QVector3D>& tangents,
+         const QOpenGLShaderProgramPtr& shader);
+
     ~Mesh();
 
-    void init(const QOpenGLShaderProgramPtr& shader);
-    void loadMesh(const string& filename);
     void render();
 
+    void setName(const QString& name) { m_name = name; }
+    QString name() const { return m_name; }
+
 private:
-    void initFromScene(const aiScene* pScene, const string& filename);
-    void initMaterials(const aiScene* pScene, const string& filename);
+    void init();
+    void load();
 
-    void initMesh(const aiMesh* paiMesh,
-                  QVector<QVector3D>& positions,
-                  QVector<QVector4D>& colors,
-                  QVector<QVector2D>& texCoords,
-                  QVector<QVector3D>& normals,
-                  QVector<QVector3D>& tangents,
-                  QVector<unsigned int>& indices);
-
-    QOpenGLVertexArrayObject* m_vao;
+    QOpenGLFunctions_4_3_Core * m_funcs;
+    QOpenGLVertexArrayObject  * m_vao;
 
     QOpenGLBuffer m_vertexPositionBuffer;
     QOpenGLBuffer m_vertexColorBuffer;
     QOpenGLBuffer m_vertexTexCoordBuffer;
     QOpenGLBuffer m_vertexNormalBuffer;
     QOpenGLBuffer m_vertexTangentBuffer;
-    QOpenGLBuffer m_indexBuffer;
 
-    struct MeshEntry
-    {
-        MeshEntry();
-        ~MeshEntry();
+    QString m_name;
 
-        unsigned int numIndices;
-        unsigned int baseVertex;
-        unsigned int baseIndex;
-        unsigned int materialIndex;
-    };
+    QVector<QVector3D> m_positions;
+    QVector<QVector4D> m_colors;
+    QVector<QVector2D> m_texCoords;
+    QVector<QVector3D> m_normals;
+    QVector<QVector3D> m_tangents;
 
-    QOpenGLFunctions_3_2_Core* m_funcs;
-    QOpenGLShaderProgramPtr    m_shader;
-
-    vector<MeshEntry> m_entries;
-    vector<unique_ptr<Texture>> m_textures;
+    QOpenGLShaderProgramPtr m_shader;
 
 };
 

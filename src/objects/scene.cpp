@@ -1,6 +1,5 @@
 #include "scene.h"
 #include "camera.h"
-#include "mesh.h"
 
 #include "../helpers/shaders.h"
 #include "../materials/texture.h"
@@ -15,8 +14,6 @@
 Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
-      m_mesh(new Mesh()),
-      // m_normalMap(new Texture(QImage("assets/box/normal_map.jpg"))),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
       m_v(),
@@ -42,8 +39,6 @@ Scene::Scene(QObject *parent)
 Scene::~Scene()
 {
     delete m_camera;
-    delete m_mesh;
-    // delete m_normalMap;
 }
 
 void Scene::initialize()
@@ -75,12 +70,6 @@ void Scene::initialize()
     shader->bind();
     shader->setUniformValue("texColor", 0);
     shader->setUniformValue("texNormal", 1);
-
-    m_mesh->init(shader);
-    m_mesh->loadMesh("assets/MercedesBenzSLSAMG/sls_amg.lwo");
-
-    // m_normalMap->load();
-    // m_normalMap->bind(GL_TEXTURE1);
 }
 
 void Scene::update(float t)
@@ -125,8 +114,6 @@ void Scene::render(double currentTime)
     shader->bind();
     shader->setUniformValue("modelViewMatrix", modelViewMatrix);
     shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
-
-    m_mesh->render();
 
     emit renderCycleDone();
 }

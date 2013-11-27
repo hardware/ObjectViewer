@@ -8,8 +8,6 @@
 #include <QSharedPointer>
 
 class Camera;
-class Mesh;
-// class Texture;
 class Shaders;
 
 class QOpenGLFunctions_4_3_Core;
@@ -71,9 +69,7 @@ signals:
     void renderCycleDone();
 
 private:
-    Camera  * m_camera;
-    Mesh    * m_mesh;
-    // Texture * m_normalMap;
+    Camera* m_camera;
 
     ShadersPtr m_shader;
     Object3D   m_model;
