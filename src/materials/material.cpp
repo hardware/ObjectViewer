@@ -1,10 +1,11 @@
 #include "material.h"
 
 #include <QDebug>
+#include <QString>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_4_3_Core>
 
-Material::Material(const QString& name,
+Material::Material(const string& name,
                    const QVector4D& ambientColor,
                    const QVector4D& diffuseColor,
                    const QVector4D& specularColor,
@@ -24,6 +25,8 @@ Material::Material(const QString& name,
     sendToGPU();
 }
 
+Material::~Material() {}
+
 void Material::init()
 {
     QOpenGLContext* context = QOpenGLContext::currentContext();
@@ -36,7 +39,7 @@ void Material::init()
 
 void Material::sendToGPU()
 {
-    qDebug() << "Load material : " << m_name << " into memory";
+    qDebug() << "Load material : " << QString::fromStdString(m_name) << " into memory";
 
     m_shader->setUniformValue("material.Ka", m_ambientColor);
     m_shader->setUniformValue("material.Kd", m_diffuseColor);

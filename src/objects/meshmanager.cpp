@@ -37,7 +37,13 @@ Mesh* MeshManager::addMesh(const string &name,
     }
 
     qDebug() << "Add " << QString::fromStdString(name) << " in meshes list";
-    m_meshes[name] = unique_ptr<Mesh>(new Mesh(name, positions, colors, texCoords, normals, tangents, m_shader));
+    m_meshes[name] = unique_ptr<Mesh>(new Mesh(name,
+                                               positions,
+                                               colors,
+                                               texCoords,
+                                               normals,
+                                               tangents,
+                                               m_shader));
 
     return m_meshes[name].get();
 }

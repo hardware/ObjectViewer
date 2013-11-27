@@ -1,12 +1,13 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <QString>
-#include <QVector4D>
+#include <string>
 
-#include <qopengl.h>
+#include <QVector4D>
 #include <QOpenGLShaderProgram>
 #include <QSharedPointer>
+
+using namespace std;
 
 typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
 
@@ -16,7 +17,7 @@ class Material
 {
 
 public:
-    Material(const QString& name,
+    Material(const string& name,
              const QVector4D& ambientColor,
              const QVector4D& diffuseColor,
              const QVector4D& specularColor,
@@ -29,16 +30,15 @@ public:
 
     void init();
 
-    void setName(const QString& name) { m_name = name; }
-    QString name() const { return m_name; }
+    void setName(const string& name) { m_name = name; }
+    string name() const { return m_name; }
 
 private:
     void sendToGPU();
 
     QOpenGLFunctions_4_3_Core* m_funcs;
 
-    QString m_name;
-    GLenum  m_fillMode;
+    string m_name;
 
     QVector4D m_ambientColor;
     QVector4D m_diffuseColor;

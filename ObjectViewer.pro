@@ -65,7 +65,9 @@ HEADERS += \
     src/objects/mesh.h \
     src/materials/material.h \
     src/objects/abstractmeshmanager.h \
-    src/objects/meshmanager.h
+    src/objects/meshmanager.h \
+    src/materials/abstractmaterialmanager.h \
+    src/materials/materialmanager.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -80,7 +82,9 @@ SOURCES += \
     src/objects/mesh.cpp \
     src/materials/material.cpp \
     src/objects/abstractmeshmanager.cpp \
-    src/objects/meshmanager.cpp
+    src/objects/meshmanager.cpp \
+    src/materials/abstractmaterialmanager.cpp \
+    src/materials/materialmanager.cpp
 
 RESOURCES += \
     resources.qrc
