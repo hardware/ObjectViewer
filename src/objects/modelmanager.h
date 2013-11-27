@@ -3,6 +3,7 @@
 
 #include "abstractmodelmanager.h"
 #include "abstractmodel.h"
+#include "modelloader.h"
 
 #include <QOpenGLShaderProgram>
 #include <QSharedPointer>
@@ -32,6 +33,7 @@ public:
 private:
     map<string, unique_ptr<Model>> m_models;
     Scene* m_scene;
+    ModelLoader m_modelLoader;
 };
 
 #endif // MODELMANAGER_H

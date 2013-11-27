@@ -7,7 +7,8 @@
 #include <QString>
 
 ModelManager::ModelManager(Scene *scene)
-    : m_scene(scene)
+    : m_scene(scene),
+      m_modelLoader(ModelLoader())
 {}
 
 ModelManager::~ModelManager() {}

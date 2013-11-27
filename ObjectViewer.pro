@@ -73,7 +73,8 @@ HEADERS += \
     src/objects/abstractmodel.h \
     src/objects/abstractmodelmanager.h \
     src/objects/modelmanager.h \
-    src/objects/model.h
+    src/objects/model.h \
+    src/objects/modelloader.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -96,7 +97,8 @@ SOURCES += \
     src/objects/abstractmodel.cpp \
     src/objects/abstractmodelmanager.cpp \
     src/objects/modelmanager.cpp \
-    src/objects/model.cpp
+    src/objects/model.cpp \
+    src/objects/modelloader.cpp
 
 RESOURCES += \
     resources.qrc
