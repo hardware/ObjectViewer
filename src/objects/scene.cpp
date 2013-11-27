@@ -1,8 +1,11 @@
 #include "scene.h"
 #include "camera.h"
+#include "abstractmeshmanager.h"
 
+#include "../materials/abstractmaterialmanager.h"
+#include "../materials/abstracttexturemanager.h"
 #include "../helpers/shaders.h"
-#include "../materials/texture.h"
+
 
 #include <QOpenGLFunctions_4_3_Core>
 
@@ -207,4 +210,19 @@ Object3D* Scene::getObject()
 Camera* Scene::getCamera()
 {
     return m_camera;
+}
+
+AbstractMeshManager* Scene::meshManager()
+{
+    return m_meshManager.get();
+}
+
+AbstractMaterialManager* Scene::materialManager()
+{
+    return m_materialManager.get();
+}
+
+AbstractTextureManager* Scene::textureManager()
+{
+    return m_textureManager.get();
 }

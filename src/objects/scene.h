@@ -4,11 +4,19 @@
 #include "abstractscene.h"
 #include "object3d.h"
 
+#include <memory>
+
 #include <qopengl.h>
 #include <QSharedPointer>
 
+using namespace std;
+
 class Camera;
 class Shaders;
+
+class AbstractMeshManager;
+class AbstractMaterialManager;
+class AbstractTextureManager;
 
 class QOpenGLFunctions_4_3_Core;
 
@@ -51,6 +59,10 @@ public:
     void setLightMode(LightMode lightMode) { m_lightMode = lightMode; }
     LightMode lightMode() const { return m_lightMode; }
 
+    AbstractMeshManager     * meshManager();
+    AbstractMaterialManager * materialManager();
+    AbstractTextureManager  * textureManager();
+
 private:
     void prepareShaders();
 
@@ -70,6 +82,10 @@ signals:
 
 private:
     Camera* m_camera;
+
+    unique_ptr<AbstractMeshManager>     m_meshManager;
+    unique_ptr<AbstractMaterialManager> m_materialManager;
+    unique_ptr<AbstractTextureManager>  m_textureManager;
 
     ShadersPtr m_shader;
     Object3D   m_model;
