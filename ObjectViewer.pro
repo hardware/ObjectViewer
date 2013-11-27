@@ -62,7 +62,8 @@ HEADERS += \
     src/ui/window.h \
     src/ui/mainwindow.h \
     src/materials/texture.h \
-    src/objects/mesh.h
+    src/objects/mesh.h \
+    src/materials/material.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -74,7 +75,8 @@ SOURCES += \
     src/ui/mainwindow.cpp \
     src/main.cpp \
     src/materials/texture.cpp \
-    src/objects/mesh.cpp
+    src/objects/mesh.cpp \
+    src/materials/material.cpp
 
 RESOURCES += \
     resources.qrc

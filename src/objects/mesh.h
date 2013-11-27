@@ -28,13 +28,13 @@ public:
 
     ~Mesh();
 
+    void init();
     void render();
 
     void setName(const QString& name) { m_name = name; }
     QString name() const { return m_name; }
 
 private:
-    void init();
     void load();
 
     QOpenGLFunctions_4_3_Core * m_funcs;
