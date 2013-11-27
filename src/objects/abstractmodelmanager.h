@@ -18,8 +18,8 @@ public:
 
     virtual AbstractModel* getModel(const string& name) = 0;
     virtual void loadModel(const string& name, const string& filename) = 0;
-    virtual unique_ptr<AbstractModel> createModel(const string& name) = 0;
 
+    // virtual unique_ptr<AbstractModel> createModel(const string& name) = 0;
     // virtual unique_ptr<AbstractModel> createModel(Mesh* mesh) = 0;
     // virtual unique_ptr<AbstractModel> createModel(vector<shared_ptr<ModelData>> modelData) = 0;
 };

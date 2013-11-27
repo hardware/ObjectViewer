@@ -11,6 +11,7 @@ typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
 
 using namespace std;
 
+class Scene;
 class Model;
 class AbstractModel;
 
@@ -18,19 +19,19 @@ class ModelManager : public AbstractModelManager
 {
 
 public:
-    ModelManager(const QOpenGLShaderProgramPtr& shader);
+    ModelManager(Scene* scene);
     virtual ~ModelManager();
 
     virtual AbstractModel* getModel(const string& name);
     virtual void loadModel(const string& name, const string& filename);
-    virtual unique_ptr<AbstractModel> createModel(const string& name);
 
+    // virtual unique_ptr<AbstractModel> createModel(const string& name);
     // virtual unique_ptr<AbstractModel> createModel(Mesh* mesh);
     // virtual unique_ptr<AbstractModel> createModel(vector<shared_ptr<ModelData>> modelData);
 
 private:
     map<string, unique_ptr<Model>> m_models;
-    QOpenGLShaderProgramPtr m_shader;
+    Scene* m_scene;
 };
 
 #endif // MODELMANAGER_H

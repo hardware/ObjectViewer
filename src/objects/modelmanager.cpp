@@ -1,27 +1,31 @@
 #include "modelmanager.h"
+#include "scene.h"
+#include "model.h"
+#include "abstractmodel.h"
 
-ModelManager::ModelManager(const QOpenGLShaderProgramPtr& shader)
-    : m_shader(shader)
+#include <QDebug>
+#include <QString>
+
+ModelManager::ModelManager(Scene *scene)
+    : m_scene(scene)
 {}
 
 ModelManager::~ModelManager() {}
 
-AbstractModel* getModel(const string& name)
+AbstractModel* ModelManager::getModel(const string& name)
 {
-    Q_UNUSED(name);
+    if(m_models.find(name) != m_models.end())
+    {
+        qDebug() << "Model " << QString::fromStdString(name) << " found";
+        return m_models[name].get();
+    }
 
+    qDebug() << "Model " << QString::fromStdString(name) << " not found";
     return nullptr;
 }
 
-void loadModel(const string& name, const string& filename)
+void ModelManager::loadModel(const string& name, const string& filename)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(filename);
-}
-
-unique_ptr<AbstractModel> createModel(const string& name)
-{
-    Q_UNUSED(name);
-
-
+    vector<shared_ptr<ModelData>> modelData = m_modelLoader.loadModel(name, filename);
+    m_models[name] = unique_ptr<Model>(new Model(m_scene, modelData));
 }
