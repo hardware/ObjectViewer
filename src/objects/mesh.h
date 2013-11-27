@@ -1,13 +1,16 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <QString>
+#include <string>
+
 #include <QVector>
 #include <QVector3D>
 
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QSharedPointer>
+
+using namespace std;
 
 typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
 
@@ -18,7 +21,7 @@ class Mesh
 {
 
 public:
-    Mesh(const QString& name,
+    Mesh(const string& name,
          const QVector<QVector3D>& positions,
          const QVector<QVector4D>& colors,
          const QVector<QVector2D>& texCoords,
@@ -31,8 +34,8 @@ public:
     void init();
     void render();
 
-    void setName(const QString& name) { m_name = name; }
-    QString name() const { return m_name; }
+    void setName(const string& name) { m_name = name; }
+    string name() const { return m_name; }
 
 private:
     void load();
@@ -46,7 +49,7 @@ private:
     QOpenGLBuffer m_vertexNormalBuffer;
     QOpenGLBuffer m_vertexTangentBuffer;
 
-    QString m_name;
+    string m_name;
 
     QVector<QVector3D> m_positions;
     QVector<QVector4D> m_colors;

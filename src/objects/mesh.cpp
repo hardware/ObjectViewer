@@ -5,7 +5,7 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include <QOpenGLVertexArrayObject>
 
-Mesh::Mesh(const QString& name,
+Mesh::Mesh(const string& name,
            const QVector<QVector3D>& positions,
            const QVector<QVector4D>& colors,
            const QVector<QVector2D>& texCoords,
@@ -55,7 +55,7 @@ void Mesh::init()
 
 void Mesh::load()
 {
-    qDebug() << "Loading mesh " << m_name << " into video memory";
+    qDebug() << "Loading mesh " << QString::fromStdString(m_name) << " into video memory";
 
     m_vao->create();
     m_vao->bind();
@@ -109,7 +109,7 @@ void Mesh::load()
 
     m_vao->release();
 
-    qDebug() << "Successfully loaded mesh : " << m_name;
+    qDebug() << "Successfully loaded mesh : " << QString::fromStdString(m_name);
 }
 
 void Mesh::render()
