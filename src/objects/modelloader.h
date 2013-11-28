@@ -33,9 +33,7 @@ private:
                               unsigned int index,
                               const aiMaterial* material);
 
-    TextureData loadTexture(const string& name,
-                            const string& filename,
-                            unsigned int index,
+    TextureData loadTexture(const string& filename,
                             const aiMaterial* material);
 
 };

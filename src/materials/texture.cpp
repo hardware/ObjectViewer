@@ -106,7 +106,7 @@ void Texture::destroy()
 
 void Texture::bind(GLenum textureUnit)
 {
-    m_funcs->glActiveTexture(textureUnit);
+//    m_funcs->glActiveTexture(textureUnit);
     glBindTexture(m_type, m_textureId);
 }
 

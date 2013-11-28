@@ -53,7 +53,7 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
 
         modelData[i]->meshData     =     loadMesh(name, filename, i, scene->mMeshes[i]);
         modelData[i]->materialData = loadMaterial(name, filename, i, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
-        modelData[i]->textureData  =  loadTexture(name, filename, i, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
+        modelData[i]->textureData  =  loadTexture(filename, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
 
         numVertices += scene->mMeshes[i]->mNumVertices;
     }
@@ -233,16 +233,17 @@ MaterialData ModelLoader::loadMaterial(const string& name,
     return data;
 }
 
-TextureData ModelLoader::loadTexture(const string& name,
-                                     const string& filename,
-                                     unsigned int index,
+TextureData ModelLoader::loadTexture(const string& filename,
                                      const aiMaterial* material)
 {
     // Q_ASSERT(material == nullptr);
 
-    Q_UNUSED(name);
-    Q_UNUSED(filename);
-    Q_UNUSED(index);
+    string dir;
+    string::size_type slashIndex = filename.find_last_of("/");
+
+    if(slashIndex == string::npos) dir = ".";
+    else if(slashIndex == 0) dir = "/";
+    else dir = filename.substr(0, slashIndex);
 
     TextureData data = TextureData();
     aiString path;
@@ -251,8 +252,10 @@ TextureData ModelLoader::loadTexture(const string& name,
     {
         if(material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
         {
-            qDebug() << "\t Done loading texture : " << QString::fromStdString(path.data);
-            data.filename = path.data;
+            string texturePath = dir + "/" + path.data;
+
+            qDebug() << "\t Done loading texture : " << QString::fromStdString(texturePath);
+            data.filename = texturePath;
         }
     }
     else
