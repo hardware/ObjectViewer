@@ -27,7 +27,7 @@ Texture* TextureManager::addTexture(const string& name, const string& filename)
 {
     if(m_textures.find(name) != m_textures.end() && m_textures[name].get() != nullptr)
     {
-        qDebug() << "Material " << QString::fromStdString(name) << " already exists";
+        qDebug() << "Texture " << QString::fromStdString(name) << " already exists";
         return m_textures[name].get();
     }
 

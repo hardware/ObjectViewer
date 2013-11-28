@@ -1,6 +1,7 @@
 #include "modelloader.h"
 
 #include <QDebug>
+#include <QString>
 
 ModelLoader::ModelLoader()
 {
@@ -22,16 +23,20 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
 
     Assimp::Importer Importer;
     const aiScene* scene = Importer.ReadFile(filename.c_str(),
-                                             aiProcessPreset_TargetRealtime_MaxQuality ^
-                                             aiProcess_JoinIdenticalVertices ^
-                                             aiProcess_FindInvalidData
-                                             );
+                                             aiProcessPreset_TargetRealtime_MaxQuality |
+                                             aiProcess_FlipUVs);
+
+    /*
+    aiProcessPreset_TargetRealtime_MaxQuality ^
+    aiProcess_JoinIdenticalVertices ^
+    aiProcess_FindInvalidData
+    */
 
     // aiProcess_FlipUVs
 
     if(scene == nullptr)
     {
-        qFatal("Unable to load model...");
+        qFatal(qPrintable(QObject::tr("Error parsing : %1 -> %2").arg(filename.c_str()).arg(Importer.GetErrorString())));
         exit(1);
     }
     else if(scene->HasTextures())
@@ -51,9 +56,9 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
     {
         modelData[i] = std::shared_ptr<ModelData>(new ModelData());
 
-        modelData[i]->meshData     =     loadMesh(name, filename, i, scene->mMeshes[i]);
+        modelData[i]->meshData     = loadMesh(name, filename, i, scene->mMeshes[i]);
         modelData[i]->materialData = loadMaterial(name, filename, i, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
-        modelData[i]->textureData  =  loadTexture(filename, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
+        modelData[i]->textureData  = loadTexture(filename, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
 
         numVertices += scene->mMeshes[i]->mNumVertices;
     }

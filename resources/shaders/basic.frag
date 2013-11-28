@@ -7,9 +7,9 @@ in VS_OUT
 
 out vec4 FragColor;
 
-uniform sampler2D texColor;
+uniform sampler2DArray texColor;
 
 void main()
 {
-    FragColor = texture(texColor, fs_in.texCoord.xy);
+    FragColor = texture(texColor, vec3(fs_in.texCoord.xy, 1.0));
 }

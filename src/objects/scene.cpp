@@ -86,8 +86,8 @@ void Scene::initialize()
     m_textureManager  = unique_ptr<AbstractTextureManager>(new TextureManager(shader));
     m_meshManager     = unique_ptr<AbstractMeshManager>(new MeshManager(shader));
 
-    m_modelManager->loadModel("BOX", "assets/box/box.obj");
-    m_model = m_modelManager->createModel("BOX");
+    m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo");
+    m_model = m_modelManager->createModel("UH60");
 }
 
 void Scene::update(float t)
@@ -166,8 +166,11 @@ void Scene::prepareShaders()
 {
     m_shader = ShadersPtr(new Shaders);
 
-    m_shader->setVertexShader(":/resources/shaders/per-fragment-blinn-phong.vert");
-    m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
+    // m_shader->setVertexShader(":/resources/shaders/per-fragment-blinn-phong.vert");
+    // m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
+
+    m_shader->setVertexShader(":/resources/shaders/basic.vert");
+    m_shader->setFragmentShader(":/resources/shaders/basic.frag");
 
     m_shader->shader()->link();
 }
