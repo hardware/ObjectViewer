@@ -139,6 +139,10 @@ MeshData ModelLoader::loadMesh(const string& name,
                                                           (float)mesh->mColors[0][vertexIndex].b,
                                                           (float)mesh->mColors[0][vertexIndex].a);
             }
+            else
+            {
+                data.colors[currentIndex + j] = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
+            }
 
             if(mesh->HasTextureCoords(0))
             {
@@ -266,6 +270,7 @@ TextureData ModelLoader::loadTexture(const string& filename,
     else
     {
         qDebug() << "\t No texture for this mesh";
+        data.filename = "assets/white.png";
     }
 
     return data;

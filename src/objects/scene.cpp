@@ -166,11 +166,8 @@ void Scene::prepareShaders()
 {
     m_shader = ShadersPtr(new Shaders);
 
-    // m_shader->setVertexShader(":/resources/shaders/per-fragment-blinn-phong.vert");
-    // m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
-
-    m_shader->setVertexShader(":/resources/shaders/basic.vert");
-    m_shader->setFragmentShader(":/resources/shaders/basic.frag");
+    m_shader->setVertexShader(":/resources/shaders/per-fragment-blinn-phong.vert");
+    m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
 
     m_shader->shader()->link();
 }
