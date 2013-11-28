@@ -27,6 +27,7 @@ Mesh::Mesh(const string& name,
       m_tangents(tangents),
       m_shader(shader)
 {
+    init();
     load();
 }
 

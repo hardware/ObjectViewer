@@ -25,8 +25,8 @@ public:
 
     virtual AbstractModel* getModel(const string& name);
     virtual void loadModel(const string& name, const string& filename);
+    virtual unique_ptr<AbstractModel> createModel(const string& name);
 
-    // virtual unique_ptr<AbstractModel> createModel(const string& name);
     // virtual unique_ptr<AbstractModel> createModel(Mesh* mesh);
     // virtual unique_ptr<AbstractModel> createModel(vector<shared_ptr<ModelData>> modelData);
 

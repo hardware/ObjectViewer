@@ -24,7 +24,10 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
     const aiScene* scene = Importer.ReadFile(filename.c_str(),
                                              aiProcessPreset_TargetRealtime_MaxQuality ^
                                              aiProcess_JoinIdenticalVertices ^
-                                             aiProcess_FindInvalidData);
+                                             aiProcess_FindInvalidData
+                                             );
+
+    // aiProcess_FlipUVs
 
     if(scene == nullptr)
     {
@@ -52,7 +55,6 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
         modelData[i]->materialData = loadMaterial(name, filename, i, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
         modelData[i]->textureData  =  loadTexture(name, filename, i, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
 
-
         numVertices += scene->mMeshes[i]->mNumVertices;
     }
 
@@ -67,8 +69,7 @@ MeshData ModelLoader::loadMesh(const string& name,
                                const aiMesh* mesh)
 {
     Q_UNUSED(name);
-
-    qDebug() << "Loading mesh : " << QString::fromStdString(filename);
+    Q_UNUSED(filename);
 
     MeshData data = MeshData();
 
@@ -77,7 +78,7 @@ MeshData ModelLoader::loadMesh(const string& name,
     else
         data.name = "mesh_" + to_string(index);
 
-    qDebug() << "Mesh name : " << QString::fromStdString(data.name);
+    qDebug() << "Mesh ->" << QString::fromStdString(data.name);
 
     unsigned int currentIndex = 0;
 
@@ -112,9 +113,10 @@ MeshData ModelLoader::loadMesh(const string& name,
         unsigned int numIndices = face.mNumIndices;
 
         data.positions.resize(currentIndex + numIndices);
-        data.normals.resize(currentIndex + numIndices);
-        data.texCoords.resize(currentIndex + numIndices);
         data.colors.resize(currentIndex + numIndices);
+        data.texCoords.resize(currentIndex + numIndices);
+        data.normals.resize(currentIndex + numIndices);
+        data.tangents.resize(currentIndex + numIndices);
 
         for(unsigned int j = 0; j < numIndices; j++)
         {
@@ -158,8 +160,6 @@ MeshData ModelLoader::loadMesh(const string& name,
         currentIndex += 3;
     }
 
-    qDebug() << "Done loading mesh : " << QString::fromStdString(filename);
-
     return data;
 }
 
@@ -173,8 +173,6 @@ MaterialData ModelLoader::loadMaterial(const string& name,
 
     MaterialData data = MaterialData();
     data.name = name + "_material_" + to_string(index);
-
-    qDebug() << "Material name : " << QString::fromStdString(data.name);
 
     aiColor3D ambientColor(0.1f, 0.1f, 0.1f);
 
@@ -230,7 +228,7 @@ MaterialData ModelLoader::loadMaterial(const string& name,
         data.shininessStrength = shininessStrength;
     }
 
-    qDebug() << "Done loading material";
+    qDebug() << "\t Done loading material : " << QString::fromStdString(data.name);
 
     return data;
 }
@@ -253,13 +251,13 @@ TextureData ModelLoader::loadTexture(const string& name,
     {
         if(material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
         {
-            qDebug() << "Texture filename : " << QString::fromStdString(path.data);
+            qDebug() << "\t Done loading texture : " << QString::fromStdString(path.data);
             data.filename = path.data;
         }
     }
     else
     {
-        qDebug() << "No material specified for this texture : ";
+        qDebug() << "\t No texture for this mesh";
     }
 
     return data;

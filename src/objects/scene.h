@@ -85,8 +85,8 @@ signals:
 private:
     Camera* m_camera;
 
-    AbstractModel        * m_model;
-    AbstractModelManager * m_modelManager;
+    unique_ptr<AbstractModel>  m_model;
+    AbstractModelManager*      m_modelManager;
 
     unique_ptr<AbstractMeshManager>     m_meshManager;
     unique_ptr<AbstractMaterialManager> m_materialManager;

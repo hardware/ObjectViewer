@@ -24,7 +24,6 @@
 Scene::Scene(QObject *parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
-      m_model(new Model(this)),
       m_modelManager(new ModelManager(this)),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
@@ -87,7 +86,8 @@ void Scene::initialize()
     m_textureManager  = unique_ptr<AbstractTextureManager>(new TextureManager(shader));
     m_meshManager     = unique_ptr<AbstractMeshManager>(new MeshManager(shader));
 
-    m_modelManager->loadModel("SLSAMG", "assets/MercedesBenzSLSAMG/sls_amg.lwo");
+    m_modelManager->loadModel("BOX", "assets/box/box.obj");
+    m_model = m_modelManager->createModel("BOX");
 }
 
 void Scene::update(float t)

@@ -8,6 +8,8 @@
 #include "../materials/abstractmaterialmanager.h"
 #include "../materials/abstracttexturemanager.h"
 
+#include <QDebug>
+
 Model::Model(Scene *scene)
     : m_scene(scene)
 {
@@ -18,6 +20,19 @@ Model::Model(Scene *scene, vector<shared_ptr<ModelData>> modelData)
     : m_scene(scene)
 {
     initialize(modelData);
+}
+
+Model::Model(const Model& other)
+{
+    m_scene = other.m_scene;
+
+    m_meshManager     = m_scene->meshManager();
+    m_materialManager = m_scene->materialManager();
+    m_textureManager  = m_scene->textureManager();
+
+    m_meshes    = other.m_meshes;
+    m_textures  = other.m_textures;
+    m_materials = other.m_materials;
 }
 
 Model::~Model() {}
@@ -78,10 +93,7 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
     }
 }
 
-void Model::destroy()
-{
-
-}
+void Model::destroy() {}
 
 void Model::render(const QOpenGLShaderProgramPtr& shader)
 {

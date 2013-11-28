@@ -22,6 +22,7 @@ Material::Material(const string& name,
       m_shininessStrength(shininessStrength),
       m_shader(shader)
 {
+    init();
     sendToGPU();
 }
 

@@ -22,6 +22,7 @@ class Model : public AbstractModel
 public:
     Model(Scene* scene);
     Model(Scene* scene, vector<shared_ptr<ModelData>> modelData);
+    Model(const Model& other);
     virtual ~Model();
 
     virtual void render(const QOpenGLShaderProgramPtr& shader);
