@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <QString>
 
-ModelManager::ModelManager(Scene *scene)
+ModelManager::ModelManager(Scene* scene)
     : m_scene(scene),
       m_modelLoader(ModelLoader())
 {}

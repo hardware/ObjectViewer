@@ -28,15 +28,12 @@ public:
 
     ~Material();
 
-    void init();
-
     void setName(const string& name) { m_name = name; }
     string name() const { return m_name; }
 
 private:
+    void init();
     void sendToGPU();
-
-    QOpenGLFunctions_4_3_Core* m_funcs;
 
     string m_name;
 
@@ -52,7 +49,8 @@ private:
     int m_twoSidedTrue;
     int m_wireframe;
 
-    QOpenGLShaderProgramPtr m_shader;
+    QOpenGLFunctions_4_3_Core* m_funcs;
+    QOpenGLShaderProgramPtr    m_shader;
 
 };
 

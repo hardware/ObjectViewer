@@ -21,6 +21,10 @@ struct MeshData {
     QVector<QVector3D> tangents;
 };
 
+struct TextureData {
+    string filename;
+};
+
 struct MaterialData {
     string name;
 
@@ -33,14 +37,10 @@ struct MaterialData {
     float shininessStrength;
 };
 
-struct TextureData {
-    string filename;
-};
-
 struct ModelData {
     MeshData     meshData;
-    MaterialData materialData;
     TextureData  textureData;
+    MaterialData materialData;
 };
 
 typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;

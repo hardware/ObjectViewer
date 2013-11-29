@@ -27,13 +27,13 @@ Scene::Scene(QObject *parent)
       m_modelManager(new ModelManager(this)),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
-      m_v(),
       m_viewCenterFixed(false),
       m_metersToUnits(0.05f),
       m_time(0.0f),
       m_lightMode(PerFragmentBlinnPhong),
       m_lightModeSubroutines(LightModeCount),
-      m_funcs(0)
+      m_funcs(0),
+      m_v()
 
 {
     // Initialisation de la position et de l'orientation de la camera
@@ -85,6 +85,14 @@ void Scene::initialize()
     m_materialManager = unique_ptr<AbstractMaterialManager>(new MaterialManager(shader));
     m_textureManager  = unique_ptr<AbstractTextureManager>(new TextureManager(shader));
     m_meshManager     = unique_ptr<AbstractMeshManager>(new MeshManager(shader));
+
+    /*
+    MODELS AVAILABLE :
+        - MercedesBenzSLSAMG/sls_amg.lwo
+        - blackhawk/uh60.lwo
+        - US_APC/apc.lwo
+        - tomcat/f14d.lwo
+    */
 
     m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo");
     m_model = m_modelManager->createModel("UH60");

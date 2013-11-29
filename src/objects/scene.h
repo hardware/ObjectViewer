@@ -89,8 +89,8 @@ private:
     AbstractModelManager*      m_modelManager;
 
     unique_ptr<AbstractMeshManager>     m_meshManager;
-    unique_ptr<AbstractMaterialManager> m_materialManager;
     unique_ptr<AbstractTextureManager>  m_textureManager;
+    unique_ptr<AbstractMaterialManager> m_materialManager;
 
     ShadersPtr m_shader;
     Object3D   m_object3D;

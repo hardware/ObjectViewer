@@ -35,8 +35,8 @@ protected:
     vector<Material*> m_materials;
 
     AbstractMeshManager     * m_meshManager;
-    AbstractMaterialManager * m_materialManager;
     AbstractTextureManager  * m_textureManager;
+    AbstractMaterialManager * m_materialManager;
 
 private:
     void initialize(vector<shared_ptr<ModelData>> modelData = vector<shared_ptr<ModelData>>());
