@@ -26,7 +26,7 @@ public:
 
     Texture(const string& fileName, TextureType type = Texture2D);
     Texture(const QImage& image, TextureType type = Texture2D);
-    ~Texture();
+    virtual ~Texture();
 
     void bind(GLenum textureUnit);
     void release();

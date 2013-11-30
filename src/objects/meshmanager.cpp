@@ -23,12 +23,12 @@ Mesh* MeshManager::getMesh(const string& name)
     return nullptr;
 }
 
-Mesh* MeshManager::addMesh(const string &name,
-                           const QVector<QVector3D> &positions,
-                           const QVector<QVector4D> &colors,
-                           const QVector<QVector2D> &texCoords,
-                           const QVector<QVector3D> &normals,
-                           const QVector<QVector3D> &tangents)
+Mesh* MeshManager::addMesh(const string& name,
+                           const QVector<QVector3D>& positions,
+                           const QVector<QVector4D>& colors,
+                           const QVector<QVector2D>& texCoords,
+                           const QVector<QVector3D>& normals,
+                           const QVector<QVector3D>& tangents)
 {
     if(m_meshes.find(name) != m_meshes.end() && m_meshes[name].get() != nullptr)
     {

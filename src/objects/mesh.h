@@ -29,7 +29,7 @@ public:
          const QVector<QVector3D>& tangents,
          const QOpenGLShaderProgramPtr& shader);
 
-    ~Mesh();
+    virtual ~Mesh();
 
     void render();
 

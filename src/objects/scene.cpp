@@ -21,7 +21,7 @@
  *
  * @param parent Objet parent
  */
-Scene::Scene(QObject *parent)
+Scene::Scene(QObject* parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
       m_modelManager(new ModelManager(this)),

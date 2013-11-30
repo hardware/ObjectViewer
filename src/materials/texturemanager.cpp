@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QString>
 
-TextureManager::TextureManager(const QOpenGLShaderProgramPtr &shader)
+TextureManager::TextureManager(const QOpenGLShaderProgramPtr& shader)
     : m_shader(shader)
 {}
 

@@ -26,7 +26,7 @@ public:
              float shininessStrength,
              const QOpenGLShaderProgramPtr& shader);
 
-    ~Material();
+    virtual ~Material();
 
     void setName(const string& name) { m_name = name; }
     string name() const { return m_name; }

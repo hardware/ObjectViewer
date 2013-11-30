@@ -10,13 +10,13 @@
 
 #include <QDebug>
 
-Model::Model(Scene *scene)
+Model::Model(Scene* scene)
     : m_scene(scene)
 {
     initialize();
 }
 
-Model::Model(Scene *scene, vector<shared_ptr<ModelData>> modelData)
+Model::Model(Scene* scene, vector<shared_ptr<ModelData>> modelData)
     : m_scene(scene)
 {
     initialize(modelData);

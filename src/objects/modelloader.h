@@ -17,7 +17,7 @@ class ModelLoader
 
 public:
     ModelLoader();
-    ~ModelLoader();
+    virtual ~ModelLoader();
 
     vector<shared_ptr<ModelData>> loadModel(const string& filename);
     vector<shared_ptr<ModelData>> loadModel(const string& name, const string& filename);
