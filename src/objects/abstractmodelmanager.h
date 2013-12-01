@@ -14,6 +14,7 @@ class AbstractModelManager
 
 public:
     AbstractModelManager();
+    virtual ~AbstractModelManager() = 0;
 
     virtual AbstractModel* getModel(const string& name) = 0;
     virtual shared_ptr<Model> loadModel(const string& name, const string& filename) = 0;

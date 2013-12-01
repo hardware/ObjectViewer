@@ -30,7 +30,7 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
     m_textureManager  = m_scene->textureManager();
     m_materialManager = m_scene->materialManager();
 
-    for(shared_ptr<ModelData> data : modelData)
+    for(shared_ptr<ModelData>& data : modelData)
     {
         shared_ptr<Mesh> mesh = m_meshManager->getMesh(data->meshData.name);
 

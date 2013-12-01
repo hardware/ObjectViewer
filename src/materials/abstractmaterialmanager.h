@@ -15,6 +15,7 @@ class AbstractMaterialManager
 
 public:
     AbstractMaterialManager();
+    virtual ~AbstractMaterialManager() = 0;
 
     virtual shared_ptr<Material> getMaterial(const string& name) = 0;
 

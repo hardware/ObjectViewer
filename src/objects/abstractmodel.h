@@ -50,6 +50,7 @@ class AbstractModel
 
 public:
     AbstractModel();
+    virtual ~AbstractModel() = 0;
 
     virtual void render(const QOpenGLShaderProgramPtr& shader) = 0;
 

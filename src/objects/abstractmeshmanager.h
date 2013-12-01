@@ -17,6 +17,7 @@ class AbstractMeshManager
 
 public:
     AbstractMeshManager();
+    virtual ~AbstractMeshManager() = 0;
 
     virtual shared_ptr<Mesh> getMesh(const string& name) = 0;
 
