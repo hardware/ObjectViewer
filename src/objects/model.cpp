@@ -22,30 +22,17 @@ Model::Model(Scene* scene, vector<shared_ptr<ModelData>> modelData)
     initialize(modelData);
 }
 
-Model::Model(const Model& other)
-{
-    m_scene = other.m_scene;
-
-    m_meshManager     = m_scene->meshManager();
-    m_materialManager = m_scene->materialManager();
-    m_textureManager  = m_scene->textureManager();
-
-    m_meshes    = other.m_meshes;
-    m_textures  = other.m_textures;
-    m_materials = other.m_materials;
-}
-
 Model::~Model() {}
 
 void Model::initialize(vector<shared_ptr<ModelData>> modelData)
 {
     m_meshManager     = m_scene->meshManager();
-    m_materialManager = m_scene->materialManager();
     m_textureManager  = m_scene->textureManager();
+    m_materialManager = m_scene->materialManager();
 
     for(shared_ptr<ModelData> data : modelData)
     {
-        Mesh* mesh = m_meshManager->getMesh(data->meshData.name);
+        shared_ptr<Mesh> mesh = m_meshManager->getMesh(data->meshData.name);
 
         if(mesh == nullptr)
         {
@@ -61,7 +48,7 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
 
         if( ! data->textureData.filename.empty() )
         {
-            Texture* texture = m_textureManager->getTexture(data->textureData.filename);
+            shared_ptr<Texture> texture = m_textureManager->getTexture(data->textureData.filename);
 
             if(texture == nullptr)
             {
@@ -76,7 +63,7 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
             m_textures.push_back(nullptr);
         }
 
-        Material* material = m_materialManager->getMaterial(data->materialData.name);
+        shared_ptr<Material> material = m_materialManager->getMaterial(data->materialData.name);
 
         if(material == nullptr)
         {

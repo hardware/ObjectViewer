@@ -13,7 +13,7 @@ using namespace std;
 
 class Camera;
 class Shaders;
-class AbstractModel;
+class Model;
 
 class AbstractMeshManager;
 class AbstractMaterialManager;
@@ -47,9 +47,6 @@ public:
     inline void pan(float angle)  { m_panAngle  = angle; }
     inline void tilt(float angle) { m_tiltAngle = angle; }
 
-    Object3D* getObject();
-    Camera*   getCamera();
-
     enum LightMode
     {
         PerFragmentBlinnPhong = 1,
@@ -61,9 +58,12 @@ public:
     void setLightMode(LightMode lightMode) { m_lightMode = lightMode; }
     LightMode lightMode() const { return m_lightMode; }
 
-    AbstractMeshManager     * meshManager();
-    AbstractMaterialManager * materialManager();
-    AbstractTextureManager  * textureManager();
+    Object3D* getObject();
+    Camera*   getCamera();
+
+    shared_ptr<AbstractMeshManager>     meshManager();
+    shared_ptr<AbstractTextureManager>  textureManager();
+    shared_ptr<AbstractMaterialManager> materialManager();
 
 private:
     void prepareShaders();
@@ -85,12 +85,12 @@ signals:
 private:
     Camera* m_camera;
 
-    unique_ptr<AbstractModel>  m_model;
-    AbstractModelManager*      m_modelManager;
+    shared_ptr<Model> m_model;
 
-    unique_ptr<AbstractMeshManager>     m_meshManager;
-    unique_ptr<AbstractTextureManager>  m_textureManager;
-    unique_ptr<AbstractMaterialManager> m_materialManager;
+    unique_ptr<AbstractModelManager>    m_modelManager;
+    shared_ptr<AbstractMeshManager>     m_meshManager;
+    shared_ptr<AbstractTextureManager>  m_textureManager;
+    shared_ptr<AbstractMaterialManager> m_materialManager;
 
     ShadersPtr m_shader;
     Object3D   m_object3D;

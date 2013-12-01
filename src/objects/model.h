@@ -22,7 +22,6 @@ class Model : public AbstractModel
 public:
     Model(Scene* scene);
     Model(Scene* scene, vector<shared_ptr<ModelData>> modelData);
-    Model(const Model& other);
     virtual ~Model();
 
     virtual void render(const QOpenGLShaderProgramPtr& shader);
@@ -30,13 +29,13 @@ public:
 protected:
     Scene* m_scene;
 
-    vector<Mesh*>     m_meshes;
-    vector<Texture*>  m_textures;
-    vector<Material*> m_materials;
+    vector<shared_ptr<Mesh>> m_meshes;
+    vector<shared_ptr<Texture>>  m_textures;
+    vector<shared_ptr<Material>> m_materials;
 
-    AbstractMeshManager     * m_meshManager;
-    AbstractTextureManager  * m_textureManager;
-    AbstractMaterialManager * m_materialManager;
+    shared_ptr<AbstractMeshManager>     m_meshManager;
+    shared_ptr<AbstractTextureManager>  m_textureManager;
+    shared_ptr<AbstractMaterialManager> m_materialManager;
 
 private:
     void initialize(vector<shared_ptr<ModelData>> modelData = vector<shared_ptr<ModelData>>());

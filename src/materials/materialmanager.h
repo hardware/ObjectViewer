@@ -3,7 +3,6 @@
 
 #include "abstractmaterialmanager.h"
 
-#include <memory>
 #include <map>
 
 #include <QOpenGLShaderProgram>
@@ -22,18 +21,18 @@ public:
     MaterialManager(const QOpenGLShaderProgramPtr& shader);
     virtual ~MaterialManager();
 
-    virtual Material* getMaterial(const string& name);
+    virtual shared_ptr<Material> getMaterial(const string& name);
 
-    virtual Material* addMaterial(const string& name,
-                                  const QVector4D& ambientColor,
-                                  const QVector4D& diffuseColor,
-                                  const QVector4D& specularColor,
-                                  const QVector4D& emissiveColor,
-                                  float shininess,
-                                  float shininessStrength);
+    virtual shared_ptr<Material> addMaterial(const string& name,
+                                             const QVector4D& ambientColor,
+                                             const QVector4D& diffuseColor,
+                                             const QVector4D& specularColor,
+                                             const QVector4D& emissiveColor,
+                                             float shininess,
+                                             float shininessStrength);
 
 private:
-    map<string, unique_ptr<Material>> m_materials;
+    map<string, shared_ptr<Material>> m_materials;
     QOpenGLShaderProgramPtr m_shader;
 };
 

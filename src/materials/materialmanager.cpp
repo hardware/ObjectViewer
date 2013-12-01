@@ -10,35 +10,35 @@ MaterialManager::MaterialManager(const QOpenGLShaderProgramPtr& shader)
 
 MaterialManager::~MaterialManager() {}
 
-Material* MaterialManager::getMaterial(const string& name)
+shared_ptr<Material> MaterialManager::getMaterial(const string& name)
 {
     if(m_materials.find(name) != m_materials.end())
     {
         qDebug() << "Material " << QString::fromStdString(name) << " found";
-        return m_materials[name].get();
+        return m_materials[name];
     }
 
     qDebug() << "Material " << QString::fromStdString(name) << " not found";
 
-    return nullptr;
+    return shared_ptr<Material>(nullptr);
 }
 
-Material* MaterialManager::addMaterial(const string& name,
-                                       const QVector4D& ambientColor,
-                                       const QVector4D& diffuseColor,
-                                       const QVector4D& specularColor,
-                                       const QVector4D& emissiveColor,
-                                       float shininess,
-                                       float shininessStrength)
+shared_ptr<Material> MaterialManager::addMaterial(const string& name,
+                                                  const QVector4D& ambientColor,
+                                                  const QVector4D& diffuseColor,
+                                                  const QVector4D& specularColor,
+                                                  const QVector4D& emissiveColor,
+                                                  float shininess,
+                                                  float shininessStrength)
 {
     if(m_materials.find(name) != m_materials.end() && m_materials[name].get() != nullptr)
     {
         qDebug() << "Material " << QString::fromStdString(name) << " already exists";
-        return m_materials[name].get();
+        return m_materials[name];
     }
 
     qDebug() << "Add " << QString::fromStdString(name) << " in materials list";
-    m_materials[name] = unique_ptr<Material>(new Material(name,
+    m_materials[name] = shared_ptr<Material>(new Material(name,
                                                           ambientColor,
                                                           diffuseColor,
                                                           specularColor,
@@ -47,5 +47,5 @@ Material* MaterialManager::addMaterial(const string& name,
                                                           shininessStrength,
                                                           m_shader));
 
-    return m_materials[name].get();
+    return m_materials[name];
 }

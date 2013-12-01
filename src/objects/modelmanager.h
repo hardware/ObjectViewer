@@ -16,11 +16,11 @@ public:
     virtual ~ModelManager();
 
     virtual AbstractModel* getModel(const string& name);
-    virtual void loadModel(const string& name, const string& filename);
-    virtual unique_ptr<AbstractModel> createModel(const string& name);
+    virtual shared_ptr<Model> loadModel(const string& name, const string& filename);
+//    virtual unique_ptr<AbstractModel> createModel(const string& name);
 
 private:
-    map<string, unique_ptr<Model>> m_models;
+    map<string, shared_ptr<Model>> m_models;
     Scene* m_scene;
     ModelLoader m_modelLoader;
 };

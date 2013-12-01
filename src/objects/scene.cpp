@@ -2,13 +2,9 @@
 #include "camera.h"
 #include "model.h"
 
-#include "abstractmodelmanager.h"
-#include "abstractmeshmanager.h"
 #include "modelmanager.h"
 #include "meshmanager.h"
 
-#include "../materials/abstractmaterialmanager.h"
-#include "../materials/abstracttexturemanager.h"
 #include "../materials/materialmanager.h"
 #include "../materials/texturemanager.h"
 
@@ -24,7 +20,6 @@
 Scene::Scene(QObject* parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
-      m_modelManager(new ModelManager(this)),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
       m_viewCenterFixed(false),
@@ -82,6 +77,7 @@ void Scene::initialize()
     shader->setUniformValue("texColor", 0);
     shader->setUniformValue("texNormal", 1);
 
+    m_modelManager    = unique_ptr<AbstractModelManager>(new ModelManager(this));
     m_materialManager = unique_ptr<AbstractMaterialManager>(new MaterialManager(shader));
     m_textureManager  = unique_ptr<AbstractTextureManager>(new TextureManager(shader));
     m_meshManager     = unique_ptr<AbstractMeshManager>(new MeshManager(shader));
@@ -94,8 +90,8 @@ void Scene::initialize()
         - tomcat/f14d.lwo
     */
 
-    m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo");
-    m_model = m_modelManager->createModel("UH60");
+    m_model = m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo");
+    // m_model = m_modelManager->createModel("UH60");
 }
 
 void Scene::update(float t)
@@ -237,17 +233,17 @@ Camera* Scene::getCamera()
     return m_camera;
 }
 
-AbstractMeshManager* Scene::meshManager()
+shared_ptr<AbstractMeshManager> Scene::meshManager()
 {
-    return m_meshManager.get();
+    return m_meshManager;
 }
 
-AbstractMaterialManager* Scene::materialManager()
+shared_ptr<AbstractTextureManager> Scene::textureManager()
 {
-    return m_materialManager.get();
+    return m_textureManager;
 }
 
-AbstractTextureManager* Scene::textureManager()
+shared_ptr<AbstractMaterialManager> Scene::materialManager()
 {
-    return m_textureManager.get();
+    return m_materialManager;
 }

@@ -3,7 +3,6 @@
 
 #include "abstracttexturemanager.h"
 
-#include <memory>
 #include <map>
 
 #include <QOpenGLShaderProgram>
@@ -22,11 +21,11 @@ public:
     TextureManager(const QOpenGLShaderProgramPtr& shader);
     virtual ~TextureManager();
 
-    virtual Texture* getTexture(const string& name);
-    virtual Texture* addTexture(const string& name, const string& filename);
+    virtual shared_ptr<Texture> getTexture(const string& name);
+    virtual shared_ptr<Texture> addTexture(const string& name, const string& filename);
 
 private:
-    map<string, unique_ptr<Texture>> m_textures;
+    map<string, shared_ptr<Texture>> m_textures;
     QOpenGLShaderProgramPtr m_shader;
 };
 

@@ -2,6 +2,7 @@
 #define ABSTRACTTEXTUREMANAGER_H
 
 #include <string>
+#include <memory>
 
 using namespace std;
 
@@ -13,8 +14,8 @@ class AbstractTextureManager
 public:
     AbstractTextureManager();
 
-    virtual Texture* getTexture(const string& name) = 0;
-    virtual Texture* addTexture(const string& name, const string& filename) = 0;
+    virtual shared_ptr<Texture> getTexture(const string& name) = 0;
+    virtual shared_ptr<Texture> addTexture(const string& name, const string& filename) = 0;
 
 };
 

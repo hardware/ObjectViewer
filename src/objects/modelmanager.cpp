@@ -25,25 +25,27 @@ AbstractModel* ModelManager::getModel(const string& name)
     return nullptr;
 }
 
-void ModelManager::loadModel(const string& name, const string& filename)
+shared_ptr<Model> ModelManager::loadModel(const string& name, const string& filename)
 {
     vector<shared_ptr<ModelData>> modelData = m_modelLoader.loadModel(name, filename);
-    m_models[name] = unique_ptr<Model>(new Model(m_scene, modelData));
+    m_models[name] = shared_ptr<Model>(new Model(m_scene, modelData));
+
+    return m_models[name];
 }
 
-unique_ptr<AbstractModel> ModelManager::createModel(const string& name)
-{
-    qDebug() << "Creating model : " << QString::fromStdString(name);
+//unique_ptr<AbstractModel> ModelManager::createModel(const string& name)
+//{
+//    qDebug() << "Creating model : " << QString::fromStdString(name);
 
-    if(m_models.find(name) != m_models.end())
-    {
-        qDebug() << "Model found";
+//    if(m_models.find(name) != m_models.end())
+//    {
+//        qDebug() << "Model found";
 
-        // Create a COPY of the model, and returns it wrapped in a unique pointer
-        return unique_ptr<AbstractModel>(new Model(*m_models[name].get()));
-    }
+//        // Create a COPY of the model, and returns it wrapped in a unique pointer
+//        return unique_ptr<AbstractModel>(new Model(*m_models[name].get()));
+//    }
 
-    qDebug() << "Model not found.";
+//    qDebug() << "Model not found.";
 
-    return unique_ptr<AbstractModel>(nullptr);
-}
+//    return unique_ptr<AbstractModel>(nullptr);
+//}
