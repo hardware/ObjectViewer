@@ -32,7 +32,7 @@ shared_ptr<Texture> TextureManager::addTexture(const string& name, const string&
     }
 
     qDebug() << "Add " << QString::fromStdString(name) << " in textures list";
-    m_textures[name] = shared_ptr<Texture>(new Texture(filename));
+    m_textures[name] = make_shared<Texture>(filename);
 
     return m_textures[name];
 }

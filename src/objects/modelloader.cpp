@@ -54,7 +54,7 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
 
     for(unsigned int i = 0; i < modelData.size(); i++)
     {
-        modelData[i] = std::shared_ptr<ModelData>(new ModelData());
+        modelData[i] = make_shared<ModelData>();
 
         modelData[i]->meshData     = loadMesh(name, filename, i, scene->mMeshes[i]);
         modelData[i]->materialData = loadMaterial(name, filename, i, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);

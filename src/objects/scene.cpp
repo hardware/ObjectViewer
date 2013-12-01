@@ -79,9 +79,9 @@ void Scene::initialize()
 
     m_modelManager    = unique_ptr<AbstractModelManager>(new ModelManager(this));
 
-    m_materialManager = shared_ptr<AbstractMaterialManager>(new MaterialManager(shader));
-    m_textureManager  = shared_ptr<AbstractTextureManager>(new TextureManager(shader));
-    m_meshManager     = shared_ptr<AbstractMeshManager>(new MeshManager(shader));
+    m_materialManager = make_shared<MaterialManager>(shader);
+    m_textureManager  = make_shared<TextureManager>(shader);
+    m_meshManager     = make_shared<MeshManager>(shader);
 
     /*
     MODELS AVAILABLE :
@@ -92,7 +92,6 @@ void Scene::initialize()
     */
 
     m_model = m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo");
-    // m_model = m_modelManager->createModel("UH60");
 }
 
 void Scene::update(float t)

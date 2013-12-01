@@ -38,14 +38,14 @@ shared_ptr<Material> MaterialManager::addMaterial(const string& name,
     }
 
     qDebug() << "Add " << QString::fromStdString(name) << " in materials list";
-    m_materials[name] = shared_ptr<Material>(new Material(name,
-                                                          ambientColor,
-                                                          diffuseColor,
-                                                          specularColor,
-                                                          emissiveColor,
-                                                          shininess,
-                                                          shininessStrength,
-                                                          m_shader));
+    m_materials[name] = make_shared<Material>(name,
+                                              ambientColor,
+                                              diffuseColor,
+                                              specularColor,
+                                              emissiveColor,
+                                              shininess,
+                                              shininessStrength,
+                                              m_shader);
 
     return m_materials[name];
 }

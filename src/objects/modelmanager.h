@@ -17,7 +17,6 @@ public:
 
     virtual AbstractModel* getModel(const string& name);
     virtual shared_ptr<Model> loadModel(const string& name, const string& filename);
-//    virtual unique_ptr<AbstractModel> createModel(const string& name);
 
 private:
     map<string, shared_ptr<Model>> m_models;
