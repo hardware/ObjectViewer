@@ -24,11 +24,11 @@ public:
     virtual shared_ptr<Mesh> getMesh(const string& name);
 
     virtual shared_ptr<Mesh> addMesh(const string& name,
-                                     const QVector<QVector3D>& positions,
-                                     const QVector<QVector4D>& colors,
-                                     const QVector<QVector2D>& texCoords,
-                                     const QVector<QVector3D>& normals,
-                                     const QVector<QVector3D>& tangents);
+                                     const vector<QVector3D>& positions,
+                                     const vector<QVector4D>& colors,
+                                     const vector<QVector2D>& texCoords,
+                                     const vector<QVector3D>& normals,
+                                     const vector<QVector3D>& tangents);
 
 private:
     map<string, shared_ptr<Mesh>> m_meshes;

@@ -78,9 +78,10 @@ void Scene::initialize()
     shader->setUniformValue("texNormal", 1);
 
     m_modelManager    = unique_ptr<AbstractModelManager>(new ModelManager(this));
-    m_materialManager = unique_ptr<AbstractMaterialManager>(new MaterialManager(shader));
-    m_textureManager  = unique_ptr<AbstractTextureManager>(new TextureManager(shader));
-    m_meshManager     = unique_ptr<AbstractMeshManager>(new MeshManager(shader));
+
+    m_materialManager = shared_ptr<AbstractMaterialManager>(new MaterialManager(shader));
+    m_textureManager  = shared_ptr<AbstractTextureManager>(new TextureManager(shader));
+    m_meshManager     = shared_ptr<AbstractMeshManager>(new MeshManager(shader));
 
     /*
     MODELS AVAILABLE :

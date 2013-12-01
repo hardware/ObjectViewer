@@ -22,11 +22,11 @@ class Mesh
 
 public:
     Mesh(const string& name,
-         const QVector<QVector3D>& positions,
-         const QVector<QVector4D>& colors,
-         const QVector<QVector2D>& texCoords,
-         const QVector<QVector3D>& normals,
-         const QVector<QVector3D>& tangents,
+         const vector<QVector3D>& positions,
+         const vector<QVector4D>& colors,
+         const vector<QVector2D>& texCoords,
+         const vector<QVector3D>& normals,
+         const vector<QVector3D>& tangents,
          const QOpenGLShaderProgramPtr& shader);
 
     virtual ~Mesh();
@@ -51,11 +51,11 @@ private:
 
     string m_name;
 
-    QVector<QVector3D> m_positions;
-    QVector<QVector4D> m_colors;
-    QVector<QVector2D> m_texCoords;
-    QVector<QVector3D> m_normals;
-    QVector<QVector3D> m_tangents;
+    vector<QVector3D> m_positions;
+    vector<QVector4D> m_colors;
+    vector<QVector2D> m_texCoords;
+    vector<QVector3D> m_normals;
+    vector<QVector3D> m_tangents;
 
     QOpenGLShaderProgramPtr m_shader;
 

@@ -24,11 +24,11 @@ shared_ptr<Mesh> MeshManager::getMesh(const string& name)
 }
 
 shared_ptr<Mesh> MeshManager::addMesh(const string& name,
-                                      const QVector<QVector3D>& positions,
-                                      const QVector<QVector4D>& colors,
-                                      const QVector<QVector2D>& texCoords,
-                                      const QVector<QVector3D>& normals,
-                                      const QVector<QVector3D>& tangents)
+                                      const vector<QVector3D>& positions,
+                                      const vector<QVector4D>& colors,
+                                      const vector<QVector2D>& texCoords,
+                                      const vector<QVector3D>& normals,
+                                      const vector<QVector3D>& tangents)
 {
     if(m_meshes.find(name) != m_meshes.end() && m_meshes[name].get() != nullptr)
     {

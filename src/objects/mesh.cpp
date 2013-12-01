@@ -6,11 +6,11 @@
 #include <QOpenGLVertexArrayObject>
 
 Mesh::Mesh(const string& name,
-           const QVector<QVector3D>& positions,
-           const QVector<QVector4D>& colors,
-           const QVector<QVector2D>& texCoords,
-           const QVector<QVector3D>& normals,
-           const QVector<QVector3D>& tangents,
+           const vector<QVector3D>& positions,
+           const vector<QVector4D>& colors,
+           const vector<QVector2D>& texCoords,
+           const vector<QVector3D>& normals,
+           const vector<QVector3D>& tangents,
            const QOpenGLShaderProgramPtr& shader)
     : m_funcs(0),
       m_vao(new QOpenGLVertexArrayObject),
@@ -64,27 +64,27 @@ void Mesh::load()
     m_vertexPositionBuffer.create();
     m_vertexPositionBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_vertexPositionBuffer.bind();
-    m_vertexPositionBuffer.allocate(m_positions.constData(), m_positions.size() * sizeof(QVector3D));
+    m_vertexPositionBuffer.allocate(m_positions.data(), m_positions.size() * sizeof(QVector3D));
 
     m_vertexColorBuffer.create();
     m_vertexColorBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_vertexColorBuffer.bind();
-    m_vertexColorBuffer.allocate(m_colors.constData(), m_colors.size() * sizeof(QVector4D));
+    m_vertexColorBuffer.allocate(m_colors.data(), m_colors.size() * sizeof(QVector4D));
 
     m_vertexTexCoordBuffer.create();
     m_vertexTexCoordBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_vertexTexCoordBuffer.bind();
-    m_vertexTexCoordBuffer.allocate(m_texCoords.constData(), m_texCoords.size() * sizeof(QVector2D));
+    m_vertexTexCoordBuffer.allocate(m_texCoords.data(), m_texCoords.size() * sizeof(QVector2D));
 
     m_vertexNormalBuffer.create();
     m_vertexNormalBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_vertexNormalBuffer.bind();
-    m_vertexNormalBuffer.allocate(m_normals.constData(), m_normals.size() * sizeof(QVector3D));
+    m_vertexNormalBuffer.allocate(m_normals.data(), m_normals.size() * sizeof(QVector3D));
 
     m_vertexTangentBuffer.create();
     m_vertexTangentBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_vertexTangentBuffer.bind();
-    m_vertexTangentBuffer.allocate(m_tangents.constData(), m_tangents.size() * sizeof(QVector3D));
+    m_vertexTangentBuffer.allocate(m_tangents.data(), m_tangents.size() * sizeof(QVector3D));
 
     m_shader->bind();
 

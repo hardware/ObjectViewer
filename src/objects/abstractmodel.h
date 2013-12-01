@@ -14,11 +14,11 @@ using namespace std;
 struct MeshData {
     string name;
 
-    QVector<QVector3D> positions;
-    QVector<QVector4D> colors;
-    QVector<QVector2D> texCoords;
-    QVector<QVector3D> normals;
-    QVector<QVector3D> tangents;
+    vector<QVector3D> positions;
+    vector<QVector4D> colors;
+    vector<QVector2D> texCoords;
+    vector<QVector3D> normals;
+    vector<QVector3D> tangents;
 };
 
 struct TextureData {
