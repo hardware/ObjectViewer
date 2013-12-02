@@ -153,37 +153,37 @@ const QMatrix4x4& Object3D::modelMatrix()
 
 void Object3D::setObjectXPosition(int x)
 {
-    m_position.setX(x/100.0f);
+    m_position.setX(static_cast<float>(x)/100.0f);
     m_modelMatrixDirty = true;
 }
 
 void Object3D::setObjectYPosition(int y)
 {
-    m_position.setY(y/100.0f);
+    m_position.setY(static_cast<float>(y)/100.0f);
     m_modelMatrixDirty = true;
 }
 
 void Object3D::setObjectZPosition(int z)
 {
-    m_position.setZ(z/100.0f);
+    m_position.setZ(static_cast<float>(z)/100.0f);
     m_modelMatrixDirty = true;
 }
 
 void Object3D::setObjectXRotation(int x)
 {
-    m_rotation.setX(x);
+    m_rotation.setX(static_cast<float>(x));
     m_modelMatrixDirty = true;
 }
 
 void Object3D::setObjectYRotation(int y)
 {
-    m_rotation.setY(y);
+    m_rotation.setY(static_cast<float>(y));
     m_modelMatrixDirty = true;
 }
 
 void Object3D::setObjectZRotation(int z)
 {
-    m_rotation.setZ(z);
+    m_rotation.setZ(static_cast<float>(z));
     m_modelMatrixDirty = true;
 }
 

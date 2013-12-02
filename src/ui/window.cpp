@@ -19,8 +19,8 @@ Window::Window(QScreen *screen)
       m_context(new QOpenGLContext),
       m_scene(new Scene(this)),
       m_leftButtonPressed(false),
-      m_cameraSpeed(200.0),
-      m_cameraSensitivity(0.2)
+      m_cameraSpeed(200.0f),
+      m_cameraSensitivity(0.2f)
 {
     // On définit le type de la zone de rendu, dans notre cas il
     // s'agit d'une zone OpenGL
@@ -138,27 +138,27 @@ void Window::keyPressEvent(QKeyEvent* e)
         break;
 
     case Qt::Key_Right:
-        scene->setSideSpeed(m_cameraSpeed);
+        scene->setSideSpeed(static_cast<float>(m_cameraSpeed));
         break;
 
     case Qt::Key_Left:
-        scene->setSideSpeed(-m_cameraSpeed);
+        scene->setSideSpeed(static_cast<float>(-m_cameraSpeed));
         break;
 
     case Qt::Key_Up:
-        scene->setForwardSpeed(m_cameraSpeed);
+        scene->setForwardSpeed(static_cast<float>(m_cameraSpeed));
         break;
 
     case Qt::Key_Down:
-        scene->setForwardSpeed(-m_cameraSpeed);
+        scene->setForwardSpeed(static_cast<float>(-m_cameraSpeed));
         break;
 
     case Qt::Key_PageUp:
-        scene->setVerticalSpeed(m_cameraSpeed);
+        scene->setVerticalSpeed(static_cast<float>(m_cameraSpeed));
         break;
 
     case Qt::Key_PageDown:
-        scene->setVerticalSpeed(-m_cameraSpeed);
+        scene->setVerticalSpeed(static_cast<float>(-m_cameraSpeed));
         break;
 
     case Qt::Key_Shift:
@@ -227,8 +227,8 @@ void Window::mouseMoveEvent(QMouseEvent* e)
     {
         m_pos = e->pos();
 
-        float dx = m_cameraSensitivity * (m_pos.x() - m_prevPos.x());
-        float dy = -m_cameraSensitivity * (m_pos.y() - m_prevPos.y());
+        float dx = static_cast<float>(m_cameraSensitivity) * (static_cast<float>(m_pos.x()) - static_cast<float>(m_prevPos.x()));
+        float dy = static_cast<float>(-m_cameraSensitivity) * (static_cast<float>(m_pos.y()) - static_cast<float>(m_prevPos.y()));
 
         m_prevPos = m_pos;
 

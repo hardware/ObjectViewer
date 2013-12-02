@@ -48,8 +48,9 @@ QMAKE_CXXFLAGS += -isystem "/usr/include/qt/QtCore" \
 QMAKE_CXXFLAGS_WARN_ON += -Wall -Wextra -Wfloat-equal -Wundef -Wpointer-arith \
                           -Wcast-align -Wstrict-prototypes -Wstrict-overflow=5 \
                           -Wwrite-strings -Wcast-qual -Wswitch-enum -Wconversion \
-                          -Wnon-virtual-dtor
-
+                          -Wnon-virtual-dtor -Wmissing-noreturn \
+                          -Wredundant-decls -Winline -Wdouble-promotion -Winit-self \
+                          -Wold-style-cast -Woverloaded-virtual -pedantic
 OTHER_FILES += \
     resources/shaders/basic.vert \
     resources/shaders/basic.frag \

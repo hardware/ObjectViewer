@@ -734,35 +734,35 @@ void MainWindow::updateMatrix()
 
 void MainWindow::updateFieldOfView(double fov)
 {
-    m_camera->setFieldOfView(fov);
+    m_camera->setFieldOfView(static_cast<float>(fov));
 }
 
 void MainWindow::updateNearPlane(double nearPlane)
 {
-    m_camera->setNearPlane(nearPlane);
+    m_camera->setNearPlane(static_cast<float>(nearPlane));
 }
 
 void MainWindow::updateFarPlane(double farPlane)
 {
-    m_camera->setFarPlane(farPlane);
+    m_camera->setFarPlane(static_cast<float>(farPlane));
 }
 
 void MainWindow::updateLeft(double left)
 {
-    m_camera->setLeft(left);
+    m_camera->setLeft(static_cast<float>(left));
 }
 
 void MainWindow::updateRight(double right)
 {
-    m_camera->setRight(right);
+    m_camera->setRight(static_cast<float>(right));
 }
 
 void MainWindow::updateBottom(double bottom)
 {
-    m_camera->setBottom(bottom);
+    m_camera->setBottom(static_cast<float>(bottom));
 }
 
 void MainWindow::updateTop(double top)
 {
-    m_camera->setTop(top);
+    m_camera->setTop(static_cast<float>(top));
 }

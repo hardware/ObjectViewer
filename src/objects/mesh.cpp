@@ -5,6 +5,8 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include <QOpenGLVertexArrayObject>
 
+#pragma GCC diagnostic ignored "-Wconversion"
+
 Mesh::Mesh(const string& name,
            const vector<QVector3D>& positions,
            const vector<QVector4D>& colors,
@@ -119,3 +121,5 @@ void Mesh::render()
     m_funcs->glDrawArrays(GL_TRIANGLES, 0, m_positions.size());
     m_vao->release();
 }
+
+#pragma GCC diagnostic pop

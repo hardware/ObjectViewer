@@ -134,10 +134,10 @@ MeshData ModelLoader::loadMesh(const string& name,
 
             if(mesh->HasVertexColors(0))
             {
-                data.colors[currentIndex + j] = QVector4D((float)mesh->mColors[0][vertexIndex].r,
-                                                          (float)mesh->mColors[0][vertexIndex].g,
-                                                          (float)mesh->mColors[0][vertexIndex].b,
-                                                          (float)mesh->mColors[0][vertexIndex].a);
+                data.colors[currentIndex + j] = QVector4D(static_cast<float>(mesh->mColors[0][vertexIndex].r),
+                                                          static_cast<float>(mesh->mColors[0][vertexIndex].g),
+                                                          static_cast<float>(mesh->mColors[0][vertexIndex].b),
+                                                          static_cast<float>(mesh->mColors[0][vertexIndex].a));
             }
             else
             {

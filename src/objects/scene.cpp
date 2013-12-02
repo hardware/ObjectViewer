@@ -126,7 +126,7 @@ void Scene::render(double currentTime)
 
     if(currentTime > 0)
     {
-        m_object3D.rotateY(currentTime/0.02f);
+        m_object3D.rotateY(static_cast<float>(currentTime)/0.02f);
     }
 
     QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_object3D.modelMatrix();
