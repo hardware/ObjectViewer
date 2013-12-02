@@ -11,7 +11,7 @@ Texture::Texture(const string& fileName, TextureType type)
       m_fileName(fileName),
       m_type(type),
       m_textureId(0),
-      m_funcs(0)
+      m_funcs(nullptr)
 {
     init();
     load();
@@ -23,7 +23,7 @@ Texture::Texture(const QImage& image, TextureType type)
       m_fileName(""),
       m_type(type),
       m_textureId(0),
-      m_funcs(0)
+      m_funcs(nullptr)
 {
     init();
     load();

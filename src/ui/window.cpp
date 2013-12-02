@@ -121,15 +121,11 @@ void Window::checkAnimate(int state)
 
 Scene* Window::getScene()
 {
-    Scene* scene = static_cast<Scene*>(m_scene);
-
-    return scene;
+    return ( static_cast<Scene*>(m_scene) );
 }
 
 void Window::keyPressEvent(QKeyEvent* e)
 {
-    Scene* scene = static_cast<Scene*>(m_scene);
-
     switch (e->key())
     {
     case Qt::Key_Escape:
@@ -138,31 +134,31 @@ void Window::keyPressEvent(QKeyEvent* e)
         break;
 
     case Qt::Key_Right:
-        scene->setSideSpeed(static_cast<float>(m_cameraSpeed));
+        getScene()->setSideSpeed(static_cast<float>(m_cameraSpeed));
         break;
 
     case Qt::Key_Left:
-        scene->setSideSpeed(static_cast<float>(-m_cameraSpeed));
+        getScene()->setSideSpeed(static_cast<float>(-m_cameraSpeed));
         break;
 
     case Qt::Key_Up:
-        scene->setForwardSpeed(static_cast<float>(m_cameraSpeed));
+        getScene()->setForwardSpeed(static_cast<float>(m_cameraSpeed));
         break;
 
     case Qt::Key_Down:
-        scene->setForwardSpeed(static_cast<float>(-m_cameraSpeed));
+        getScene()->setForwardSpeed(static_cast<float>(-m_cameraSpeed));
         break;
 
     case Qt::Key_PageUp:
-        scene->setVerticalSpeed(static_cast<float>(m_cameraSpeed));
+        getScene()->setVerticalSpeed(static_cast<float>(m_cameraSpeed));
         break;
 
     case Qt::Key_PageDown:
-        scene->setVerticalSpeed(static_cast<float>(-m_cameraSpeed));
+        getScene()->setVerticalSpeed(static_cast<float>(-m_cameraSpeed));
         break;
 
     case Qt::Key_Shift:
-        scene->setViewCenterFixed(true);
+        getScene()->setViewCenterFixed(true);
         break;
 
     default:
@@ -172,27 +168,25 @@ void Window::keyPressEvent(QKeyEvent* e)
 
 void Window::keyReleaseEvent(QKeyEvent* e)
 {
-    Scene* scene = static_cast<Scene*>(m_scene);
-
     switch (e->key())
     {
         case Qt::Key_Right:
         case Qt::Key_Left:
-            scene->setSideSpeed(0.0f);
+            getScene()->setSideSpeed(0.0f);
             break;
 
         case Qt::Key_Up:
         case Qt::Key_Down:
-            scene->setForwardSpeed(0.0f);
+            getScene()->setForwardSpeed(0.0f);
             break;
 
         case Qt::Key_PageUp:
         case Qt::Key_PageDown:
-            scene->setVerticalSpeed(0.0f);
+            getScene()->setVerticalSpeed(0.0f);
             break;
 
         case Qt::Key_Shift:
-            scene->setViewCenterFixed(false);
+            getScene()->setViewCenterFixed(false);
             break;
 
         default:
@@ -232,10 +226,8 @@ void Window::mouseMoveEvent(QMouseEvent* e)
 
         m_prevPos = m_pos;
 
-        Scene* scene = static_cast<Scene*>(m_scene);
-
-        scene->pan(dx);
-        scene->tilt(dy);
+        getScene()->pan(dx);
+        getScene()->tilt(dy);
     }
 
     QWindow::mouseMoveEvent(e);

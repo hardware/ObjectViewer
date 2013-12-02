@@ -28,7 +28,7 @@ Scene::Scene(QObject* parent)
       m_metersToUnits(0.05f),
       m_lightMode(PerFragmentBlinnPhong),
       m_lightModeSubroutines(LightModeCount),
-      m_funcs(0)
+      m_funcs(nullptr)
 {
     // Initialisation de la position et de l'orientation de la camera
     m_camera->setPosition(QVector3D(-8.0f, 6.0f, -7.0f));
@@ -44,6 +44,7 @@ Scene::Scene(QObject* parent)
 Scene::~Scene()
 {
     delete m_camera;
+    m_camera = nullptr;
 }
 
 void Scene::initialize()

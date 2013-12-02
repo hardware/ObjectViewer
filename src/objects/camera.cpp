@@ -9,6 +9,7 @@ Camera::Camera(QObject* parent)
 Camera::~Camera()
 {
     delete d_ptr;
+    d_ptr = nullptr;
 }
 
 Camera::ProjectionType Camera::projectionType() const

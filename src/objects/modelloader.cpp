@@ -3,14 +3,8 @@
 #include <QDebug>
 #include <QString>
 
-ModelLoader::ModelLoader()
-{
-}
-
-ModelLoader::~ModelLoader()
-{
-
-}
+ModelLoader::ModelLoader() {}
+ModelLoader::~ModelLoader() {}
 
 vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& filename)
 {

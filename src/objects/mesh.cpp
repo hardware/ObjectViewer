@@ -14,7 +14,7 @@ Mesh::Mesh(const string& name,
            const vector<QVector3D>& normals,
            const vector<QVector3D>& tangents,
            const QOpenGLShaderProgramPtr& shader)
-    : m_funcs(0),
+    : m_funcs(nullptr),
       m_vao(new QOpenGLVertexArrayObject),
       m_vertexPositionBuffer(QOpenGLBuffer::VertexBuffer),
       m_vertexColorBuffer(QOpenGLBuffer::VertexBuffer),
@@ -44,6 +44,7 @@ Mesh::~Mesh()
     m_vao->destroy();
 
     delete m_vao;
+    m_vao = nullptr;
 }
 
 void Mesh::init()

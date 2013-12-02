@@ -10,9 +10,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       m_openglArea(new Window),
-      m_scene(0),
-      m_object3D(0),
-      m_camera(0)
+      m_scene(nullptr),
+      m_object3D(nullptr),
+      m_camera(nullptr)
 {
     resize(1366, 768);
     setCentralWidget(QWidget::createWindowContainer(m_openglArea.data()));
@@ -359,7 +359,7 @@ void MainWindow::initializeParamsArea()
 
     lightTab->setLayout(lightTabLayout);
 
-    // ############ DOCK LEFT ############
+    // ############ DOCK BOTTOM ############
 
     m_dockMatrixArea = new QDockWidget("MODEL VIEW PROJECTION MATRIX", this);
     addDockWidget(Qt::BottomDockWidgetArea, m_dockMatrixArea);
@@ -507,12 +507,12 @@ void MainWindow::initializeParamsArea()
     viewMatrixGroupBox->setAlignment(Qt::AlignHCenter);
     projectionMatrixGroupBox->setAlignment(Qt::AlignHCenter);
 
-    modelMatrixGroupBox->setMinimumWidth(250);
-    modelMatrixGroupBox->setMaximumWidth(250);
-    viewMatrixGroupBox->setMinimumWidth(250);
-    viewMatrixGroupBox->setMaximumWidth(250);
-    projectionMatrixGroupBox->setMinimumWidth(250);
-    projectionMatrixGroupBox->setMaximumWidth(250);
+    modelMatrixGroupBox->setMinimumWidth(300);
+    modelMatrixGroupBox->setMaximumWidth(300);
+    viewMatrixGroupBox->setMinimumWidth(300);
+    viewMatrixGroupBox->setMaximumWidth(300);
+    projectionMatrixGroupBox->setMinimumWidth(300);
+    projectionMatrixGroupBox->setMaximumWidth(300);
 
     QLabel* operator1 = new QLabel("x");
     QLabel* operator2 = new QLabel("x");
@@ -665,8 +665,8 @@ void MainWindow::updateMatrix()
     if(count == 15) // Mise à jour des matrices toutes les 1/4 de secondes
     {
         const float* modelMatrixData      = m_object3D->modelMatrix().data();
-        const float* viewMatrixData       = m_scene->getCamera()->viewMatrix().data();
-        const float* projectionMatrixData = m_scene->getCamera()->projectionMatrix().data();
+        const float* viewMatrixData       = m_camera->viewMatrix().data();
+        const float* projectionMatrixData = m_camera->projectionMatrix().data();
 
         modelMatrix00->setNum(modelMatrixData[0]);
         modelMatrix01->setNum(modelMatrixData[4]);
