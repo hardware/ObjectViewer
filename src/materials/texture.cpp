@@ -47,7 +47,7 @@ void Texture::init()
 bool Texture::load()
 {
     glGenTextures(1, &m_textureId);
-    glBindTexture(GL_TEXTURE_2D_ARRAY, m_textureId);
+    glBindTexture(m_type, m_textureId);
 
     if( ! m_fileName.empty() )
     {
@@ -64,55 +64,33 @@ bool Texture::load()
             return false;
         }
 
-//        glTexImage2D(m_type,
-//            0,
-//            GL_RGBA,
-//            static_cast<GLsizei>(m_image.columns()),
-//            static_cast<GLsizei>(m_image.rows()),
-//            0,
-//            GL_RGBA,
-//            GL_UNSIGNED_BYTE,
-//            m_blob.data()
-//        );
-
-        glTexImage3D(GL_TEXTURE_2D_ARRAY,
-                     0,
-                     GL_RGBA,
-                     static_cast<GLsizei>(m_image.columns()),
-                     static_cast<GLsizei>(m_image.rows()),
-                     1,
-                     0,
-                     GL_RGBA,
-                     GL_UNSIGNED_BYTE,
-                     m_blob.data());
+        glTexImage2D(m_type,
+            0,
+            GL_RGBA,
+            static_cast<GLsizei>(m_image.columns()),
+            static_cast<GLsizei>(m_image.rows()),
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            m_blob.data()
+        );
     }
     else
     {
-//        glTexImage2D(m_type,
-//            0,
-//            GL_RGBA,
-//            m_qimage.width(),
-//            m_qimage.height(),
-//            0,
-//            GL_RGBA,
-//            GL_UNSIGNED_BYTE,
-//            m_qimage.bits()
-//        );
-
-        glTexImage3D(GL_TEXTURE_2D_ARRAY,
-                     0,
-                     GL_RGBA,
-                     m_qimage.width(),
-                     m_qimage.height(),
-                     1,
-                     0,
-                     GL_RGBA,
-                     GL_UNSIGNED_BYTE,
-                     m_qimage.bits());
+        glTexImage2D(m_type,
+            0,
+            GL_RGBA,
+            m_qimage.width(),
+            m_qimage.height(),
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            m_qimage.bits()
+        );
     }
 
-    glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(m_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(m_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     return true;
 }
@@ -129,10 +107,10 @@ void Texture::destroy()
 void Texture::bind(GLenum textureUnit)
 {
     m_funcs->glActiveTexture(textureUnit);
-    glBindTexture(GL_TEXTURE_2D_ARRAY, m_textureId);
+    glBindTexture(m_type, m_textureId);
 }
 
 void Texture::release()
 {
-    glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+    glBindTexture(m_type, 0);
 }

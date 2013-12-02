@@ -17,7 +17,7 @@ in VS_OUT
 out vec4 FragColor;
 
 // Texture sampler
-uniform sampler2DArray texColor;
+uniform sampler2D texColor;
 
 // Material properties
 uniform vec3 ambient        = vec3(0.1, 0.1, 0.1);
@@ -88,5 +88,5 @@ void main()
     vec3 diffuse  = max(dot(N, L), 0.0) * diffuseAlbedo;
 
     // Write final color to the framebuffer
-    FragColor = texture(texColor, vec3(fs_in.texCoord.xy, 1.0)) * fs_in.color * vec4(ambient + diffuse + GenlightColor(N, L, V), 1.0);
+    FragColor = texture(texColor, fs_in.texCoord.xy) * fs_in.color * vec4(ambient + diffuse + GenlightColor(N, L, V), 1.0);
 }

@@ -26,8 +26,6 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
     aiProcess_FindInvalidData
     */
 
-    // aiProcess_FlipUVs
-
     if(scene == nullptr)
     {
         qFatal(qPrintable(QObject::tr("Error parsing : %1 -> %2").arg(filename.c_str()).arg(Importer.GetErrorString())));
