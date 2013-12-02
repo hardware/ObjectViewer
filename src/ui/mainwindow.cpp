@@ -320,11 +320,11 @@ void MainWindow::initializeParamsArea()
 
     // ############ LIGHT TAB - LIGHT EFFECT GROUPBOX ############
 
-    QRadioButton* PVPhong      = new QRadioButton("Per-vertex Phong");
-    QRadioButton* PVBlinnPhong = new QRadioButton("Per-vertex Blinn-Phong");
-    QRadioButton* RimLighting  = new QRadioButton("Rim lighting");
+    QRadioButton* PVPhong      = new QRadioButton("Per-fragment Phong");
+    QRadioButton* PVBlinnPhong = new QRadioButton("Per-fragment Blinn-Phong");
+    QRadioButton* RimLighting  = new QRadioButton("Phong + Rim lighting");
 
-    PVBlinnPhong->setChecked(true);
+    PVPhong->setChecked(true);
 
     QVBoxLayout* lightEffectLayout = new QVBoxLayout;
     lightEffectLayout->addWidget(PVPhong);

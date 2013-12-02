@@ -20,11 +20,16 @@ out vec4 FragColor;
 uniform sampler2D texColor;
 
 // Material properties
-uniform vec3 ambient        = vec3(0.1, 0.1, 0.1);
-uniform vec3 diffuseAlbedo  = vec3(1.0, 1.0, 1.0);
-uniform vec3 specularAlbedo = vec3(0.7);
+uniform struct MaterialInfo
+{
+    vec4 Ka; // Ambient reflectivity
+    vec4 Kd; // Diffuse reflectivity
+    vec4 Ks; // Specular reflectivity
+    vec4 Ke; // Emissive reflectivity
 
-uniform float specularPower = 64.0;
+    float shininess; // Specular shininess exponent
+    float shininessStrength; // Not yet used
+} material;
 
 // Rim effect properties
 uniform vec3  rimColor = vec3(0.93, 0.09, 0.14);
@@ -50,7 +55,7 @@ vec3 PerFragmentBlinnPhong(vec3 N, vec3 L, vec3 V)
     // Calculate the half vector
     vec3 H = normalize(L + V);
 
-    return pow(max(dot(N, H), 0.0), specularPower) * specularAlbedo;
+    return pow(max(dot(N, H), 0.0), material.shininess) * material.Ks.xyz;
 }
 
 layout (index = 2)
@@ -60,7 +65,7 @@ vec3 PerFragmentPhong(vec3 N, vec3 L, vec3 V)
     // Calculate R locally
     vec3 R = reflect(-L, N);
 
-    return pow(max(dot(R, V), 0.0), specularPower) * specularAlbedo;
+    return pow(max(dot(R, V), 0.0), material.shininess) * material.Ks.xyz;
 }
 
 layout (index = 3)
@@ -69,7 +74,7 @@ vec3 RimLighting(vec3 N, vec3 L, vec3 V)
 {
     vec3 R = reflect(-L, N);
 
-    vec3 specular = pow(max(dot(R, V), 0.0), specularPower) * specularAlbedo;
+    vec3 specular = pow(max(dot(R, V), 0.0), material.shininess) * material.Ks.xyz;
     vec3 rim      = calculateRim(N, V);
 
     return specular + rim;
@@ -85,8 +90,8 @@ void main()
     vec3 V = normalize(fs_in.V);
 
     // Compute the diffuse and specular components for each fragment
-    vec3 diffuse  = max(dot(N, L), 0.0) * diffuseAlbedo;
+    vec3 diffuse  = max(dot(N, L), 0.0) * material.Kd.xyz;
 
     // Write final color to the framebuffer
-    FragColor = texture(texColor, fs_in.texCoord.xy) * fs_in.color * vec4(ambient + diffuse + GenlightColor(N, L, V), 1.0);
+    FragColor = texture(texColor, fs_in.texCoord.xy) * fs_in.color * vec4(material.Ke.xyz + material.Ka.xyz + diffuse + GenlightColor(N, L, V), 1.0);
 }

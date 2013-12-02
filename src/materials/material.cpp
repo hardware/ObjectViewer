@@ -40,8 +40,6 @@ void Material::init()
 
 void Material::sendToGPU()
 {
-    qDebug() << "Load material : " << QString::fromStdString(m_name) << " into memory";
-
     m_shader->setUniformValue("material.Ka", m_ambientColor);
     m_shader->setUniformValue("material.Kd", m_diffuseColor);
     m_shader->setUniformValue("material.Ks", m_specularColor);
@@ -51,18 +49,4 @@ void Material::sendToGPU()
     m_shader->setUniformValue("material.shininessStrength", m_shininessStrength);
 
     // TODO : Il faut utiliser un Uniform Buffer Object !!
-
-    /*
-    BLOCK IN FRAGMENT SHADER
-    uniform struct MaterialInfo
-    {
-        vec4 Ka;
-        vec4 Kd;
-        vec4 Ks;
-        vec4 Ke;
-
-        float shininess;
-        float shininessStrength;
-    } material;
-    */
 }

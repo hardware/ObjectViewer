@@ -95,7 +95,7 @@ void Model::render(const QOpenGLShaderProgramPtr& shader)
 
         if(m_materials[i] != nullptr)
         {
-            // TODO : Bind material
+            m_materials[i]->sendToGPU();
         }
 
         m_meshes[i]->render();

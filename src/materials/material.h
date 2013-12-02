@@ -31,9 +31,10 @@ public:
     void setName(const string& name) { m_name = name; }
     string name() const { return m_name; }
 
+    void sendToGPU();
+
 private:
     void init();
-    void sendToGPU();
 
     string m_name;
 

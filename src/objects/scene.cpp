@@ -26,7 +26,7 @@ Scene::Scene(QObject* parent)
       m_tiltAngle(0.0f),
       m_time(0.0f),
       m_metersToUnits(0.05f),
-      m_lightMode(PerFragmentBlinnPhong),
+      m_lightMode(PerFragmentPhong),
       m_lightModeSubroutines(LightModeCount),
       m_funcs(nullptr)
 {

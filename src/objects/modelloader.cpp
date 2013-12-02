@@ -195,7 +195,7 @@ MaterialData ModelLoader::loadMaterial(const string& name,
         data.diffuseColor.setW(1.0f);
     }
 
-    aiColor3D specularColor(0.0f, 0.0f, 0.0f);
+    aiColor3D specularColor(0.7f, 0.7f, 0.7f);
 
     if(material->Get(AI_MATKEY_COLOR_SPECULAR, specularColor) == AI_SUCCESS)
     {
@@ -215,7 +215,7 @@ MaterialData ModelLoader::loadMaterial(const string& name,
         data.emissiveColor.setW(1.0f);
     }
 
-    float shininess = 0.0f;
+    float shininess = 64.0f;
 
     if(material->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
     {
