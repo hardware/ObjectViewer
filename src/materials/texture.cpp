@@ -6,9 +6,9 @@
 #include <QOpenGLFunctions>
 
 Texture::Texture(const string& fileName, TextureType type)
-    : m_fileName(fileName),
-      m_qimage(),
+    : m_qimage(),
       m_image(),
+      m_fileName(fileName),
       m_type(type),
       m_textureId(0),
       m_funcs(0)
@@ -18,9 +18,9 @@ Texture::Texture(const string& fileName, TextureType type)
 }
 
 Texture::Texture(const QImage& image, TextureType type)
-    : m_fileName(""),
-      m_qimage(QGLWidget::convertToGLFormat(image)),
+    : m_qimage(QGLWidget::convertToGLFormat(image)),
       m_image(),
+      m_fileName(""),
       m_type(type),
       m_textureId(0),
       m_funcs(0)

@@ -20,16 +20,15 @@
 Scene::Scene(QObject* parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
+      m_v(),
+      m_viewCenterFixed(false),
       m_panAngle(0.0f),
       m_tiltAngle(0.0f),
-      m_viewCenterFixed(false),
-      m_metersToUnits(0.05f),
       m_time(0.0f),
+      m_metersToUnits(0.05f),
       m_lightMode(PerFragmentBlinnPhong),
       m_lightModeSubroutines(LightModeCount),
-      m_funcs(0),
-      m_v()
-
+      m_funcs(0)
 {
     // Initialisation de la position et de l'orientation de la camera
     m_camera->setPosition(QVector3D(-8.0f, 6.0f, -7.0f));

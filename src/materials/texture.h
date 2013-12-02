@@ -39,14 +39,15 @@ private:
     void init();
     bool load();
 
+    QImage m_qimage;
+
     Magick::Image m_image;
     Magick::Blob  m_blob;
 
-    GLuint      m_textureId;
     string      m_fileName;
     TextureType m_type;
+    GLuint      m_textureId;
 
-    QImage m_qimage;
     QOpenGLFunctions* m_funcs;
 
 };

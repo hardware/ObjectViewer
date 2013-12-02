@@ -22,10 +22,6 @@ DEPENDPATH += \
     /usr/lib \
     /usr/include
 
-# GCC FLAGS
-QMAKE_CXXFLAGS += -std=c++0x
-QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder -Wnon-virtual-dtor
-
 RCC_DIR     = $$_PRO_FILE_PWD_/build/tmp/rcc
 UI_DIR      = $$_PRO_FILE_PWD_/build/tmp/ui
 MOC_DIR     = $$_PRO_FILE_PWD_/build/tmp/moc
@@ -37,6 +33,22 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
     DESTDIR = $$_PRO_FILE_PWD_/build/release
 }
+
+# GCC FLAGS
+QMAKE_CXXFLAGS += -std=c++0x
+
+QMAKE_CXXFLAGS += -isystem "/usr/include/qt/QtCore" \
+                  -isystem "/usr/include/qt/QtGui" \
+                  -isystem "/usr/include/qt/QtOpenGL" \
+                  -isystem "/usr/include/qt/QtWidgets" \
+                  -isystem "/usr/include/qt/QtOpenGLExtensions" \
+                  -isystem "$$PWD/includes" \
+                  -isystem "$$PWD/build/tmp/moc"
+
+QMAKE_CXXFLAGS_WARN_ON += -Wall -Wextra -Wfloat-equal -Wundef -Wpointer-arith \
+                          -Wcast-align -Wstrict-prototypes -Wstrict-overflow=5 \
+                          -Wwrite-strings -Wcast-qual -Wswitch-enum -Wconversion \
+                          -Wnon-virtual-dtor
 
 OTHER_FILES += \
     resources/shaders/basic.vert \

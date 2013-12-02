@@ -39,13 +39,13 @@ private slots:
     void updateTop(double top);
 
 private:
+    QScopedPointer<Window> m_openglArea;
+
     QWidget      * m_params,         * m_coordinate,     * m_mvpMatrix;
     QDockWidget  * m_dockParamsArea, * m_dockMatrixArea;
     Scene        * m_scene;
     Object3D     * m_object3D;
     Camera       * m_camera;
-
-    QScopedPointer<Window> m_openglArea;
 
     QLabel * fovLabel,   * leftLabel,
            * rightLabel, * bottomLabel,

@@ -96,9 +96,6 @@ private:
     Object3D   m_object3D;
     QVector3D  m_v;
 
-    LightMode       m_lightMode;
-    QVector<GLuint> m_lightModeSubroutines;
-
     bool m_viewCenterFixed;
 
     float m_panAngle;
@@ -106,6 +103,9 @@ private:
     float m_time;
 
     const float m_metersToUnits;
+
+    LightMode       m_lightMode;
+    QVector<GLuint> m_lightModeSubroutines;
 
     QOpenGLFunctions_4_3_Core* m_funcs;
 };
