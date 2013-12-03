@@ -1,6 +1,7 @@
 #include "scene.h"
 #include "camera.h"
 #include "model.h"
+#include "pointlight.h"
 
 #include "modelmanager.h"
 #include "meshmanager.h"
@@ -20,6 +21,7 @@
 Scene::Scene(QObject* parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
+      m_light(new PointLight),
       m_v(),
       m_viewCenterFixed(false),
       m_panAngle(0.0f),
@@ -45,6 +47,9 @@ Scene::~Scene()
 {
     delete m_camera;
     m_camera = nullptr;
+
+    delete m_light;
+    m_light = nullptr;
 }
 
 void Scene::initialize()
@@ -77,7 +82,13 @@ void Scene::initialize()
     shader->setUniformValue("texColor", 0);
     shader->setUniformValue("texNormal", 1);
 
-    m_modelManager    = unique_ptr<AbstractModelManager>(new ModelManager(this));
+    PointLight* pointLight = static_cast<PointLight*>(m_light);
+    pointLight->setPosition(QVector3D(0.0f, 0.0f, 0.0f));
+    pointLight->setUniqueColor(QVector3D(1.0f, 1.0f, 1.0f));
+    pointLight->setLinearAttenuation(0.1f);
+    pointLight->setIntensity(2.0f);
+
+    m_modelManager = unique_ptr<AbstractModelManager>(new ModelManager(this));
 
     m_materialManager = make_shared<MaterialManager>(shader);
     m_textureManager  = make_shared<TextureManager>(shader);
@@ -138,6 +149,9 @@ void Scene::render(double currentTime)
     shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
 
     m_model->render(shader);
+
+    PointLight* pointLight = static_cast<PointLight*>(m_light);
+    pointLight->render(shader);
 
     emit renderCycleDone();
 }

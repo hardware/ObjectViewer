@@ -7,8 +7,8 @@ PER-FRAGMENT LIGHTING (BLINN-PHONG SHADING IMPLEMENTATION)
 in VS_OUT
 {
     vec3 N;
-    vec3 L;
     vec3 V;
+    vec4 P;
 
     vec2 texCoord;
     vec4 color;
@@ -30,6 +30,22 @@ uniform struct MaterialInfo
     float shininess; // Specular shininess exponent
     float shininessStrength; // Not yet used
 } material;
+
+// Light properties
+uniform struct LightInfo
+{
+    vec3 position; // Position of light source
+
+    vec3 Ka; // Ambient light color
+    vec3 Kd; // Diffuse light color
+    vec3 Ks; // Specular light color
+
+    float constantAttenuation;  // Constant light attenuation factor
+    float linearAttenuation;    // Linear light attenuation factor
+    float quadraticAttenuation; // Quadratic light attenuation factor
+
+    float intensity;
+} light;
 
 // Rim effect properties
 uniform vec3  rimColor = vec3(0.93, 0.09, 0.14);
@@ -80,18 +96,34 @@ vec3 RimLighting(vec3 N, vec3 L, vec3 V)
     return specular + rim;
 }
 
-subroutine uniform lightColor GenlightColor;
+subroutine uniform lightColor GenSpecularColor;
 
 void main()
 {
-    // Normalize the incoming N, L and V vectors
+    // Calculate view-space light vector (light direction)
+    vec3 L = light.position - fs_in.P.xyz;
+
+    // Calculate the length of view-space light vector
+    float lightDistance = length(L);
+
+    // Calculate spot light attenuation
+    float attenuation = light.constantAttenuation +
+                        light.linearAttenuation * lightDistance +
+                        light.quadraticAttenuation * lightDistance * lightDistance;
+
+    // Normalize the incoming L, N and V vectors
+    L = normalize(L);
     vec3 N = normalize(fs_in.N);
-    vec3 L = normalize(fs_in.L);
     vec3 V = normalize(fs_in.V);
 
-    // Compute the diffuse and specular components for each fragment
-    vec3 diffuse  = max(dot(N, L), 0.0) * material.Kd.xyz;
+    // Compute the emissive / ambient / diffuse / specular components for each fragment
+    vec3 emissive = material.Ke.xyz;
+    vec3 ambient  = material.Ka.xyz * light.Ka * light.intensity;
+    vec3 diffuse  = max(dot(N, L), 0.0) * material.Kd.xyz * light.Kd * light.intensity;
+    vec3 specular = GenSpecularColor(N, L, V) * light.Ks * light.intensity;
+
+    vec3 envColor = ( emissive + ambient + diffuse + specular ) / attenuation;
 
     // Write final color to the framebuffer
-    FragColor = texture(texColor, fs_in.texCoord.xy) * fs_in.color * vec4(material.Ke.xyz + material.Ka.xyz + diffuse + GenlightColor(N, L, V), 1.0);
+    FragColor = texture(texColor, fs_in.texCoord.xy) * fs_in.color * vec4(envColor, 1.0);
 }

@@ -15,6 +15,7 @@ class Camera;
 class Shaders;
 class Model;
 
+class AbstractLight;
 class AbstractMeshManager;
 class AbstractMaterialManager;
 class AbstractTextureManager;
@@ -84,6 +85,7 @@ signals:
 
 private:
     Camera* m_camera;
+    AbstractLight* m_light;
 
     shared_ptr<Model> m_model;
 
