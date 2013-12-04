@@ -8,8 +8,6 @@
 #include "../materials/abstractmaterialmanager.h"
 #include "../materials/abstracttexturemanager.h"
 
-#include <QDebug>
-
 Model::Model(Scene* scene)
     : m_scene(scene)
 {

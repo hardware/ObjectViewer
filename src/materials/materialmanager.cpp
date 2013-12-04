@@ -1,9 +1,6 @@
 #include "materialmanager.h"
 #include "material.h"
 
-#include <QDebug>
-#include <QString>
-
 MaterialManager::MaterialManager(const QOpenGLShaderProgramPtr& shader)
     : m_shader(shader)
 {}
@@ -14,11 +11,8 @@ shared_ptr<Material> MaterialManager::getMaterial(const string& name)
 {
     if(m_materials.find(name) != m_materials.end())
     {
-        qDebug() << "Material " << QString::fromStdString(name) << " found";
         return m_materials[name];
     }
-
-    qDebug() << "Material " << QString::fromStdString(name) << " not found";
 
     return shared_ptr<Material>(nullptr);
 }
@@ -33,11 +27,9 @@ shared_ptr<Material> MaterialManager::addMaterial(const string& name,
 {
     if(m_materials.find(name) != m_materials.end() && m_materials[name].get() != nullptr)
     {
-        qDebug() << "Material " << QString::fromStdString(name) << " already exists";
         return m_materials[name];
     }
 
-    qDebug() << "Add " << QString::fromStdString(name) << " in materials list";
     m_materials[name] = make_shared<Material>(name,
                                               ambientColor,
                                               diffuseColor,

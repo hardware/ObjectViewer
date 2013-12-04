@@ -3,9 +3,6 @@
 #include "model.h"
 #include "abstractmodel.h"
 
-#include <QDebug>
-#include <QString>
-
 ModelManager::ModelManager(Scene* scene)
     : m_scene(scene),
       m_modelLoader(ModelLoader())
@@ -17,11 +14,9 @@ AbstractModel* ModelManager::getModel(const string& name)
 {
     if(m_models.find(name) != m_models.end())
     {
-        qDebug() << "Model " << QString::fromStdString(name) << " found";
         return m_models[name].get();
     }
 
-    qDebug() << "Model " << QString::fromStdString(name) << " not found";
     return nullptr;
 }
 

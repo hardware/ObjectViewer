@@ -13,8 +13,6 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& filename)
 
 vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const string& filename)
 {
-    qDebug() << "Loading model : " << QString::fromStdString(name);
-
     Assimp::Importer Importer;
     const aiScene* scene = Importer.ReadFile(filename.c_str(),
                                              aiProcessPreset_TargetRealtime_MaxQuality |
@@ -40,7 +38,7 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
     vector<shared_ptr<ModelData>> modelData = vector<shared_ptr<ModelData>>();
     modelData.resize(scene->mNumMeshes);
 
-    qDebug() << "Model has " << modelData.size() << " meshes";
+    qDebug() << "Model has" << modelData.size() << "meshes";
 
     int numVertices = 0;
 
@@ -55,7 +53,7 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
         numVertices += scene->mMeshes[i]->mNumVertices;
     }
 
-    qDebug() << "Model has " << numVertices << " vertices";
+    qDebug() << "Model has" << numVertices << "vertices";
 
     return modelData;
 }
@@ -65,6 +63,7 @@ MeshData ModelLoader::loadMesh(const string& name,
                                unsigned int index,
                                const aiMesh* mesh)
 {
+    Q_ASSERT(mesh != nullptr);
     Q_UNUSED(name);
     Q_UNUSED(filename);
 
@@ -74,8 +73,6 @@ MeshData ModelLoader::loadMesh(const string& name,
         data.name = string(mesh->mName.C_Str());
     else
         data.name = "mesh_" + to_string(index);
-
-    qDebug() << "Mesh ->" << QString::fromStdString(data.name);
 
     unsigned int currentIndex = 0;
 
@@ -169,7 +166,7 @@ MaterialData ModelLoader::loadMaterial(const string& name,
                                        unsigned int index,
                                        const aiMaterial* material)
 {
-    // assert( material != nullptr );
+    Q_ASSERT(material != nullptr);
     Q_UNUSED(filename);
 
     MaterialData data = MaterialData();
@@ -229,15 +226,13 @@ MaterialData ModelLoader::loadMaterial(const string& name,
         data.shininessStrength = shininessStrength;
     }
 
-    qDebug() << "\t Done loading material : " << QString::fromStdString(data.name);
-
     return data;
 }
 
 TextureData ModelLoader::loadTexture(const string& filename,
                                      const aiMaterial* material)
 {
-    // Q_ASSERT(material == nullptr);
+    Q_ASSERT(material != nullptr);
 
     string dir;
     string::size_type slashIndex = filename.find_last_of("/");
@@ -254,14 +249,11 @@ TextureData ModelLoader::loadTexture(const string& filename,
         if(material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
         {
             string texturePath = dir + "/" + path.data;
-
-            qDebug() << "\t Done loading texture : " << QString::fromStdString(texturePath);
             data.filename = texturePath;
         }
     }
     else
     {
-        qDebug() << "\t No texture for this mesh";
         data.filename = "assets/white.png";
     }
 

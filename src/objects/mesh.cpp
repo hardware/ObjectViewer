@@ -1,6 +1,5 @@
 #include "mesh.h"
 
-#include <QDebug>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_4_3_Core>
 #include <QOpenGLVertexArrayObject>
@@ -59,8 +58,6 @@ void Mesh::init()
 
 void Mesh::load()
 {
-    qDebug() << "Loading mesh " << QString::fromStdString(m_name) << " into video memory";
-
     m_vao->create();
     m_vao->bind();
 
@@ -112,8 +109,6 @@ void Mesh::load()
     m_shader->setAttributeBuffer("tangent", GL_FLOAT, 0, 3);
 
     m_vao->release();
-
-    qDebug() << "Successfully loaded mesh : " << QString::fromStdString(m_name);
 }
 
 void Mesh::render()

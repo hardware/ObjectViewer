@@ -1,7 +1,5 @@
 #include "material.h"
 
-#include <QDebug>
-#include <QString>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_4_3_Core>
 

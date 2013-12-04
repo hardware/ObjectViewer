@@ -50,6 +50,11 @@ Window::Window(QScreen *screen)
     // On définit le contexte OpenGL de la scène
     m_scene->setContext(m_context.data());
 
+    qDebug() << endl <<  "- OpenGL version :" << reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    qDebug() << "- GLSL version :" << reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+    qDebug() << "- Vendor :" << reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+    qDebug() << "- Renderer (GPU) :" << reinterpret_cast<const char*>(glGetString(GL_RENDERER)) << endl;
+
     m_renderTimer.invalidate(); // Timer pour la zone de rendu (animation... etc)
     m_updateTimer.start(); // Timer pour la mise à jour de la scène (camera... etc)
 

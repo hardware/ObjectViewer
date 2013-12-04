@@ -1,9 +1,6 @@
 #include "meshmanager.h"
 #include "mesh.h"
 
-#include <QDebug>
-#include <QString>
-
 MeshManager::MeshManager(const QOpenGLShaderProgramPtr& shader)
     : m_shader(shader)
 {}
@@ -14,11 +11,8 @@ shared_ptr<Mesh> MeshManager::getMesh(const string& name)
 {
     if(m_meshes.find(name) != m_meshes.end())
     {
-        qDebug() << "Mesh " << QString::fromStdString(name) << " found";
         return m_meshes[name];
     }
-
-    qDebug() << "Mesh " << QString::fromStdString(name) << " not found";
 
     return shared_ptr<Mesh>(nullptr);
 }
@@ -32,11 +26,9 @@ shared_ptr<Mesh> MeshManager::addMesh(const string& name,
 {
     if(m_meshes.find(name) != m_meshes.end() && m_meshes[name].get() != nullptr)
     {
-        qDebug() << "Mesh " << QString::fromStdString(name) << " already exists";
         return m_meshes[name];
     }
 
-    qDebug() << "Add " << QString::fromStdString(name) << " in meshes list";
     m_meshes[name] = make_shared<Mesh>(name,
                                        positions,
                                        colors,
