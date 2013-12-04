@@ -6,12 +6,19 @@ DirectionalLight::DirectionalLight()
 
 DirectionalLight::~DirectionalLight() {}
 
+void DirectionalLight::setDirection(float x, float y, float z)
+{
+    m_direction.setX(x);
+    m_direction.setY(y);
+    m_direction.setZ(z);
+}
+
 void DirectionalLight::setDirection(const QVector3D& direction)
 {
     m_direction = direction;
 }
 
-QVector3D DirectionalLight::direction() const
+const QVector3D& DirectionalLight::getDirection() const
 {
     return m_direction;
 }

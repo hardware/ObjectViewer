@@ -21,13 +21,17 @@ public:
     void setIntensity(float intensity);
     void setUniqueColor(const QVector3D& color);
 
+    void setAmbientColor(float red, float green, float blue);
+    void setDiffuseColor(float red, float green, float blue);
+    void setSpecularColor(float red, float green, float blue);
+
     void setAmbientColor(const QVector3D& color);
     void setDiffuseColor(const QVector3D& color);
     void setSpecularColor(const QVector3D& color);
 
-    QVector3D ambientColor() const;
-    QVector3D diffuseColor() const;
-    QVector3D specularColor() const;
+    const QVector3D& ambientColor() const;
+    const QVector3D& diffuseColor() const;
+    const QVector3D& specularColor() const;
 
     virtual void render(const QOpenGLShaderProgramPtr& shader) = 0;
 

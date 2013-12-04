@@ -44,13 +44,14 @@ uniform struct LightInfo
     float linearAttenuation;    // Linear light attenuation factor
     float quadraticAttenuation; // Quadratic light attenuation factor
 
-    float intensity;
+    float intensity; // Power scale of light source
 } light;
 
 // Rim effect properties
 uniform vec3  rimColor = vec3(0.93, 0.09, 0.14);
 uniform float rimPower = 5.0;
 
+// Calcule rim lighting
 vec3 calculateRim(vec3 N, vec3 V)
 {
     float f = 1.0 - dot(N, V);
@@ -100,13 +101,13 @@ subroutine uniform lightColor GenSpecularColor;
 
 void main()
 {
-    // Calculate view-space light vector (light direction)
+    // Calculate model-space light vector (light direction)
     vec3 L = light.position - fs_in.P.xyz;
 
-    // Calculate the length of view-space light vector
+    // Calculate the length of model-space light vector
     float lightDistance = length(L);
 
-    // Calculate spot light attenuation
+    // Calculate light attenuation
     float attenuation = light.constantAttenuation +
                         light.linearAttenuation * lightDistance +
                         light.quadraticAttenuation * lightDistance * lightDistance;

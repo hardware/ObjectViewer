@@ -3,13 +3,14 @@
 
 #include "abstractlight.h"
 
-class PointLight : public AbstractLight
+class PointLight : public virtual AbstractLight
 {
 
 public:
     PointLight();
     virtual ~PointLight();
 
+    void setPosition(float x, float y, float z);
     void setPosition(const QVector3D& position);
 
     void setAttenuation(float constantFactor,
@@ -20,7 +21,11 @@ public:
     void setLinearAttenuation(float linearFactor);
     void setQuadraticAttenuation(float quadraticFactor);
 
-    QVector3D position() const;
+    float getConstantAttenuation() const;
+    float getLinearAttenuation() const;
+    float getQuadraticAttenuation() const;
+
+    const QVector3D& getPosition() const;
 
     virtual void render(const QOpenGLShaderProgramPtr& shader);
 

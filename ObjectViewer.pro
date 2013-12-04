@@ -90,7 +90,8 @@ HEADERS += \
     src/objects/modelloader.h \
     src/objects/pointlight.h \
     src/objects/directionallight.h \
-    src/objects/abstractlight.h
+    src/objects/abstractlight.h \
+    src/objects/spotlight.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -117,7 +118,8 @@ SOURCES += \
     src/objects/modelloader.cpp \
     src/objects/pointlight.cpp \
     src/objects/directionallight.cpp \
-    src/objects/abstractlight.cpp
+    src/objects/abstractlight.cpp \
+    src/objects/spotlight.cpp
 
 RESOURCES += \
     resources.qrc

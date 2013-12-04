@@ -82,8 +82,7 @@ void Scene::initialize()
     shader->setUniformValue("texColor", 0);
     shader->setUniformValue("texNormal", 1);
 
-    PointLight* pointLight = static_cast<PointLight*>(m_light);
-    pointLight->setPosition(QVector3D(0.0f, 0.0f, 0.0f));
+    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
     pointLight->setUniqueColor(QVector3D(1.0f, 1.0f, 1.0f));
     pointLight->setLinearAttenuation(0.1f);
     pointLight->setIntensity(2.0f);
@@ -138,19 +137,23 @@ void Scene::render(double currentTime)
 
     if(currentTime > 0)
     {
-        m_object3D.rotateY(static_cast<float>(currentTime)/0.02f);
+        // m_object3D.rotateY(static_cast<float>(currentTime)/0.02f);
     }
 
-    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_object3D.modelMatrix();
     QOpenGLShaderProgramPtr shader = m_shader->shader();
 
     shader->bind();
-    shader->setUniformValue("modelViewMatrix", modelViewMatrix);
-    shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
+    shader->setUniformValue("modelMatrix", m_object3D.modelMatrix());
+    shader->setUniformValue("viewProjectionMatrix", m_camera->viewProjectionMatrix());
 
     m_model->render(shader);
 
-    PointLight* pointLight = static_cast<PointLight*>(m_light);
+    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
+
+    const float scale = cosf(currentTime) * 5.0f + 5.0f;
+
+    pointLight->setPosition(QVector3D(scale, 5.0f, scale));
+
     pointLight->render(shader);
 
     emit renderCycleDone();

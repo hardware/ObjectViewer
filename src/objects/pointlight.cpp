@@ -9,6 +9,13 @@ PointLight::PointLight()
 
 PointLight::~PointLight() {}
 
+void PointLight::setPosition(float x, float y, float z)
+{
+    m_position.setX(x);
+    m_position.setY(y);
+    m_position.setZ(z);
+}
+
 void PointLight::setPosition(const QVector3D& position)
 {
     m_position = position;
@@ -36,7 +43,22 @@ void PointLight::setQuadraticAttenuation(float quadraticFactor)
     m_quadraticAttenuation = quadraticFactor;
 }
 
-QVector3D PointLight::position() const
+float PointLight::getConstantAttenuation() const
+{
+    return m_constantAttenuation;
+}
+
+float PointLight::getLinearAttenuation() const
+{
+    return m_linearAttenuation;
+}
+
+float PointLight::getQuadraticAttenuation() const
+{
+    return m_quadraticAttenuation;
+}
+
+const QVector3D& PointLight::getPosition() const
 {
     return m_position;
 }

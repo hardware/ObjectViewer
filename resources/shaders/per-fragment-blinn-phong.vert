@@ -19,21 +19,21 @@ out VS_OUT
     vec4 color;
 } vs_out;
 
-uniform mat4 modelViewMatrix;
-uniform mat4 projectionMatrix;
+uniform mat4 modelMatrix;
+uniform mat4 viewProjectionMatrix;
 
 void main()
 {
-    // Calculate view-space coordinate
-    vec4 P = modelViewMatrix * vec4(position, 1.0);
+    // Calculate model-space coordinate
+    vec4 P = modelMatrix * vec4(position, 1.0);
 
-    // Calculate normal in view-space
-    vs_out.N = mat3(modelViewMatrix) * normal;
+    // Calculate normal in model-space
+    vs_out.N = mat3(modelMatrix) * normal;
 
-    // Calculate view vector
+    // Calculate model vector
     vs_out.V = -P.xyz;
 
-    // Send the view-space coordinate to the fragment shader
+    // Send the model-space coordinate to the fragment shader
     vs_out.P = P;
 
     // Send texture coordinates and colors to the fragment shader
@@ -41,5 +41,5 @@ void main()
     vs_out.color    = color;
 
     // Calculate the clip-space position of each vertex
-    gl_Position = projectionMatrix * P;
+    gl_Position = viewProjectionMatrix * P;
 }
