@@ -5,7 +5,6 @@
 
 #include <QVector>
 #include <QVector3D>
-#include <QVector4D>
 #include <QOpenGLShaderProgram>
 #include <QSharedPointer>
 

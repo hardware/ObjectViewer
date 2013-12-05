@@ -11,25 +11,29 @@ public:
     SpotLight();
     virtual ~SpotLight();
 
-    void setSpotlightRange(float innerAngle, float outerAngle, float falloff = 1.0f);
+//    void setSpotlightRange(float innerAngle, float outerAngle, float falloff = 1.0f);
 
-    void setInnerAngle(float innerAngle);
-    void setOuterAngle(float outerAngle);
-    void setFalloff(float falloff);
-    void setNearClipDistance(float nearClip);
+//    void setInnerAngle(float innerAngle);
+//    void setOuterAngle(float outerAngle);
+//    void setFalloff(float falloff);
+//    void setNearClipDistance(float nearClip);
 
-    float getInnerAngle() const;
-    float getOuterAngle() const;
-    float getFalloff() const;
-    float getNearClipDistance () const;
+//    float getInnerAngle() const;
+//    float getOuterAngle() const;
+//    float getFalloff() const;
+//    float getNearClipDistance () const;
 
-    virtual void render(const QOpenGLShaderProgramPtr &shader);
+    void setCutOff(float cutOff);
+
+    virtual void render(const QOpenGLShaderProgramPtr& shader);
 
 private:
-    float m_outerAngle;
-    float m_innerAngle;
-    float m_falloff;
-    float m_nearClip;
+//    float m_outerAngle;
+//    float m_innerAngle;
+//    float m_falloff;
+//    float m_nearClip;
+
+    float m_cutOff;
 
 };
 

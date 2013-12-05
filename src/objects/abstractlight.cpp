@@ -2,9 +2,9 @@
 
 AbstractLight::AbstractLight()
     : m_intensity(1.0f),
-      m_ambientColor(1.0f, 1.0f, 1.0f),
-      m_diffuseColor(1.0f, 1.0f, 1.0f),
-      m_specularColor(1.0f, 1.0f, 1.0f)
+      m_ambientColor(0.0f, 0.0f, 0.0f),
+      m_diffuseColor(0.0f, 0.0f, 0.0f),
+      m_specularColor(0.0f, 0.0f, 0.0f)
 {}
 
 AbstractLight::~AbstractLight() {}

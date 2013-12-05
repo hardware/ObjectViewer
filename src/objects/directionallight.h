@@ -17,7 +17,7 @@ public:
 
     virtual void render(const QOpenGLShaderProgramPtr& shader);
 
-private:
+protected:
     QVector3D m_direction;
 
 };

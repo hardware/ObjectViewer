@@ -6,7 +6,6 @@
 
 #include <QVector>
 #include <QVector3D>
-#include <QVector4D>
 
 using namespace std;
 
