@@ -3,21 +3,20 @@
 
 #include <string>
 
-#include <QVector>
-#include <QVector3D>
-#include <QOpenGLShaderProgram>
+#include <QVector4D>
 #include <QSharedPointer>
+
+#include <QOpenGLShaderProgram>
+#include <QOpenGLVertexArrayObject>
 
 using namespace std;
 
 struct MeshData {
     string name;
 
-    vector<QVector3D> positions;
-    vector<QVector4D> colors;
-    vector<QVector2D> texCoords;
-    vector<QVector3D> normals;
-    vector<QVector3D> tangents;
+    unsigned int numIndices;
+    unsigned int baseVertex;
+    unsigned int baseIndex;
 };
 
 struct TextureData {
@@ -43,6 +42,7 @@ struct ModelData {
 };
 
 typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
+typedef QSharedPointer<QOpenGLVertexArrayObject> QOpenGLVertexArrayObjectPtr;
 
 class AbstractModel
 {
@@ -51,7 +51,7 @@ public:
     AbstractModel();
     virtual ~AbstractModel() = 0;
 
-    virtual void render(const QOpenGLShaderProgramPtr& shader) = 0;
+    virtual void render() = 0;
 
 };
 

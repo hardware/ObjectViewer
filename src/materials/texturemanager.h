@@ -5,11 +5,6 @@
 
 #include <map>
 
-#include <QOpenGLShaderProgram>
-#include <QSharedPointer>
-
-typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
-
 using namespace std;
 
 class Texture;
@@ -18,7 +13,7 @@ class TextureManager : public AbstractTextureManager
 {
 
 public:
-    TextureManager(const QOpenGLShaderProgramPtr& shader);
+    TextureManager();
     virtual ~TextureManager();
 
     virtual shared_ptr<Texture> getTexture(const string& name);
@@ -26,7 +21,7 @@ public:
 
 private:
     map<string, shared_ptr<Texture>> m_textures;
-    QOpenGLShaderProgramPtr m_shader;
+
 };
 
 #endif // TEXTUREMANAGER_H

@@ -16,15 +16,22 @@ class AbstractMeshManager;
 class AbstractMaterialManager;
 class AbstractTextureManager;
 
+class QOpenGLFunctions_4_3_Core;
+
 class Model : public AbstractModel
 {
 
 public:
-    Model(Scene* scene);
-    Model(Scene* scene, vector<shared_ptr<ModelData>> modelData);
+    Model(Scene* scene,
+          const QOpenGLVertexArrayObjectPtr& vao);
+
+    Model(Scene* scene,
+          const QOpenGLVertexArrayObjectPtr& vao,
+          vector<shared_ptr<ModelData>> modelData);
+
     virtual ~Model();
 
-    virtual void render(const QOpenGLShaderProgramPtr& shader);
+    virtual void render();
 
 protected:
     Scene* m_scene;
@@ -40,6 +47,9 @@ protected:
 private:
     void initialize(vector<shared_ptr<ModelData>> modelData = vector<shared_ptr<ModelData>>());
     void destroy();
+
+    QOpenGLVertexArrayObjectPtr m_vao;
+    QOpenGLFunctions_4_3_Core*  m_funcs;
 
 };
 

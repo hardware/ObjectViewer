@@ -21,11 +21,9 @@ public:
     virtual shared_ptr<Mesh> getMesh(const string& name) = 0;
 
     virtual shared_ptr<Mesh> addMesh(const string& name,
-                                     const vector<QVector3D>& positions,
-                                     const vector<QVector4D>& colors,
-                                     const vector<QVector2D>& texCoords,
-                                     const vector<QVector3D>& normals,
-                                     const vector<QVector3D>& tangents) = 0;
+                                     unsigned int numIndices,
+                                     unsigned int baseVertex,
+                                     unsigned int baseIndex) = 0;
 
 };
 

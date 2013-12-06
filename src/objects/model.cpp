@@ -8,14 +8,24 @@
 #include "../materials/abstractmaterialmanager.h"
 #include "../materials/abstracttexturemanager.h"
 
-Model::Model(Scene* scene)
-    : m_scene(scene)
+#include <QOpenGLContext>
+#include <QOpenGLFunctions_4_3_Core>
+
+Model::Model(Scene* scene,
+             const QOpenGLVertexArrayObjectPtr& vao)
+    : m_scene(scene),
+      m_vao(vao),
+      m_funcs(nullptr)
 {
     initialize();
 }
 
-Model::Model(Scene* scene, vector<shared_ptr<ModelData>> modelData)
-    : m_scene(scene)
+Model::Model(Scene* scene,
+             const QOpenGLVertexArrayObjectPtr& vao,
+             vector<shared_ptr<ModelData>> modelData)
+    : m_scene(scene),
+      m_vao(vao),
+      m_funcs(nullptr)
 {
     initialize(modelData);
 }
@@ -24,6 +34,13 @@ Model::~Model() {}
 
 void Model::initialize(vector<shared_ptr<ModelData>> modelData)
 {
+    QOpenGLContext* context = QOpenGLContext::currentContext();
+
+    Q_ASSERT(context);
+
+    m_funcs = context->versionFunctions<QOpenGLFunctions_4_3_Core>();
+    m_funcs->initializeOpenGLFunctions();
+
     m_meshManager     = m_scene->meshManager();
     m_textureManager  = m_scene->textureManager();
     m_materialManager = m_scene->materialManager();
@@ -35,11 +52,9 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
         if(mesh == nullptr)
         {
             mesh = m_meshManager->addMesh(data->meshData.name,
-                                          data->meshData.positions,
-                                          data->meshData.colors,
-                                          data->meshData.texCoords,
-                                          data->meshData.normals,
-                                          data->meshData.tangents);
+                                          data->meshData.numIndices,
+                                          data->meshData.baseVertex,
+                                          data->meshData.baseIndex);
         }
 
         m_meshes.push_back(mesh);
@@ -80,22 +95,23 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
 
 void Model::destroy() {}
 
-void Model::render(const QOpenGLShaderProgramPtr& shader)
+void Model::render()
 {
-    Q_UNUSED(shader);
+    m_vao->bind();
 
     for(unsigned int i = 0; i < m_meshes.size(); i++)
     {
-        if(m_textures[i] != nullptr)
-        {
-            m_textures[i]->bind(GL_TEXTURE0);
-        }
+        if(m_textures[i] != nullptr) m_textures[i]->bind(GL_TEXTURE0);
+        if(m_materials[i] != nullptr) m_materials[i]->sendToGPU();
 
-        if(m_materials[i] != nullptr)
-        {
-            m_materials[i]->sendToGPU();
-        }
-
-        m_meshes[i]->render();
+        m_funcs->glDrawElementsBaseVertex(
+            GL_TRIANGLES,
+            m_meshes[i]->getNumIndices(),
+            GL_UNSIGNED_INT,
+            reinterpret_cast<void*>((sizeof(unsigned int)) * m_meshes[i]->getBaseIndex()),
+            m_meshes[i]->getBaseVertex()
+        );
     }
+
+    m_vao->release();
 }

@@ -1,10 +1,9 @@
 #include "texturemanager.h"
 #include "texture.h"
 
-TextureManager::TextureManager(const QOpenGLShaderProgramPtr& shader)
-    : m_shader(shader)
-{}
+#include <QDebug>
 
+TextureManager::TextureManager() {}
 TextureManager::~TextureManager() {}
 
 shared_ptr<Texture> TextureManager::getTexture(const string& name)

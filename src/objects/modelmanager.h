@@ -2,7 +2,6 @@
 #define MODELMANAGER_H
 
 #include "abstractmodelmanager.h"
-#include "modelloader.h"
 
 class Scene;
 class Model;
@@ -16,7 +15,10 @@ public:
     virtual ~ModelManager();
 
     virtual AbstractModel* getModel(const string& name);
-    virtual shared_ptr<Model> loadModel(const string& name, const string& filename);
+
+    virtual shared_ptr<Model> loadModel(const string& name,
+                                        const string& filename,
+                                        const QOpenGLShaderProgramPtr& shader);
 
 private:
     map<string, shared_ptr<Model>> m_models;

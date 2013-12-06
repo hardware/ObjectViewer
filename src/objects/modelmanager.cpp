@@ -20,10 +20,15 @@ AbstractModel* ModelManager::getModel(const string& name)
     return nullptr;
 }
 
-shared_ptr<Model> ModelManager::loadModel(const string& name, const string& filename)
+shared_ptr<Model> ModelManager::loadModel(const string& name,
+                                          const string& filename,
+                                          const QOpenGLShaderProgramPtr& shader)
 {
-    vector<shared_ptr<ModelData>> modelData = m_modelLoader.loadModel(name, filename);
-    m_models[name] = make_shared<Model>(m_scene, modelData);
+    vector<shared_ptr<ModelData>> modelData = m_modelLoader.loadModel(filename, shader);
+
+    m_models[name] = make_shared<Model>(m_scene,
+                                        m_modelLoader.getVAO(),
+                                        modelData);
 
     return m_models[name];
 }

@@ -96,8 +96,8 @@ void Scene::initialize()
     m_modelManager = unique_ptr<AbstractModelManager>(new ModelManager(this));
 
     m_materialManager = make_shared<MaterialManager>(shader);
-    m_textureManager  = make_shared<TextureManager>(shader);
-    m_meshManager     = make_shared<MeshManager>(shader);
+    m_textureManager  = make_shared<TextureManager>();
+    m_meshManager     = make_shared<MeshManager>();
 
     /*
     MODELS AVAILABLE :
@@ -107,7 +107,7 @@ void Scene::initialize()
         - tomcat/f14d.lwo
     */
 
-    m_model = m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo");
+    m_model = m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo", shader);
 }
 
 void Scene::update(float t)
@@ -152,7 +152,7 @@ void Scene::render(double currentTime)
     shader->setUniformValue("modelMatrix", m_object3D.modelMatrix());
     shader->setUniformValue("viewProjectionMatrix", m_camera->viewProjectionMatrix());
 
-    m_model->render(shader);
+    m_model->render();
 
 //    const float scale = cosf(currentTime) * 5.0f + 5.0f;
 //    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);

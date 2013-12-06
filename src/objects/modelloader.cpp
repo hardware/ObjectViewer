@@ -3,26 +3,37 @@
 #include <QDebug>
 #include <QString>
 
-ModelLoader::ModelLoader() {}
-ModelLoader::~ModelLoader() {}
+ModelLoader::ModelLoader()
+    : m_vertexPositionBuffer(QOpenGLBuffer::VertexBuffer),
+      m_vertexColorBuffer(QOpenGLBuffer::VertexBuffer),
+      m_vertexTexCoordBuffer(QOpenGLBuffer::VertexBuffer),
+      m_vertexNormalBuffer(QOpenGLBuffer::VertexBuffer),
+      m_vertexTangentBuffer(QOpenGLBuffer::VertexBuffer),
+      m_indexBuffer(QOpenGLBuffer::IndexBuffer),
+      m_vao(QOpenGLVertexArrayObjectPtr(new QOpenGLVertexArrayObject()))
+{}
 
-vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& filename)
+ModelLoader::~ModelLoader()
 {
-    return loadModel(filename, filename);
+    m_vertexPositionBuffer.destroy();
+    m_vertexColorBuffer.destroy();
+    m_vertexTexCoordBuffer.destroy();
+    m_vertexNormalBuffer.destroy();
+    m_vertexTangentBuffer.destroy();
+    m_indexBuffer.destroy();
+
+    m_vao->destroy();
 }
 
-vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const string& filename)
+vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& filename,
+                                                       const QOpenGLShaderProgramPtr& shader)
 {
+    m_shader = shader;
+
     Assimp::Importer Importer;
     const aiScene* scene = Importer.ReadFile(filename.c_str(),
                                              aiProcessPreset_TargetRealtime_MaxQuality |
                                              aiProcess_FlipUVs);
-
-    /*
-    aiProcessPreset_TargetRealtime_MaxQuality ^
-    aiProcess_JoinIdenticalVertices ^
-    aiProcess_FindInvalidData
-    */
 
     if(scene == nullptr)
     {
@@ -40,33 +51,49 @@ vector< shared_ptr<ModelData> > ModelLoader::loadModel(const string& name, const
 
     qDebug() << "Model has" << modelData.size() << "meshes";
 
-    int numVertices = 0;
+    unsigned int numVertices = 0;
+    unsigned int numIndices  = 0;
+
+    for(unsigned int i = 0; i < modelData.size(); i++)
+    {
+        numVertices += scene->mMeshes[i]->mNumVertices;
+        numIndices  += scene->mMeshes[i]->mNumFaces * 3;
+    }
+
+    m_positions.reserve(numVertices);
+    m_colors.reserve(numVertices);
+    m_normals.reserve(numVertices);
+    m_texCoords.reserve(numVertices);
+    m_tangents.reserve(numVertices);
+    m_indices.reserve(numIndices);
+
+    numVertices = 0;
+    numIndices  = 0;
 
     for(unsigned int i = 0; i < modelData.size(); i++)
     {
         modelData[i] = make_shared<ModelData>();
 
-        modelData[i]->meshData     = loadMesh(name, filename, i, scene->mMeshes[i]);
-        modelData[i]->materialData = loadMaterial(name, filename, i, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
+        modelData[i]->meshData     = loadMesh(i, numVertices, numIndices, scene->mMeshes[i]);
         modelData[i]->textureData  = loadTexture(filename, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
+        modelData[i]->materialData = loadMaterial(i, scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
 
         numVertices += scene->mMeshes[i]->mNumVertices;
+        numIndices  += scene->mMeshes[i]->mNumFaces * 3;
     }
+
+    prepareVertexBuffers();
 
     qDebug() << "Model has" << numVertices << "vertices";
 
     return modelData;
 }
 
-MeshData ModelLoader::loadMesh(const string& name,
-                               const string& filename,
-                               unsigned int index,
+MeshData ModelLoader::loadMesh(unsigned int index,
+                               unsigned int numVertices,
+                               unsigned int numIndices,
                                const aiMesh* mesh)
 {
-    Q_ASSERT(mesh != nullptr);
-    Q_UNUSED(name);
-    Q_UNUSED(filename);
-
     MeshData data = MeshData();
 
     if(mesh->mName.length > 0)
@@ -74,103 +101,127 @@ MeshData ModelLoader::loadMesh(const string& name,
     else
         data.name = "mesh_" + to_string(index);
 
-    unsigned int currentIndex = 0;
+    data.numIndices = mesh->mNumFaces * 3;
+    data.baseVertex = numVertices;
+    data.baseIndex  = numIndices;
 
-    vector<unsigned int> vertexIndexMap = vector<unsigned int>();
-    vertexIndexMap.resize(mesh->mNumVertices);
-
-    for(unsigned int i = 0; i < mesh->mNumFaces; ++i)
-    {
-        const aiFace& face = mesh->mFaces[i];
-
-        switch(face.mNumIndices)
-        {
-        case 1:
-            // Mode = GL_POINTS;
-            qFatal("Unable to load model... Unsupported number of indices per face (1)");
-            exit(1);
-            break;
-
-        case 2:
-            // Mode = GL_LINES;
-            qFatal("Unable to load model... Unsupported number of indices per face (2)");
-            exit(1);
-            break;
-
-        case 4:
-            // Mode = GL_POLYGON;
-            qFatal("Unable to load model... Unsupported number of indices per face (4)");
-            exit(1);
-            break;
-        }
-
-        unsigned int numIndices = face.mNumIndices;
-
-        data.positions.resize(currentIndex + numIndices);
-        data.colors.resize(currentIndex + numIndices);
-        data.texCoords.resize(currentIndex + numIndices);
-        data.normals.resize(currentIndex + numIndices);
-        data.tangents.resize(currentIndex + numIndices);
-
-        for(unsigned int j = 0; j < numIndices; j++)
-        {
-            int vertexIndex = face.mIndices[j];
-            vertexIndexMap[vertexIndex] = currentIndex + j;
-
-            data.positions[currentIndex + j] = QVector3D(mesh->mVertices[vertexIndex].x,
-                                                         mesh->mVertices[vertexIndex].y,
-                                                         mesh->mVertices[vertexIndex].z);
-
-            if(mesh->HasVertexColors(0))
-            {
-                data.colors[currentIndex + j] = QVector4D(static_cast<float>(mesh->mColors[0][vertexIndex].r),
-                                                          static_cast<float>(mesh->mColors[0][vertexIndex].g),
-                                                          static_cast<float>(mesh->mColors[0][vertexIndex].b),
-                                                          static_cast<float>(mesh->mColors[0][vertexIndex].a));
-            }
-            else
-            {
-                data.colors[currentIndex + j] = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
-            }
-
-            if(mesh->HasTextureCoords(0))
-            {
-                data.texCoords[currentIndex + j] = QVector2D(mesh->mTextureCoords[0][vertexIndex].x,
-                                                             mesh->mTextureCoords[0][vertexIndex].y);
-            }
-
-            if(mesh->HasNormals())
-            {
-                data.normals[currentIndex + j] = QVector3D(mesh->mNormals[vertexIndex].x,
-                                                           mesh->mNormals[vertexIndex].y,
-                                                           mesh->mNormals[vertexIndex].z);
-            }
-
-            if(mesh->HasTangentsAndBitangents())
-            {
-                data.tangents[currentIndex + j] = QVector3D(mesh->mTangents[vertexIndex].x,
-                                                            mesh->mTangents[vertexIndex].y,
-                                                            mesh->mTangents[vertexIndex].z);
-            }
-
-        }
-
-        currentIndex += 3;
-    }
+    prepareVertexContainers(mesh);
 
     return data;
 }
 
-MaterialData ModelLoader::loadMaterial(const string& name,
-                                       const string& filename,
-                                       unsigned int index,
+void ModelLoader::prepareVertexContainers(const aiMesh* mesh)
+{
+    const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
+    const aiColor4D  zeroColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Populate the vertex attribute vectors
+    for(unsigned int i = 0; i < mesh->mNumVertices; i++)
+    {
+        const aiVector3D * pPos      = &(mesh->mVertices[i]);
+        const aiColor4D  * pColor    = mesh->HasVertexColors(0)         ? &(mesh->mColors[0][i])        : &zeroColor;
+        const aiVector3D * pTexCoord = mesh->HasTextureCoords(0)        ? &(mesh->mTextureCoords[0][i]) : &zero3D;
+        const aiVector3D * pNormal   = mesh->HasNormals()               ? &(mesh->mNormals[i])          : &zero3D;
+        const aiVector3D * pTangent  = mesh->HasTangentsAndBitangents() ? &(mesh->mTangents[i])         : &zero3D;
+
+        m_positions.push_back(QVector3D(pPos->x, pPos->y, pPos->z));
+           m_colors.push_back(QVector4D(pColor->r, pColor->g, pColor->b, pColor->a));
+        m_texCoords.push_back(QVector2D(pTexCoord->x, pTexCoord->y));
+          m_normals.push_back(QVector3D(pNormal->x, pNormal->y, pNormal->z));
+         m_tangents.push_back(QVector3D(pTangent->x, pTangent->y, pTangent->z));
+    }
+
+    // Populate the index buffer
+    for(unsigned int i = 0; i < mesh->mNumFaces; i++)
+    {
+        const aiFace& face = mesh->mFaces[i];
+
+        if(face.mNumIndices != 3)
+        {
+            // Unsupported modes : GL_POINTS / GL_LINES / GL_POLYGON
+            qFatal("Unable to load model... Unsupported number of indices per face.");
+            exit(1);
+            break;
+        }
+
+        m_indices.push_back(face.mIndices[0]);
+        m_indices.push_back(face.mIndices[1]);
+        m_indices.push_back(face.mIndices[2]);
+    }
+}
+
+void ModelLoader::prepareVertexBuffers()
+{
+    m_vao->create();
+    m_vao->bind();
+
+    #pragma GCC diagnostic ignored "-Wconversion"
+
+    // Generate and populate the buffers with vertex attributes and the indices
+    m_vertexPositionBuffer.create();
+    m_vertexPositionBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_vertexPositionBuffer.bind();
+    m_vertexPositionBuffer.allocate(m_positions.data(), m_positions.size() * sizeof(QVector3D));
+
+    m_vertexColorBuffer.create();
+    m_vertexColorBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_vertexColorBuffer.bind();
+    m_vertexColorBuffer.allocate(m_colors.data(), m_colors.size() * sizeof(QVector4D));
+
+    m_vertexTexCoordBuffer.create();
+    m_vertexTexCoordBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_vertexTexCoordBuffer.bind();
+    m_vertexTexCoordBuffer.allocate(m_texCoords.data(), m_texCoords.size() * sizeof(QVector2D));
+
+    m_vertexNormalBuffer.create();
+    m_vertexNormalBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_vertexNormalBuffer.bind();
+    m_vertexNormalBuffer.allocate(m_normals.data(), m_normals.size() * sizeof(QVector3D));
+
+    m_vertexTangentBuffer.create();
+    m_vertexTangentBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_vertexTangentBuffer.bind();
+    m_vertexTangentBuffer.allocate(m_tangents.data(), m_tangents.size() * sizeof(QVector3D));
+
+    m_indexBuffer.create();
+    m_indexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_indexBuffer.bind();
+    m_indexBuffer.allocate(m_indices.data(), m_indices.size() * sizeof(unsigned int));
+
+    #pragma GCC diagnostic pop
+
+    m_shader->bind();
+
+    m_vertexPositionBuffer.bind();
+    m_shader->enableAttributeArray("position");
+    m_shader->setAttributeBuffer("position", GL_FLOAT, 0, 3);
+
+    m_vertexColorBuffer.bind();
+    m_shader->enableAttributeArray("color");
+    m_shader->setAttributeBuffer("color", GL_FLOAT, 0, 4);
+
+    m_vertexTexCoordBuffer.bind();
+    m_shader->enableAttributeArray("texCoord");
+    m_shader->setAttributeBuffer("texCoord", GL_FLOAT, 0, 2);
+
+    m_vertexNormalBuffer.bind();
+    m_shader->enableAttributeArray("normal");
+    m_shader->setAttributeBuffer("normal", GL_FLOAT, 0, 3);
+
+    m_vertexTangentBuffer.bind();
+    m_shader->enableAttributeArray("tangent");
+    m_shader->setAttributeBuffer("tangent", GL_FLOAT, 0, 3);
+
+    m_vao->release();
+}
+
+MaterialData ModelLoader::loadMaterial(unsigned int index,
                                        const aiMaterial* material)
 {
     Q_ASSERT(material != nullptr);
-    Q_UNUSED(filename);
 
     MaterialData data = MaterialData();
-    data.name = name + "_material_" + to_string(index);
+    data.name = "material_" + to_string(index);
 
     aiColor3D ambientColor(0.1f, 0.1f, 0.1f);
 
@@ -258,4 +309,9 @@ TextureData ModelLoader::loadTexture(const string& filename,
     }
 
     return data;
+}
+
+QOpenGLVertexArrayObjectPtr ModelLoader::getVAO()
+{
+    return m_vao;
 }
