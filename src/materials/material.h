@@ -4,12 +4,9 @@
 #include <string>
 
 #include <QVector4D>
-#include <QOpenGLShaderProgram>
-#include <QSharedPointer>
+#include <qopengl.h>
 
 using namespace std;
-
-typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
 
 class QOpenGLFunctions_4_3_Core;
 
@@ -23,8 +20,7 @@ public:
              const QVector4D& specularColor,
              const QVector4D& emissiveColor,
              float shininess,
-             float shininessStrength,
-             const QOpenGLShaderProgramPtr& shader);
+             float shininessStrength);
 
     virtual ~Material();
 
@@ -50,8 +46,21 @@ private:
     int m_twoSidedTrue;
     int m_wireframe;
 
+    // Uniform Block
+    struct MaterialInfo
+    {
+        QVector4D Ka;
+        QVector4D Kd;
+        QVector4D Ks;
+        QVector4D Ke;
+
+        float shininess;
+        float shininessStrength;
+    };
+
+    GLuint m_bufferId;
+
     QOpenGLFunctions_4_3_Core* m_funcs;
-    QOpenGLShaderProgramPtr    m_shader;
 
 };
 

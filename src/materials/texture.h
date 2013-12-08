@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class QOpenGLFunctions;
+class QOpenGLFunctions_4_3_Core;
 
 class Texture
 {
@@ -48,7 +48,7 @@ private:
     TextureType m_type;
     GLuint      m_textureId;
 
-    QOpenGLFunctions* m_funcs;
+    QOpenGLFunctions_4_3_Core* m_funcs;
 
 };
 

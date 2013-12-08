@@ -20,7 +20,7 @@ out vec4 FragColor;
 uniform sampler2D texColor;
 
 // Material properties
-uniform struct MaterialInfo
+layout(binding = 1, std140) uniform MaterialInfo
 {
     vec4 Ka; // Ambient reflectivity
     vec4 Kd; // Diffuse reflectivity

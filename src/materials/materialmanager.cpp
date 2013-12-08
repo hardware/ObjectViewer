@@ -36,8 +36,7 @@ shared_ptr<Material> MaterialManager::addMaterial(const string& name,
                                               specularColor,
                                               emissiveColor,
                                               shininess,
-                                              shininessStrength,
-                                              m_shader);
+                                              shininessStrength);
 
     return m_materials[name];
 }
