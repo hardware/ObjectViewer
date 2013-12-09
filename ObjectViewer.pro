@@ -91,7 +91,8 @@ HEADERS += \
     src/objects/pointlight.h \
     src/objects/directionallight.h \
     src/objects/abstractlight.h \
-    src/objects/spotlight.h
+    src/objects/spotlight.h \
+    src/helpers/opengluniformbuffer.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -119,7 +120,8 @@ SOURCES += \
     src/objects/pointlight.cpp \
     src/objects/directionallight.cpp \
     src/objects/abstractlight.cpp \
-    src/objects/spotlight.cpp
+    src/objects/spotlight.cpp \
+    src/helpers/opengluniformbuffer.cpp
 
 RESOURCES += \
     resources.qrc

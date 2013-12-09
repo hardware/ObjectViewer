@@ -31,7 +31,7 @@ Texture::Texture(const QImage& image, TextureType type)
 
 Texture::~Texture()
 {
-    m_funcs->glDeleteTextures(1, &m_textureId);
+    destroy();
 }
 
 void Texture::init()

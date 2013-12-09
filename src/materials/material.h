@@ -2,13 +2,11 @@
 #define MATERIAL_H
 
 #include <string>
-
 #include <QVector4D>
-#include <qopengl.h>
+
+#include "../helpers/opengluniformbuffer.h"
 
 using namespace std;
-
-class QOpenGLFunctions_4_3_Core;
 
 class Material
 {
@@ -58,9 +56,7 @@ private:
         float shininessStrength;
     };
 
-    GLuint m_bufferId;
-
-    QOpenGLFunctions_4_3_Core* m_funcs;
+    OpenGLUniformBuffer m_uniformsBuffer;
 
 };
 

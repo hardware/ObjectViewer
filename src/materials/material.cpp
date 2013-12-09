@@ -1,8 +1,5 @@
 #include "material.h"
 
-#include <QOpenGLContext>
-#include <QOpenGLFunctions_4_3_Core>
-
 Material::Material(const string& name,
                    const QVector4D& ambientColor,
                    const QVector4D& diffuseColor,
@@ -17,7 +14,7 @@ Material::Material(const string& name,
       m_emissiveColor(emissiveColor),
       m_shininess(shininess),
       m_shininessStrength(shininessStrength),
-      m_funcs(nullptr)
+      m_uniformsBuffer()
 {
     init();
     sendToGPU();
@@ -27,28 +24,22 @@ Material::~Material() {}
 
 void Material::init()
 {
-    QOpenGLContext* context = QOpenGLContext::currentContext();
-
-    Q_ASSERT(context);
-
-    m_funcs = context->versionFunctions<QOpenGLFunctions_4_3_Core>();
-    m_funcs->initializeOpenGLFunctions();
-
-    m_funcs->glGenBuffers(1, &m_bufferId);
-    m_funcs->glBindBuffer(GL_UNIFORM_BUFFER, m_bufferId);
-    m_funcs->glBufferData(GL_UNIFORM_BUFFER, sizeof(MaterialInfo), NULL, GL_DYNAMIC_DRAW);
+    m_uniformsBuffer.create();
+    m_uniformsBuffer.setUsagePattern(OpenGLUniformBuffer::DynamicDraw);
+    m_uniformsBuffer.bind();
+    m_uniformsBuffer.allocate(sizeof(MaterialInfo));
 }
 
 void Material::sendToGPU()
 {
-    m_funcs->glBindBufferBase(GL_UNIFORM_BUFFER, 1, m_bufferId);
+    m_uniformsBuffer.bind(1);
 
     MaterialInfo* blockData = static_cast<MaterialInfo*>(
-        m_funcs->glMapBufferRange(
-            GL_UNIFORM_BUFFER,
+        m_uniformsBuffer.map(
             0,
             sizeof(MaterialInfo),
-            GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT
+            OpenGLUniformBuffer::Write |
+            OpenGLUniformBuffer::InvalidateBuffer
         )
     );
 
@@ -59,5 +50,5 @@ void Material::sendToGPU()
     blockData->shininess = m_shininess;
     blockData->shininessStrength = m_shininessStrength;
 
-    m_funcs->glUnmapBuffer(GL_UNIFORM_BUFFER);
+    m_uniformsBuffer.unmap();
 }
