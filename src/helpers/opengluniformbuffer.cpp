@@ -36,7 +36,6 @@ OpenGLUniformBuffer::~OpenGLUniformBuffer()
 {
     if( ! d_ptr->m_ref.deref() )
     {
-        destroy();
         delete d_ptr;
         d_ptr = nullptr;
     }
@@ -145,9 +144,6 @@ void OpenGLUniformBuffer::destroy()
         d->m_funcs->glDeleteBuffers(1, &d->m_bufferId);
         d->m_bufferId = 0;
     }
-
-    delete d->m_funcs;
-    d->m_funcs = nullptr;
 }
 
 void OpenGLUniformBuffer::release()
