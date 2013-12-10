@@ -2,23 +2,17 @@
 #define MATERIALMANAGER_H
 
 #include "abstractmaterialmanager.h"
+#include "material.h"
 
 #include <map>
 
-#include <QOpenGLShaderProgram>
-#include <QSharedPointer>
-
-typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
-
 using namespace std;
-
-class Material;
 
 class MaterialManager : public AbstractMaterialManager
 {
 
 public:
-    MaterialManager(const QOpenGLShaderProgramPtr& shader);
+    MaterialManager(GLuint programHandle);
     virtual ~MaterialManager();
 
     virtual shared_ptr<Material> getMaterial(const string& name);
@@ -33,7 +27,7 @@ public:
 
 private:
     map<string, shared_ptr<Material>> m_materials;
-    QOpenGLShaderProgramPtr m_shader;
+    GLuint m_programHandle;
 };
 
 #endif // MATERIALMANAGER_H

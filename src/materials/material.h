@@ -8,6 +8,8 @@
 
 using namespace std;
 
+class QOpenGLFunctions_4_3_Core;
+
 class Material
 {
 
@@ -18,7 +20,8 @@ public:
              const QVector4D& specularColor,
              const QVector4D& emissiveColor,
              float shininess,
-             float shininessStrength);
+             float shininessStrength,
+             GLuint programHandle);
 
     virtual ~Material();
 
@@ -57,6 +60,10 @@ private:
     };
 
     OpenGLUniformBuffer m_uniformsBuffer;
+    GLuint m_programHandle;
+    GLuint m_uniformHandle;
+
+    QOpenGLFunctions_4_3_Core* m_funcs;
 
 };
 

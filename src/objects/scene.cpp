@@ -95,7 +95,7 @@ void Scene::initialize()
 
     m_modelManager = unique_ptr<AbstractModelManager>(new ModelManager(this));
 
-    m_materialManager = make_shared<MaterialManager>(shader);
+    m_materialManager = make_shared<MaterialManager>(shader->programId());
     m_textureManager  = make_shared<TextureManager>();
     m_meshManager     = make_shared<MeshManager>();
 

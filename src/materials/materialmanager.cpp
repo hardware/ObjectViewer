@@ -1,8 +1,7 @@
 #include "materialmanager.h"
-#include "material.h"
 
-MaterialManager::MaterialManager(const QOpenGLShaderProgramPtr& shader)
-    : m_shader(shader)
+MaterialManager::MaterialManager(GLuint programHandle)
+    : m_programHandle(programHandle)
 {}
 
 MaterialManager::~MaterialManager() {}
@@ -36,7 +35,8 @@ shared_ptr<Material> MaterialManager::addMaterial(const string& name,
                                               specularColor,
                                               emissiveColor,
                                               shininess,
-                                              shininessStrength);
+                                              shininessStrength,
+                                              m_programHandle);
 
     return m_materials[name];
 }
