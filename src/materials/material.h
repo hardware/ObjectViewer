@@ -1,14 +1,10 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <string>
 #include <QVector4D>
-
 #include "../helpers/opengluniformbuffer.h"
 
-using namespace std;
-
-class QOpenGLFunctions_4_3_Core;
+#include <vector>
 
 class Material
 {
@@ -28,10 +24,11 @@ public:
     void setName(const string& name) { m_name = name; }
     string name() const { return m_name; }
 
-    void sendToGPU();
+    void bind();
 
 private:
     void init();
+    void fillBuffer(vector<GLubyte>& buffer, GLint* offsets);
 
     string m_name;
 
@@ -43,27 +40,7 @@ private:
     float m_shininess;
     float m_shininessStrength;
 
-    int m_twoSided;
-    int m_twoSidedTrue;
-    int m_wireframe;
-
-    // Uniform Block
-    struct MaterialInfo
-    {
-        QVector4D Ka;
-        QVector4D Kd;
-        QVector4D Ks;
-        QVector4D Ke;
-
-        float shininess;
-        float shininessStrength;
-    };
-
     OpenGLUniformBuffer m_uniformsBuffer;
-    GLuint m_programHandle;
-    GLuint m_uniformHandle;
-
-    QOpenGLFunctions_4_3_Core* m_funcs;
 
 };
 

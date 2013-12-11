@@ -102,7 +102,7 @@ void Model::render()
     for(unsigned int i = 0; i < m_meshes.size(); i++)
     {
         if(m_textures[i] != nullptr) m_textures[i]->bind(GL_TEXTURE0);
-        if(m_materials[i] != nullptr) m_materials[i]->sendToGPU();
+        if(m_materials[i] != nullptr) m_materials[i]->bind();
 
         m_funcs->glDrawElementsBaseVertex(
             GL_TRIANGLES,

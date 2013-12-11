@@ -1,5 +1,7 @@
 #include "opengluniformbuffer.h"
 
+#include <QDebug>
+
 #include <QAtomicInt>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_4_3_Core>
@@ -8,14 +10,22 @@ class OpenGLUniformBufferPrivate
 {
 
 public:
-    OpenGLUniformBufferPrivate()
+    OpenGLUniformBufferPrivate(GLuint programHandle = 0, const string& blockName = NULL, GLsizei numMembers = 0)
         : m_bufferId(0),
+          m_programHandle(programHandle),
+          m_blockName(blockName),
+          m_numMembers(numMembers),
           m_ref(1),
           m_usagePattern(OpenGLUniformBuffer::DynamicDraw),
           m_funcs(nullptr)
     {}
 
-    GLuint m_bufferId;
+    GLuint  m_bufferId;
+    GLuint  m_programHandle;
+    GLuint  m_blockIndex;
+    string  m_blockName;
+    GLsizei m_numMembers;
+
     QAtomicInt m_ref;
     OpenGLUniformBuffer::UsagePattern m_usagePattern;
     QOpenGLFunctions_4_3_Core* m_funcs;
@@ -24,6 +34,10 @@ public:
 
 OpenGLUniformBuffer::OpenGLUniformBuffer()
     : d_ptr(new OpenGLUniformBufferPrivate())
+{}
+
+OpenGLUniformBuffer::OpenGLUniformBuffer(GLuint programHandle, const string& blockName, GLsizei numMembers)
+    : d_ptr(new OpenGLUniformBufferPrivate(programHandle, blockName, numMembers))
 {}
 
 OpenGLUniformBuffer::OpenGLUniformBuffer(const OpenGLUniformBuffer& other)
@@ -86,6 +100,7 @@ bool OpenGLUniformBuffer::create()
         d->m_funcs->initializeOpenGLFunctions();
 
         d->m_funcs->glGenBuffers(1, &d->m_bufferId);
+        d->m_blockIndex = d->m_funcs->glGetUniformBlockIndex(d->m_programHandle, d->m_blockName.data());
 
         if(d->m_bufferId) return true;
     }
@@ -157,26 +172,6 @@ void OpenGLUniformBuffer::release()
         d->m_funcs->glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-GLuint OpenGLUniformBuffer::bufferId() const
-{
-    Q_D(const OpenGLUniformBuffer);
-
-    return ( (d->m_bufferId) ? d->m_bufferId : 0 );
-}
-
-int OpenGLUniformBuffer::size() const
-{
-    Q_D(const OpenGLUniformBuffer);
-
-    if ( ! d->m_bufferId )
-        return -1;
-
-    GLint value = -1;
-    d->m_funcs->glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &value);
-
-    return value;
-}
-
 bool OpenGLUniformBuffer::read(int offset, int size, void* data)
 {
     Q_D(OpenGLUniformBuffer);
@@ -236,5 +231,95 @@ bool OpenGLUniformBuffer::unmap()
     if( ! d->m_bufferId )
         return false;
 
-    return d->m_funcs->glUnmapBuffer(GL_UNIFORM_BUFFER) == GL_TRUE;
+    return ( d->m_funcs->glUnmapBuffer(GL_UNIFORM_BUFFER) == GL_TRUE );
 }
+
+GLuint OpenGLUniformBuffer::getBufferId() const
+{
+    Q_D(const OpenGLUniformBuffer);
+
+    return ( (d->m_bufferId) ? d->m_bufferId : 0 );
+}
+
+GLuint OpenGLUniformBuffer::getIndex() const
+{
+    Q_D(const OpenGLUniformBuffer);
+
+    if( ! isCreated() )
+        qWarning("OpenGLUniformBuffer::getIndex() : buffer not created");
+
+    return d->m_blockIndex;
+}
+
+GLint OpenGLUniformBuffer::getSize() const
+{
+    Q_D(const OpenGLUniformBuffer);
+
+    if( ! isCreated() )
+        qWarning("OpenGLUniformBuffer::getSize() : buffer not created");
+
+    GLint blockSize;
+    d->m_funcs->glGetActiveUniformBlockiv(
+        d->m_programHandle,
+        d->m_blockIndex,
+        GL_UNIFORM_BLOCK_DATA_SIZE,
+        &blockSize
+   );
+
+    return blockSize;
+}
+
+void OpenGLUniformBuffer::getBlockMembersData(const GLchar** uniformNames,
+                                              OpenGLUniformBuffer::MembersDataType type,
+                                              GLint* membersData)
+{
+    Q_D(OpenGLUniformBuffer);
+
+    GLuint* membersIndices = new GLuint[d->m_numMembers];
+
+    d->m_funcs->glGetUniformIndices(d->m_programHandle, d->m_numMembers, uniformNames, membersIndices);
+    d->m_funcs->glGetActiveUniformsiv(d->m_programHandle, d->m_numMembers, membersIndices, type, membersData);
+
+    delete[] membersIndices;
+}
+
+void OpenGLUniformBuffer::assignBindingPoint(GLuint bindingPoint)
+{
+    if( ! isCreated() )
+        qWarning("OpenGLUniformBuffer::assignBindingPoint() : buffer not created");
+
+    Q_D(OpenGLUniformBuffer);
+
+
+    d->m_funcs->glUniformBlockBinding(d->m_programHandle, d->m_blockIndex, bindingPoint);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
