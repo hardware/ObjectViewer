@@ -1,7 +1,7 @@
 #include "scene.h"
 #include "camera.h"
 #include "model.h"
-#include "spotlight.h"
+#include "pointlight.h"
 
 #include "modelmanager.h"
 #include "meshmanager.h"
@@ -21,7 +21,7 @@
 Scene::Scene(QObject* parent)
     : AbstractScene(parent),
       m_camera(new Camera(this)),
-      m_light(new SpotLight),
+      m_light(new PointLight),
       m_v(),
       m_viewCenterFixed(false),
       m_panAngle(0.0f),
@@ -79,19 +79,10 @@ void Scene::initialize()
     QOpenGLShaderProgramPtr shader = m_shader->shader();
     shader->bind();
     shader->setUniformValue("texColor", 0);
-    shader->setUniformValue("texNormal", 1);
+    // shader->setUniformValue("texNormal", 1);
 
-//    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
-//    pointLight->setUniqueColor(QVector3D(1.0f, 1.0f, 1.0f));
-//    pointLight->setLinearAttenuation(0.1f);
-//    pointLight->setIntensity(2.0f);
-
-    SpotLight* spotLight = dynamic_cast<SpotLight*>(m_light);
-    spotLight->setSpecularColor(1.0f, 1.0f, 1.0f);
-    spotLight->setDiffuseColor(1.0f, 1.0f, 1.0f);
-    spotLight->setLinearAttenuation(0.1f);
-    spotLight->setIntensity(2.0f);
-    spotLight->setCutOff(20.0f);
+    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
+    pointLight->setUniqueColor(QVector3D(1.0f, 1.0f, 1.0f));
 
     m_modelManager = unique_ptr<AbstractModelManager>(new ModelManager(this));
 
@@ -139,30 +130,31 @@ void Scene::render(double currentTime)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Set the fragment shader light mode subroutine
-    m_funcs->glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &m_lightModeSubroutines[m_lightMode]);
+    // m_funcs->glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &m_lightModeSubroutines[m_lightMode]);
 
     if(currentTime > 0)
     {
-        // m_object3D.rotateY(static_cast<float>(currentTime)/0.02f);
+        // m_object.rotateY(static_cast<float>(currentTime)/0.02f);
     }
+
+    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_object.modelMatrix();
+    QMatrix3x3 normalMatrix = modelViewMatrix.normalMatrix();
+    QMatrix4x4 mvpMatrix = m_camera->projectionMatrix() * modelViewMatrix;
 
     QOpenGLShaderProgramPtr shader = m_shader->shader();
 
     shader->bind();
-    shader->setUniformValue("modelMatrix", m_object3D.modelMatrix());
-    shader->setUniformValue("viewProjectionMatrix", m_camera->viewProjectionMatrix());
+    shader->setUniformValue("normalMatrix", normalMatrix);
+    shader->setUniformValue("modelViewMatrix", modelViewMatrix);
+    shader->setUniformValue("modelViewProjectionMatrix", mvpMatrix);
 
     m_model->render();
 
-//    const float scale = cosf(currentTime) * 5.0f + 5.0f;
-//    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
-//    pointLight->setPosition(QVector3D(scale, 5.0f, scale));
-//    pointLight->render(shader);
+    const float scale = cosf(currentTime) * 5.0f + 5.0f;
 
-    SpotLight* spotLight = dynamic_cast<SpotLight*>(m_light);
-    spotLight->setPosition(m_camera->position());
-    spotLight->setDirection(m_camera->viewCenter());
-    spotLight->render(shader);
+    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
+    pointLight->setPosition(QVector3D(scale, 3.0f, scale));
+    pointLight->render(shader);
 
     emit renderCycleDone();
 }
@@ -195,8 +187,8 @@ void Scene::prepareShaders()
 {
     m_shader = ShadersPtr(new Shaders);
 
-    m_shader->setVertexShader(":/resources/shaders/per-fragment-blinn-phong.vert");
-    m_shader->setFragmentShader(":/resources/shaders/per-fragment-blinn-phong.frag");
+    m_shader->setVertexShader(":/resources/shaders/basic.vert");
+    m_shader->setFragmentShader(":/resources/shaders/basic.frag");
 
     m_shader->shader()->link();
 }
@@ -250,7 +242,7 @@ void Scene::toggleAA(bool state)
 
 Object3D* Scene::getObject()
 {
-    return &m_object3D;
+    return &m_object;
 }
 
 Camera* Scene::getCamera()

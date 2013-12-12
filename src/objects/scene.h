@@ -95,7 +95,7 @@ private:
     shared_ptr<AbstractMaterialManager> m_materialManager;
 
     ShadersPtr m_shader;
-    Object3D   m_object3D;
+    Object3D   m_object;
     QVector3D  m_v;
 
     bool m_viewCenterFixed;

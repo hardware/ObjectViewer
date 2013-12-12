@@ -71,9 +71,9 @@ void PointLight::render(const QOpenGLShaderProgramPtr& shader)
     shader->setUniformValue("light.Kd", m_diffuseColor);
     shader->setUniformValue("light.Ks", m_specularColor);
 
-    shader->setUniformValue("light.constantAttenuation",  m_constantAttenuation);
-    shader->setUniformValue("light.linearAttenuation",    m_linearAttenuation);
-    shader->setUniformValue("light.quadraticAttenuation", m_quadraticAttenuation);
+//    shader->setUniformValue("light.constantAttenuation",  m_constantAttenuation);
+//    shader->setUniformValue("light.linearAttenuation",    m_linearAttenuation);
+//    shader->setUniformValue("light.quadraticAttenuation", m_quadraticAttenuation);
 
     shader->setUniformValue("light.intensity", m_intensity);
 }
