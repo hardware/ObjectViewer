@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/shaders/basic.frag</file>
+        <file>resources/shaders/basic.vert</file>
+    </qresource>
+    <qresource prefix="/lighting">
+        <file>resources/shaders/lighting/normal-mapping.frag</file>
+        <file>resources/shaders/lighting/normal-mapping.vert</file>
+        <file>resources/shaders/lighting/per-fragment-blinn-phong.frag</file>
+        <file>resources/shaders/lighting/per-fragment-blinn-phong.vert</file>
+        <file>resources/shaders/lighting/per-fragment-phong.frag</file>
+        <file alias=":/shaders/lighting/per-fragment-phong.vert">resources/shaders/lighting/per-fragment-phong.vert</file>
+        <file>resources/shaders/lighting/per-vertex-phong.frag</file>
+        <file>resources/shaders/lighting/per-vertex-phong.vert</file>
+        <file>resources/shaders/lighting/point-light.vert</file>
+        <file>resources/shaders/lighting/rim-lighting.frag</file>
+        <file>resources/shaders/lighting/rim-lighting.vert</file>
+    </qresource>
+</RCC>

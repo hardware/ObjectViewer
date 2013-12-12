@@ -51,19 +51,6 @@ QMAKE_CXXFLAGS_WARN_ON += -Wall -Wextra -Wfloat-equal -Wundef -Wpointer-arith \
                           -Wnon-virtual-dtor -Wmissing-noreturn \
                           -Wredundant-decls -Winline -Wdouble-promotion -Winit-self \
                           -Wold-style-cast -Woverloaded-virtual -pedantic
-OTHER_FILES += \
-    resources/shaders/basic.vert \
-    resources/shaders/basic.frag \
-    resources/shaders/per-vertex-phong.vert \
-    resources/shaders/per-vertex-phong.frag \
-    resources/shaders/per-fragment-phong.vert \
-    resources/shaders/per-fragment-phong.frag \
-    resources/shaders/per-fragment-blinn-phong.frag \
-    resources/shaders/per-fragment-blinn-phong.vert \
-    resources/shaders/rim-lighting.vert \
-    resources/shaders/rim-lighting.frag \
-    resources/shaders/normal-mapping.vert \
-    resources/shaders/normal-mapping.frag
 
 HEADERS += \
     src/helpers/shaders.h \
@@ -124,4 +111,21 @@ SOURCES += \
     src/helpers/opengluniformbuffer.cpp
 
 RESOURCES += \
-    resources.qrc
+    shaders.qrc \
+    images.qrc \
+    textures.qrc
+
+OTHER_FILES += \
+    resources/shaders/basic.frag \
+    resources/shaders/basic.vert \
+    resources/shaders/lighting/rim-lighting.vert \
+    resources/shaders/lighting/rim-lighting.frag \
+    resources/shaders/lighting/point-light.vert \
+    resources/shaders/lighting/per-vertex-phong.vert \
+    resources/shaders/lighting/per-vertex-phong.frag \
+    resources/shaders/lighting/per-fragment-phong.vert \
+    resources/shaders/lighting/per-fragment-phong.frag \
+    resources/shaders/lighting/per-fragment-blinn-phong.vert \
+    resources/shaders/lighting/per-fragment-blinn-phong.frag \
+    resources/shaders/lighting/normal-mapping.vert \
+    resources/shaders/lighting/normal-mapping.frag
