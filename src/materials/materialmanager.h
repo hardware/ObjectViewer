@@ -23,7 +23,8 @@ public:
                                              const QVector4D& specularColor,
                                              const QVector4D& emissiveColor,
                                              float shininess,
-                                             float shininessStrength);
+                                             float shininessStrength,
+                                              bool hasTexture);
 
 private:
     map<string, shared_ptr<Material>> m_materials;

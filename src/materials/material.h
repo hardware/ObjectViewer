@@ -17,6 +17,7 @@ public:
              const QVector4D& emissiveColor,
              float shininess,
              float shininessStrength,
+              bool hasTexture,
              GLuint programHandle);
 
     virtual ~Material();
@@ -39,6 +40,8 @@ private:
 
     float m_shininess;
     float m_shininessStrength;
+
+    bool m_hasTexture;
 
     OpenGLUniformBuffer m_uniformsBuffer;
 

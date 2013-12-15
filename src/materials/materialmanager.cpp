@@ -22,7 +22,8 @@ shared_ptr<Material> MaterialManager::addMaterial(const string& name,
                                                   const QVector4D& specularColor,
                                                   const QVector4D& emissiveColor,
                                                   float shininess,
-                                                  float shininessStrength)
+                                                  float shininessStrength,
+                                                   bool hasTexture)
 {
     if(m_materials.find(name) != m_materials.end() && m_materials[name].get() != nullptr)
     {
@@ -36,6 +37,7 @@ shared_ptr<Material> MaterialManager::addMaterial(const string& name,
                                               emissiveColor,
                                               shininess,
                                               shininessStrength,
+                                              hasTexture,
                                               m_programHandle);
 
     return m_materials[name];

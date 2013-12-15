@@ -25,7 +25,8 @@ public:
                                              const QVector4D& specularColor,
                                              const QVector4D& emissiveColor,
                                              float shininess,
-                                             float shininessStrength) = 0;
+                                             float shininessStrength,
+                                              bool hasTexture) = 0;
 
 };
 

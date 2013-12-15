@@ -59,7 +59,7 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
 
         m_meshes.push_back(mesh);
 
-        if( ! data->textureData.filename.empty() )
+        if(data->textureData.hasTexture)
         {
             shared_ptr<Texture> texture = m_textureManager->getTexture(data->textureData.filename);
 
@@ -86,7 +86,8 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
                                                       data->materialData.specularColor,
                                                       data->materialData.emissiveColor,
                                                       data->materialData.shininess,
-                                                      data->materialData.shininessStrength);
+                                                      data->materialData.shininessStrength,
+                                                      data->textureData.hasTexture);
         }
 
         m_materials.push_back(material);

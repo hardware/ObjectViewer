@@ -29,6 +29,7 @@ uniform MaterialInfo
 
     float shininess; // Specular shininess exponent
     float shininessStrength; // Not used in Phong model
+     bool hasTexture;
 } material;
 
 // Light properties
@@ -67,11 +68,15 @@ void main()
     vec3 specular = vec3(0.0);
 
     if(nDotL > 0.0)
-    {
         specular = material.Ks.xyz * light.Ks * pow(rDotV, material.shininess);
-    }
 
     vec3 lightColor = ( emissive + ambient + diffuse + specular ) * light.intensity;
+    vec4 textureColor;
 
-    FragColor = texture(texColor, fs_in.texCoord.xy) * fs_in.color * vec4(lightColor, 1.0);
+    if(material.hasTexture)
+        textureColor = texture(texColor, fs_in.texCoord.xy);
+    else
+        textureColor = material.Kd;
+
+    FragColor = textureColor * fs_in.color * vec4(lightColor, 1.0);
 }

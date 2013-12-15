@@ -295,17 +295,31 @@ TextureData ModelLoader::loadTexture(const string& filename,
     TextureData data = TextureData();
     aiString path;
 
+    if(material->GetTextureCount(aiTextureType_DIFFUSE) > 0) qDebug() << "aiTextureType_DIFFUSE";
+    if(material->GetTextureCount(aiTextureType_SPECULAR) > 0) qDebug() << "aiTextureType_SPECULAR";
+    if(material->GetTextureCount(aiTextureType_AMBIENT) > 0) qDebug() << "aiTextureType_AMBIENT";
+    if(material->GetTextureCount(aiTextureType_EMISSIVE) > 0) qDebug() << "aiTextureType_EMISSIVE";
+    if(material->GetTextureCount(aiTextureType_HEIGHT) > 0) qDebug() << "aiTextureType_HEIGHT";
+    if(material->GetTextureCount(aiTextureType_NORMALS) > 0) qDebug() << "aiTextureType_NORMALS";
+    if(material->GetTextureCount(aiTextureType_SHININESS) > 0) qDebug() << "aiTextureType_SHININESS";
+    if(material->GetTextureCount(aiTextureType_OPACITY) > 0) qDebug() << "aiTextureType_OPACITY";
+    if(material->GetTextureCount(aiTextureType_DISPLACEMENT) > 0) qDebug() << "aiTextureType_DISPLACEMENT";
+    if(material->GetTextureCount(aiTextureType_LIGHTMAP) > 0) qDebug() << "aiTextureType_LIGHTMAP";
+    if(material->GetTextureCount(aiTextureType_REFLECTION) > 0) qDebug() << "aiTextureType_REFLECTION";
+    if(material->GetTextureCount(aiTextureType_UNKNOWN) > 0) qDebug() << "aiTextureType_UNKNOWN";
+
     if(material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
     {
         if(material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
         {
             string texturePath = dir + "/" + path.data;
             data.filename = texturePath;
+            data.hasTexture = true;
         }
-    }
-    else
-    {
-        data.filename = "assets/white.png";
+        else
+        {
+            data.hasTexture = false;
+        }
     }
 
     return data;

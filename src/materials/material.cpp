@@ -8,6 +8,7 @@ Material::Material(const string& name,
                    const QVector4D& emissiveColor,
                    float shininess,
                    float shininessStrength,
+                    bool hasTexture,
                    GLuint programHandle)
     : m_name(name),
       m_ambientColor(ambientColor),
@@ -16,7 +17,8 @@ Material::Material(const string& name,
       m_emissiveColor(emissiveColor),
       m_shininess(shininess),
       m_shininessStrength(shininessStrength),
-      m_uniformsBuffer(programHandle, "MaterialInfo", 6)
+      m_hasTexture(hasTexture),
+      m_uniformsBuffer(programHandle, "MaterialInfo", 7)
 {
     init();
 }
@@ -29,17 +31,18 @@ void Material::init()
     m_uniformsBuffer.setUsagePattern(OpenGLUniformBuffer::DynamicDraw);
     m_uniformsBuffer.bind();
 
-    const GLchar* uniformNames[6] =
+    const GLchar* uniformNames[7] =
     {
         "MaterialInfo.Ka",
         "MaterialInfo.Kd",
         "MaterialInfo.Ks",
         "MaterialInfo.Ke",
         "MaterialInfo.shininess",
-        "MaterialInfo.shininessStrength"
+        "MaterialInfo.shininessStrength",
+        "MaterialInfo.hasTexture"
     };
 
-    GLint offsets[6];
+    GLint offsets[7];
 
     m_uniformsBuffer.getBlockMembersData(uniformNames, OpenGLUniformBuffer::Offset, offsets);
 
@@ -80,4 +83,6 @@ void Material::fillBuffer(vector<GLubyte>& buffer, GLint* offsets)
 
     *(reinterpret_cast<float*>(buffer.data() + offsets[4])) = m_shininess;
     *(reinterpret_cast<float*>(buffer.data() + offsets[5])) = m_shininessStrength;
+
+    *(reinterpret_cast<bool*>(buffer.data() + offsets[6])) = m_hasTexture;
 }

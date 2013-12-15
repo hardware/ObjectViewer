@@ -21,6 +21,7 @@ struct MeshData {
 
 struct TextureData {
     string filename;
+    bool hasTexture;
 };
 
 struct MaterialData {
