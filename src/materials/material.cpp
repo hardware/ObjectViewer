@@ -90,18 +90,6 @@ void Material::bind()
 
 }
 
-//glCullFace(GL_FRONT);
-//glCullFace(GL_BACK);
-//glCullFace(GL_FRONT_AND_BACK);
-
-//glFrontFace(GL_CW);
-//glFrontFace(GL_CCW);
-
-//glEnable(GL_CULL_FACE);
-//glDisable(GL_CULL_FACE);
-
-
-
 void Material::fillBuffer(vector<GLubyte>& buffer, GLint* offsets)
 {
     (reinterpret_cast<float*>(buffer.data() + offsets[0]))[0] = m_ambientColor.x();
