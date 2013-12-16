@@ -26,6 +26,7 @@ public:
                                              const QVector4D& emissiveColor,
                                              float shininess,
                                              float shininessStrength,
+                                               int twoSided,
                                               bool hasTexture) = 0;
 
 };

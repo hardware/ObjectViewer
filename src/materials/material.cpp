@@ -9,6 +9,7 @@ Material::Material(const string& name,
                    float shininess,
                    float shininessStrength,
                     bool hasTexture,
+                     int twoSided,
                    GLuint programHandle)
     : m_name(name),
       m_ambientColor(ambientColor),
@@ -18,6 +19,7 @@ Material::Material(const string& name,
       m_shininess(shininess),
       m_shininessStrength(shininessStrength),
       m_hasTexture(hasTexture),
+      m_twoSided(twoSided),
       m_uniformsBuffer(programHandle, "MaterialInfo", 7)
 {
     init();
@@ -57,6 +59,11 @@ void Material::init()
 void Material::bind()
 {
     m_uniformsBuffer.bind(1);
+
+    // Specifies whether meshes using this material
+    // must be rendered with or without backface culling
+    (m_twoSided) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+
 }
 
 void Material::fillBuffer(vector<GLubyte>& buffer, GLint* offsets)

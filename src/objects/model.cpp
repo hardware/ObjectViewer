@@ -87,6 +87,7 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
                                                       data->materialData.emissiveColor,
                                                       data->materialData.shininess,
                                                       data->materialData.shininessStrength,
+                                                      data->materialData.twoSided,
                                                       data->textureData.hasTexture);
         }
 

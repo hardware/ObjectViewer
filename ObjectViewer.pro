@@ -11,14 +11,10 @@ unix:!macx: LIBS += \
     -L/usr/lib/ -lMagick++-6.Q16HDRI
 
 INCLUDEPATH += \
-    $$PWD/libs \
-    $$PWD/includes \
     /usr/lib \
     /usr/include
 
 DEPENDPATH += \
-    $$PWD/libs \
-    $$PWD/includes \
     /usr/lib \
     /usr/include
 

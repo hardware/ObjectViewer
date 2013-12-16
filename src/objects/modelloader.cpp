@@ -139,14 +139,15 @@ void ModelLoader::prepareVertexContainers(const aiMesh* mesh)
         if(face.mNumIndices != 3)
         {
             // Unsupported modes : GL_POINTS / GL_LINES / GL_POLYGON
-            qFatal("Unable to load model... Unsupported number of indices per face.");
-            exit(1);
+            qWarning(qPrintable(QObject::tr("Warning : unsupported number of indices per face (%1)").arg(face.mNumIndices)));
             break;
         }
 
         m_indices.push_back(face.mIndices[0]);
         m_indices.push_back(face.mIndices[1]);
         m_indices.push_back(face.mIndices[2]);
+
+        // Voir : http://gamedev.stackexchange.com/q/45683
     }
 }
 
@@ -215,8 +216,7 @@ void ModelLoader::prepareVertexBuffers()
     m_vao->release();
 }
 
-MaterialData ModelLoader::loadMaterial(unsigned int index,
-                                       const aiMaterial* material)
+MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* material)
 {
     Q_ASSERT(material != nullptr);
 
@@ -233,7 +233,7 @@ MaterialData ModelLoader::loadMaterial(unsigned int index,
         data.ambientColor.setW(1.0f);
     }
 
-    aiColor3D diffuseColor(1.0f, 1.0f, 1.0f);
+    aiColor3D diffuseColor(0.8f, 0.8f, 0.8f);
 
     if(material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor) == AI_SUCCESS)
     {
@@ -243,7 +243,7 @@ MaterialData ModelLoader::loadMaterial(unsigned int index,
         data.diffuseColor.setW(1.0f);
     }
 
-    aiColor3D specularColor(0.7f, 0.7f, 0.7f);
+    aiColor3D specularColor(0.0f, 0.0f, 0.0f);
 
     if(material->Get(AI_MATKEY_COLOR_SPECULAR, specularColor) == AI_SUCCESS)
     {
@@ -263,7 +263,7 @@ MaterialData ModelLoader::loadMaterial(unsigned int index,
         data.emissiveColor.setW(1.0f);
     }
 
-    float shininess = 64.0f;
+    float shininess = 0.0f;
 
     if(material->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
     {
@@ -277,11 +277,17 @@ MaterialData ModelLoader::loadMaterial(unsigned int index,
         data.shininessStrength = shininessStrength;
     }
 
+    int twoSided;
+
+    if(material->Get(AI_MATKEY_TWOSIDED, twoSided) == AI_SUCCESS)
+    {
+        data.twoSided = twoSided;
+    }
+
     return data;
 }
 
-TextureData ModelLoader::loadTexture(const string& filename,
-                                     const aiMaterial* material)
+TextureData ModelLoader::loadTexture(const string& filename, const aiMaterial* material)
 {
     Q_ASSERT(material != nullptr);
 
@@ -295,18 +301,20 @@ TextureData ModelLoader::loadTexture(const string& filename,
     TextureData data = TextureData();
     aiString path;
 
-    if(material->GetTextureCount(aiTextureType_DIFFUSE) > 0) qDebug() << "aiTextureType_DIFFUSE";
-    if(material->GetTextureCount(aiTextureType_SPECULAR) > 0) qDebug() << "aiTextureType_SPECULAR";
-    if(material->GetTextureCount(aiTextureType_AMBIENT) > 0) qDebug() << "aiTextureType_AMBIENT";
-    if(material->GetTextureCount(aiTextureType_EMISSIVE) > 0) qDebug() << "aiTextureType_EMISSIVE";
-    if(material->GetTextureCount(aiTextureType_HEIGHT) > 0) qDebug() << "aiTextureType_HEIGHT";
-    if(material->GetTextureCount(aiTextureType_NORMALS) > 0) qDebug() << "aiTextureType_NORMALS";
-    if(material->GetTextureCount(aiTextureType_SHININESS) > 0) qDebug() << "aiTextureType_SHININESS";
-    if(material->GetTextureCount(aiTextureType_OPACITY) > 0) qDebug() << "aiTextureType_OPACITY";
+    data.hasTexture = false;
+
+    if(material->GetTextureCount(aiTextureType_DIFFUSE)      > 0) qDebug() << "aiTextureType_DIFFUSE";
+    if(material->GetTextureCount(aiTextureType_SPECULAR)     > 0) qDebug() << "aiTextureType_SPECULAR";
+    if(material->GetTextureCount(aiTextureType_AMBIENT)      > 0) qDebug() << "aiTextureType_AMBIENT";
+    if(material->GetTextureCount(aiTextureType_EMISSIVE)     > 0) qDebug() << "aiTextureType_EMISSIVE";
+    if(material->GetTextureCount(aiTextureType_HEIGHT)       > 0) qDebug() << "aiTextureType_HEIGHT";
+    if(material->GetTextureCount(aiTextureType_NORMALS)      > 0) qDebug() << "aiTextureType_NORMALS";
+    if(material->GetTextureCount(aiTextureType_SHININESS)    > 0) qDebug() << "aiTextureType_SHININESS";
+    if(material->GetTextureCount(aiTextureType_OPACITY)      > 0) qDebug() << "aiTextureType_OPACITY";
     if(material->GetTextureCount(aiTextureType_DISPLACEMENT) > 0) qDebug() << "aiTextureType_DISPLACEMENT";
-    if(material->GetTextureCount(aiTextureType_LIGHTMAP) > 0) qDebug() << "aiTextureType_LIGHTMAP";
-    if(material->GetTextureCount(aiTextureType_REFLECTION) > 0) qDebug() << "aiTextureType_REFLECTION";
-    if(material->GetTextureCount(aiTextureType_UNKNOWN) > 0) qDebug() << "aiTextureType_UNKNOWN";
+    if(material->GetTextureCount(aiTextureType_LIGHTMAP)     > 0) qDebug() << "aiTextureType_LIGHTMAP";
+    if(material->GetTextureCount(aiTextureType_REFLECTION)   > 0) qDebug() << "aiTextureType_REFLECTION";
+    if(material->GetTextureCount(aiTextureType_UNKNOWN)      > 0) qDebug() << "aiTextureType_UNKNOWN";
 
     if(material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
     {
@@ -316,9 +324,14 @@ TextureData ModelLoader::loadTexture(const string& filename,
             data.filename = texturePath;
             data.hasTexture = true;
         }
-        else
+    }
+    else if(material->GetTextureCount(aiTextureType_OPACITY) > 0)
+    {
+        if(material->GetTexture(aiTextureType_OPACITY, 0, &path) == AI_SUCCESS)
         {
-            data.hasTexture = false;
+            string texturePath = dir + "/" + path.data;
+            data.filename = texturePath;
+            data.hasTexture = true;
         }
     }
 

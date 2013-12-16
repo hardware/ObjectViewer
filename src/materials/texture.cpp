@@ -59,7 +59,7 @@ bool Texture::load()
         }
         catch (Magick::Error& e)
         {
-            qDebug() << "Error loading texture '" << m_fileName.c_str() << "': " << e.what();
+            qDebug() << e.what();
             destroy();
             return false;
         }

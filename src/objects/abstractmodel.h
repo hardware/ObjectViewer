@@ -34,6 +34,8 @@ struct MaterialData {
 
     float shininess;
     float shininessStrength;
+
+    int twoSided;
 };
 
 struct ModelData {

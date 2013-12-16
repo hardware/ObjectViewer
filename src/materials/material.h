@@ -18,6 +18,7 @@ public:
              float shininess,
              float shininessStrength,
               bool hasTexture,
+               int twoSided,
              GLuint programHandle);
 
     virtual ~Material();
@@ -42,6 +43,7 @@ private:
     float m_shininessStrength;
 
     bool m_hasTexture;
+    int  m_twoSided;
 
     OpenGLUniformBuffer m_uniformsBuffer;
 

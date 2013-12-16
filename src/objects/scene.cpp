@@ -83,6 +83,7 @@ void Scene::initialize()
 
     PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
     pointLight->setUniqueColor(QVector3D(1.0f, 1.0f, 1.0f));
+    pointLight->setPosition(QVector3D(10.0f, 10.0f, 10.0f));
 
     m_modelManager = unique_ptr<AbstractModelManager>(new ModelManager(this));
 
@@ -96,6 +97,7 @@ void Scene::initialize()
         - blackhawk/uh60.lwo
         - US_APC/apc.lwo
         - tomcat/f14d.lwo
+        - audi_s5/audis5.3ds
     */
 
     m_model = m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo", shader);
@@ -134,7 +136,7 @@ void Scene::render(double currentTime)
 
     if(currentTime > 0)
     {
-        // m_object.rotateY(static_cast<float>(currentTime)/0.02f);
+        m_object.rotateY(static_cast<float>(currentTime)/0.02f);
     }
 
     QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_object.modelMatrix();
@@ -150,10 +152,7 @@ void Scene::render(double currentTime)
 
     m_model->render();
 
-    const float scale = cosf(currentTime) * 5.0f + 5.0f;
-
     PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
-    pointLight->setPosition(QVector3D(scale, 3.0f, scale));
     pointLight->render(shader);
 
     emit renderCycleDone();
