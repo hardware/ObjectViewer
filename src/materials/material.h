@@ -17,8 +17,10 @@ public:
              const QVector4D& emissiveColor,
              float shininess,
              float shininessStrength,
-              bool hasTexture,
                int twoSided,
+               int blendMode,
+              bool alphaBlending,
+              bool hasTexture,
              GLuint programHandle);
 
     virtual ~Material();
@@ -42,8 +44,15 @@ private:
     float m_shininess;
     float m_shininessStrength;
 
-    bool m_hasTexture;
     int  m_twoSided;
+    int  m_blendMode;
+    bool m_alphaBlending;
+    bool m_hasTexture;
+
+    enum BlendMode {
+        Default  = 0x0,
+        Additive = 0x1
+    };
 
     OpenGLUniformBuffer m_uniformsBuffer;
 

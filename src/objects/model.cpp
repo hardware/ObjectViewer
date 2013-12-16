@@ -88,6 +88,8 @@ void Model::initialize(vector<shared_ptr<ModelData>> modelData)
                                                       data->materialData.shininess,
                                                       data->materialData.shininessStrength,
                                                       data->materialData.twoSided,
+                                                      data->materialData.blendMode,
+                                                      data->materialData.alphaBlending,
                                                       data->textureData.hasTexture);
         }
 

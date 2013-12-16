@@ -8,8 +8,10 @@ Material::Material(const string& name,
                    const QVector4D& emissiveColor,
                    float shininess,
                    float shininessStrength,
-                    bool hasTexture,
                      int twoSided,
+                     int blendMode,
+                    bool alphaBlending,
+                    bool hasTexture,
                    GLuint programHandle)
     : m_name(name),
       m_ambientColor(ambientColor),
@@ -18,8 +20,10 @@ Material::Material(const string& name,
       m_emissiveColor(emissiveColor),
       m_shininess(shininess),
       m_shininessStrength(shininessStrength),
-      m_hasTexture(hasTexture),
       m_twoSided(twoSided),
+      m_blendMode(blendMode),
+      m_alphaBlending(alphaBlending),
+      m_hasTexture(hasTexture),
       m_uniformsBuffer(programHandle, "MaterialInfo", 7)
 {
     init();
@@ -62,9 +66,41 @@ void Material::bind()
 
     // Specifies whether meshes using this material
     // must be rendered with or without backface culling
-    (m_twoSided) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+    (m_twoSided != 1) ? glDisable(GL_CULL_FACE) : glEnable(GL_CULL_FACE);
+
+    if(m_alphaBlending && m_blendMode != -1)
+    {
+        glEnable(GL_BLEND);
+
+        switch(m_blendMode)
+        {
+        case BlendMode::Additive:
+            glBlendFunc(GL_ONE, GL_ONE);
+            break;
+
+        case BlendMode::Default:
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            break;
+        }
+    }
+    else
+    {
+        glDisable(GL_BLEND);
+    }
 
 }
+
+//glCullFace(GL_FRONT);
+//glCullFace(GL_BACK);
+//glCullFace(GL_FRONT_AND_BACK);
+
+//glFrontFace(GL_CW);
+//glFrontFace(GL_CCW);
+
+//glEnable(GL_CULL_FACE);
+//glDisable(GL_CULL_FACE);
+
+
 
 void Material::fillBuffer(vector<GLubyte>& buffer, GLint* offsets)
 {

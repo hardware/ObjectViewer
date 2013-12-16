@@ -230,7 +230,6 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
         data.ambientColor.setX(ambientColor.r);
         data.ambientColor.setY(ambientColor.g);
         data.ambientColor.setZ(ambientColor.b);
-        data.ambientColor.setW(1.0f);
     }
 
     aiColor3D diffuseColor(0.8f, 0.8f, 0.8f);
@@ -240,7 +239,6 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
         data.diffuseColor.setX(diffuseColor.r);
         data.diffuseColor.setY(diffuseColor.g);
         data.diffuseColor.setZ(diffuseColor.b);
-        data.diffuseColor.setW(1.0f);
     }
 
     aiColor3D specularColor(0.0f, 0.0f, 0.0f);
@@ -250,7 +248,6 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
         data.specularColor.setX(specularColor.r);
         data.specularColor.setY(specularColor.g);
         data.specularColor.setZ(specularColor.b);
-        data.specularColor.setW(1.0f);
     }
 
     aiColor3D emissiveColor(0.0f, 0.0f, 0.0f);
@@ -260,7 +257,47 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
         data.emissiveColor.setX(emissiveColor.r);
         data.emissiveColor.setY(emissiveColor.g);
         data.emissiveColor.setZ(emissiveColor.b);
-        data.emissiveColor.setW(1.0f);
+    }
+
+    int twoSided = 1;
+
+    if(material->Get(AI_MATKEY_TWOSIDED, twoSided) == AI_SUCCESS)
+    {
+        data.twoSided = twoSided;
+    }
+
+    float opacity = 1.0f;
+
+    if(material->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS)
+    {
+        data.ambientColor.setW(opacity);
+        data.diffuseColor.setW(opacity);
+        data.specularColor.setW(opacity);
+        data.emissiveColor.setW(opacity);
+
+        if(opacity < 1.0f)
+        {
+            data.alphaBlending = true;
+
+            // Activate backface culling allows to avoid
+            // cull artifacts when alpha blending is activated
+            data.twoSided = 1;
+
+            int blendMode = aiBlendMode_Default;
+
+            if(material->Get(AI_MATKEY_BLEND_FUNC, blendMode) == AI_SUCCESS)
+            {
+                if(blendMode == aiBlendMode_Additive)
+                    data.blendMode = aiBlendMode_Additive;
+                else
+                    data.blendMode = aiBlendMode_Default;
+            }
+        }
+        else
+        {
+            data.alphaBlending = false;
+            data.blendMode = -1;
+        }
     }
 
     float shininess = 0.0f;
@@ -275,13 +312,6 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
     if(material->Get(AI_MATKEY_SHININESS_STRENGTH, shininessStrength) == AI_SUCCESS)
     {
         data.shininessStrength = shininessStrength;
-    }
-
-    int twoSided;
-
-    if(material->Get(AI_MATKEY_TWOSIDED, twoSided) == AI_SUCCESS)
-    {
-        data.twoSided = twoSided;
     }
 
     return data;

@@ -24,6 +24,8 @@ shared_ptr<Material> MaterialManager::addMaterial(const string& name,
                                                   float shininess,
                                                   float shininessStrength,
                                                     int twoSided,
+                                                    int blendMode,
+                                                   bool alphaBlending,
                                                    bool hasTexture)
 {
     if(m_materials.find(name) != m_materials.end() && m_materials[name].get() != nullptr)
@@ -38,8 +40,10 @@ shared_ptr<Material> MaterialManager::addMaterial(const string& name,
                                               emissiveColor,
                                               shininess,
                                               shininessStrength,
-                                              hasTexture,
                                               twoSided,
+                                              blendMode,
+                                              alphaBlending,
+                                              hasTexture,
                                               m_programHandle);
 
     return m_materials[name];

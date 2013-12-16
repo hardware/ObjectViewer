@@ -11,7 +11,8 @@
 
 using namespace std;
 
-struct MeshData {
+struct MeshData
+{
     string name;
 
     unsigned int numIndices;
@@ -19,12 +20,14 @@ struct MeshData {
     unsigned int baseIndex;
 };
 
-struct TextureData {
+struct TextureData
+{
     string filename;
     bool hasTexture;
 };
 
-struct MaterialData {
+struct MaterialData
+{
     string name;
 
     QVector4D ambientColor;
@@ -36,9 +39,12 @@ struct MaterialData {
     float shininessStrength;
 
     int twoSided;
+    int blendMode;
+    bool alphaBlending;
 };
 
-struct ModelData {
+struct ModelData
+{
     MeshData     meshData;
     TextureData  textureData;
     MaterialData materialData;
