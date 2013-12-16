@@ -71,6 +71,7 @@ void Material::bind()
     if(m_alphaBlending && m_blendMode != -1)
     {
         glEnable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
 
         switch(m_blendMode)
         {
@@ -85,6 +86,7 @@ void Material::bind()
     }
     else
     {
+        glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
     }
 
