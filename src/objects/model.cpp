@@ -105,18 +105,22 @@ void Model::render()
 
     for(unsigned int i = 0; i < m_meshes.size(); i++)
     {
-        if(m_textures[i] != nullptr)
-        {
-            m_textures[i]->bind(GL_TEXTURE0);
-        }
-
         if( m_materials[i] != nullptr && ! m_materials[i]->isTranslucent())
         {
+            if(m_textures[i] != nullptr)
+            {
+                m_textures[i]->bind(GL_TEXTURE0);
+            }
+
             m_materials[i]->bind();
 
             drawElements(i, DrawingMode::Indexed | DrawingMode::BaseVertex);
         }
-        else
+    }
+
+    for(unsigned int i = 0; i < m_meshes.size(); i++)
+    {
+        if( m_materials[i] != nullptr && m_materials[i]->isTranslucent())
         {
             glDepthMask(GL_FALSE);
             glEnable(GL_BLEND);
