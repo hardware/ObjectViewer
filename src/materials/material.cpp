@@ -70,9 +70,6 @@ void Material::bind()
 
     if(m_alphaBlending && m_blendMode != -1)
     {
-        glEnable(GL_BLEND);
-        glDisable(GL_DEPTH_TEST);
-
         switch(m_blendMode)
         {
         case BlendMode::Additive:
@@ -84,12 +81,6 @@ void Material::bind()
             break;
         }
     }
-    else
-    {
-        glEnable(GL_DEPTH_TEST);
-        glDisable(GL_BLEND);
-    }
-
 }
 
 void Material::fillBuffer(vector<GLubyte>& buffer, GLint* offsets)

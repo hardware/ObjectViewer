@@ -28,6 +28,8 @@ public:
     void setName(const string& name) { m_name = name; }
     string name() const { return m_name; }
 
+    bool isTranslucent() const { return m_alphaBlending; }
+
     void bind();
 
 private:

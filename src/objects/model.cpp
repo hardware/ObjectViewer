@@ -105,17 +105,44 @@ void Model::render()
 
     for(unsigned int i = 0; i < m_meshes.size(); i++)
     {
-        if(m_textures[i] != nullptr) m_textures[i]->bind(GL_TEXTURE0);
-        if(m_materials[i] != nullptr) m_materials[i]->bind();
+        if(m_textures[i] != nullptr)
+        {
+            m_textures[i]->bind(GL_TEXTURE0);
+        }
 
-        m_funcs->glDrawElementsBaseVertex(
-            GL_TRIANGLES,
-            m_meshes[i]->getNumIndices(),
-            GL_UNSIGNED_INT,
-            reinterpret_cast<void*>((sizeof(unsigned int)) * m_meshes[i]->getBaseIndex()),
-            m_meshes[i]->getBaseVertex()
-        );
+        if( m_materials[i] != nullptr && ! m_materials[i]->isTranslucent())
+        {
+            m_materials[i]->bind();
+
+            drawElements(i, DrawingMode::Indexed | DrawingMode::BaseVertex);
+        }
+        else
+        {
+            glDepthMask(GL_FALSE);
+            glEnable(GL_BLEND);
+
+            m_materials[i]->bind();
+
+            drawElements(i, DrawingMode::Indexed | DrawingMode::BaseVertex);
+
+            glDisable(GL_BLEND);
+            glDepthMask(GL_TRUE);
+        }
     }
 
     m_vao->release();
+}
+
+void Model::drawElements(unsigned int index, int mode)
+{
+    // Mode non géré pour l'instant
+    Q_UNUSED(mode);
+
+    m_funcs->glDrawElementsBaseVertex(
+        GL_TRIANGLES,
+        m_meshes[index]->getNumIndices(),
+        GL_UNSIGNED_INT,
+        reinterpret_cast<void*>((sizeof(unsigned int)) * m_meshes[index]->getBaseIndex()),
+        m_meshes[index]->getBaseVertex()
+    );
 }

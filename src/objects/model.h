@@ -45,7 +45,15 @@ protected:
     shared_ptr<AbstractMaterialManager> m_materialManager;
 
 private:
+    enum DrawingMode
+    {
+        Indexed,
+        Instanced,
+        BaseVertex
+    };
+
     void initialize(vector<shared_ptr<ModelData>> modelData = vector<shared_ptr<ModelData>>());
+    void drawElements(unsigned int index, int mode);
     void destroy();
 
     QOpenGLVertexArrayObjectPtr m_vao;

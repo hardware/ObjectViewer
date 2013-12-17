@@ -32,7 +32,7 @@ Window::Window(QScreen *screen)
     format.setDepthBufferSize(24);
     format.setMajorVersion(4);
     format.setMinorVersion(3);
-    format.setSamples(4); // Multisampling x4
+    format.setSamples(16); // Multisampling x16
     format.setProfile(QSurfaceFormat::CoreProfile); // Fonctions obsolètes d'OpenGL non disponibles
     format.setOption(QSurfaceFormat::DebugContext);
 

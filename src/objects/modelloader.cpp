@@ -224,6 +224,16 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
     data.name = "material_" + to_string(index);
 
     aiColor3D ambientColor(0.1f, 0.1f, 0.1f);
+    aiColor3D diffuseColor(0.8f, 0.8f, 0.8f);
+    aiColor3D specularColor(0.0f, 0.0f, 0.0f);
+    aiColor3D emissiveColor(0.0f, 0.0f, 0.0f);
+
+    int blendMode;
+    int twoSided = 1;
+
+    float opacity = 1.0f;
+    float shininess = 0.0f;
+    float shininessStrength = 1.0f;
 
     if(material->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor) == AI_SUCCESS)
     {
@@ -232,16 +242,12 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
         data.ambientColor.setZ(ambientColor.b);
     }
 
-    aiColor3D diffuseColor(0.8f, 0.8f, 0.8f);
-
     if(material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor) == AI_SUCCESS)
     {
         data.diffuseColor.setX(diffuseColor.r);
         data.diffuseColor.setY(diffuseColor.g);
         data.diffuseColor.setZ(diffuseColor.b);
     }
-
-    aiColor3D specularColor(0.0f, 0.0f, 0.0f);
 
     if(material->Get(AI_MATKEY_COLOR_SPECULAR, specularColor) == AI_SUCCESS)
     {
@@ -250,8 +256,6 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
         data.specularColor.setZ(specularColor.b);
     }
 
-    aiColor3D emissiveColor(0.0f, 0.0f, 0.0f);
-
     if(material->Get(AI_MATKEY_COLOR_EMISSIVE, emissiveColor) == AI_SUCCESS)
     {
         data.emissiveColor.setX(emissiveColor.r);
@@ -259,14 +263,10 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
         data.emissiveColor.setZ(emissiveColor.b);
     }
 
-    int twoSided = 1;
-
     if(material->Get(AI_MATKEY_TWOSIDED, twoSided) == AI_SUCCESS)
     {
         data.twoSided = twoSided;
     }
-
-    float opacity = 1.0f;
 
     if(material->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS)
     {
@@ -283,8 +283,6 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
             // cull artifacts when alpha blending is activated
             data.twoSided = 1;
 
-            int blendMode = aiBlendMode_Default;
-
             if(material->Get(AI_MATKEY_BLEND_FUNC, blendMode) == AI_SUCCESS)
             {
                 if(blendMode == aiBlendMode_Additive)
@@ -300,14 +298,10 @@ MaterialData ModelLoader::loadMaterial(unsigned int index, const aiMaterial* mat
         }
     }
 
-    float shininess = 0.0f;
-
     if(material->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
     {
         data.shininess = shininess;
     }
-
-    float shininessStrength = 1.0f;
 
     if(material->Get(AI_MATKEY_SHININESS_STRENGTH, shininessStrength) == AI_SUCCESS)
     {

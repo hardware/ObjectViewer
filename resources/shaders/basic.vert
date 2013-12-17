@@ -20,13 +20,14 @@ out VS_OUT
 } vs_out;
 
 uniform mat3 normalMatrix;
+uniform mat4 modelMatrix;
 uniform mat4 modelViewMatrix;
 uniform mat4 modelViewProjectionMatrix;
 
 void main()
 {
     // Calculate position vector in view-space coordinate
-    vs_out.P = modelViewMatrix * vec4(position, 1.0);
+    vs_out.P = modelMatrix * vec4(position, 1.0);
 
     // Calculate normal vector in view-space coordinate
     // normalMatrix is the transpose of the inverse of the modelView matrix

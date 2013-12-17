@@ -79,7 +79,18 @@ void Scene::initialize()
 
     PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
     pointLight->setUniqueColor(QVector3D(1.0f, 1.0f, 1.0f));
-    pointLight->setPosition(QVector3D(10.0f, 10.0f, 10.0f));
+    pointLight->setPosition(QVector3D(2.07938f, 2.17309f, -3.38299f));
+    pointLight->setLinearAttenuation(0.1f);
+    pointLight->setIntensity(2.0f);
+
+//    SpotLight* spotLight = dynamic_cast<SpotLight*>(m_light);
+//    spotLight->setSpecularColor(1.0f, 1.0f, 1.0f);
+//    spotLight->setDiffuseColor(1.0f, 1.0f, 1.0f);
+//    spotLight->setLinearAttenuation(0.1f);
+//    spotLight->setIntensity(2.0f);
+//    spotLight->setCutOff(20.0f);
+//    spotLight->setPosition(.0f, 0.0f, 0.0f);
+//    spotLight->setDirection(0.0f, 0.0f, 0.0f);
 
     m_modelManager = unique_ptr<AbstractModelManager>(new ModelManager(this));
 
@@ -132,16 +143,18 @@ void Scene::render(double currentTime)
 
     if(currentTime > 0)
     {
-        m_object.rotateY(static_cast<float>(currentTime)/0.02f);
+        // m_object.rotateY(static_cast<float>(currentTime)/0.02f);
     }
 
-    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_object.modelMatrix();
-    QMatrix3x3 normalMatrix = modelViewMatrix.normalMatrix();
+    QMatrix4x4 modelMatrix = m_object.modelMatrix();
+    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * modelMatrix;
+    QMatrix3x3 normalMatrix = modelMatrix.normalMatrix();
     QMatrix4x4 mvpMatrix = m_camera->projectionMatrix() * modelViewMatrix;
 
     QOpenGLShaderProgramPtr shader = m_shader->shader();
 
     shader->bind();
+    shader->setUniformValue("modelMatrix", modelMatrix);
     shader->setUniformValue("normalMatrix", normalMatrix);
     shader->setUniformValue("modelViewMatrix", modelViewMatrix);
     shader->setUniformValue("modelViewProjectionMatrix", mvpMatrix);
@@ -150,6 +163,16 @@ void Scene::render(double currentTime)
 
     PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
     pointLight->render(shader);
+
+//     const float scale = cosf(currentTime) * 3.0f;
+
+//    SpotLight* spotLight = dynamic_cast<SpotLight*>(m_light);
+//    spotLight->setPosition(m_camera->position());
+//    spotLight->setDirection(m_camera->viewCenter());
+//    spotLight->setPosition(QVector3D(5.59114f, 1.24635f, scale));
+//    spotLight->setDirection(QVector3D(-6.26193f, -1.63253f, scale));
+//    qDebug() << "pos : " << m_camera->viewCenter();
+//    spotLight->render(shader);
 
     emit renderCycleDone();
 }
