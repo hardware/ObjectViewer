@@ -50,11 +50,13 @@ uniform struct LightInfo
     float cutOff;    // Angle of spot light
 } light;
 
+const float cos_outer_cone_angle = 0.76604; // 30 degrees
+
 uniform vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
 
 // ###############################################################################
 
-vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V)
+vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V, float falloff)
 {
     // Calculate R by reflecting -L around the plane defined by N
     vec3 R = reflect(-L, N);
@@ -66,16 +68,16 @@ vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V)
     // Compute the emissive / ambient / diffuse / specular components for each fragment
     vec3 emissive = material.Ke.xyz;
     vec3 ambient  = ( material.Ka.xyz * light.Ka ) + ( material.Ka.xyz * globalAmbient );
-    vec3 diffuse  = material.Kd.xyz * light.Kd * nDotL;
+    vec3 diffuse  = material.Kd.xyz * light.Kd * nDotL * falloff;
     vec3 specular = vec3(0.0);
 
     if(nDotL > 0.0)
-        specular = material.Ks.xyz * light.Ks * pow(rDotV, material.shininess);
+        specular = material.Ks.xyz * light.Ks * pow(rDotV, material.shininess) * falloff;
 
     return ( ambient + diffuse + specular + emissive ) * light.intensity;
 }
 
-vec3 calculatePointLight(vec3 L, vec3 N, vec3 V)
+vec3 calculatePointLight(vec3 L, vec3 N, vec3 V, float falloff)
 {
     // Calculate the length of model-space light vector
     float lightDistance = length(L);
@@ -88,17 +90,27 @@ vec3 calculatePointLight(vec3 L, vec3 N, vec3 V)
     L = normalize(L);
 
     // Calculate final light divided by attenuation
-    vec3 color = calculateLightComponents(L, N, V) / attenuation;
+    vec3 color = calculateLightComponents(L, N, V, falloff) / attenuation;
 
     return color;
 }
 
 vec3 calculateSpotLight(vec3 L, vec3 N, vec3 V)
 {
-    float spotFactor = dot(normalize(-L), normalize(light.direction));
+    // float spotFactor = dot(normalize(-L), normalize(light.direction));
 
-    if(acos(spotFactor) < radians(light.cutOff))
-        return calculatePointLight(L, N, V);
+    // if(acos(spotFactor) < radians(light.cutOff))
+    //    return calculatePointLight(L, N, V);
+
+    float cos_cur_angle = acos(dot(normalize(-L), normalize(light.direction)));
+    float cos_inner_cone_angle = radians(light.cutOff);
+    float cos_inner_minus_outer_angle = cos_inner_cone_angle - cos_outer_cone_angle;
+
+    float falloff = 0.0;
+
+    falloff = clamp((cos_cur_angle - cos_outer_cone_angle) / cos_inner_minus_outer_angle, 0.0, 1.0);
+
+    return calculatePointLight(L, N, V, falloff);
 }
 
 // ###############################################################################
@@ -119,5 +131,5 @@ void main()
     else
         textureColor = material.Kd;
 
-    FragColor = textureColor * fs_in.color * vec4(calculatePointLight(L, N, V), 1.0);
+    FragColor = textureColor * fs_in.color * vec4(calculateSpotLight(L, N, V), 1.0);
 }
