@@ -87,11 +87,14 @@ void Window::initializeGL()
  */
 void Window::paintGL()
 {
-    m_context->makeCurrent(this);
-    m_scene->render(static_cast<double>(m_renderTimer.elapsed())/1000);
-    m_context->swapBuffers(this);
+    if(isExposed())
+    {
+        m_context->makeCurrent(this);
+        m_scene->render(static_cast<double>(m_renderTimer.elapsed())/1000);
+        m_context->swapBuffers(this);
 
-    emit updateFramerate();
+        emit updateFramerate();
+    }
 }
 
 /**
