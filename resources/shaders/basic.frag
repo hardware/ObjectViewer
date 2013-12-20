@@ -52,6 +52,7 @@ uniform struct LightInfo
 
 const float cos_outer_cone_angle = 0.76604; // 30 degrees
 
+uniform mat4 viewMatrix;
 uniform vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
 
 // ###############################################################################
@@ -97,12 +98,9 @@ vec3 calculatePointLight(vec3 L, vec3 N, vec3 V, float falloff)
 
 vec3 calculateSpotLight(vec3 L, vec3 N, vec3 V)
 {
-    // float spotFactor = dot(normalize(-L), normalize(light.direction));
+    vec3 spotDirection = mat3(viewMatrix) * light.direction;
 
-    // if(acos(spotFactor) < radians(light.cutOff))
-    //    return calculatePointLight(L, N, V);
-
-    float cos_cur_angle = acos(dot(normalize(-L), normalize(light.direction)));
+    float cos_cur_angle = acos(dot(normalize(-L), normalize(spotDirection)));
     float cos_inner_cone_angle = radians(light.cutOff);
     float cos_inner_minus_outer_angle = cos_inner_cone_angle - cos_outer_cone_angle;
 
@@ -117,8 +115,10 @@ vec3 calculateSpotLight(vec3 L, vec3 N, vec3 V)
 
 void main()
 {
+    vec4 lightPosition = viewMatrix * vec4(light.position, 1.0);
+
     // Calculate view-space light unit vector (light direction)
-    vec3 L = light.position - fs_in.P.xyz;
+    vec3 L = lightPosition.xyz - fs_in.P.xyz;
 
     // Normalize the incoming N and V vectors
     vec3 N = normalize(fs_in.N);

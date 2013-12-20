@@ -33,8 +33,8 @@ Scene::Scene(QObject* parent)
       m_funcs(nullptr)
 {
     // Initialisation de la position et de l'orientation de la camera
-    m_camera->setPosition(QVector3D(-8.0f, 6.0f, -7.0f));
-    m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
+    m_camera->setPosition(QVector3D(0.674403f, 3.58379f, -4.49476f));
+    m_camera->setViewCenter(QVector3D(-3.64862f, -1.92781f, 5.50186f));
     m_camera->setUpVector(QVector3D(0.0f, 1.0f, 0.0f));
 
     for(int i = 1; i < LightModeCount; i++)
@@ -79,15 +79,16 @@ void Scene::initialize()
 
 //    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
 //    pointLight->setUniqueColor(QVector3D(1.0f, 1.0f, 1.0f));
-//    pointLight->setPosition(QVector3D(2.07938f, 2.17309f, -3.38299f));
+//    pointLight->setPosition(QVector3D(-3.88743f, 5.14994f, -1.67327f));
 //    pointLight->setLinearAttenuation(0.1f);
 //    pointLight->setIntensity(2.0f);
 
     SpotLight* spotLight = dynamic_cast<SpotLight*>(m_light);
+    spotLight->setAmbientColor(1.0f, 1.0f, 1.0f);
     spotLight->setSpecularColor(1.0f, 1.0f, 1.0f);
     spotLight->setDiffuseColor(1.0f, 1.0f, 1.0f);
     spotLight->setLinearAttenuation(0.1f);
-    spotLight->setIntensity(2.0f);
+    spotLight->setIntensity(3.0f);
     spotLight->setCutOff(20.0f);
 
     m_modelManager = unique_ptr<AbstractModelManager>(new ModelManager(this));
@@ -105,7 +106,7 @@ void Scene::initialize()
         - audi_s5/audis5.3ds
     */
 
-    m_model = m_modelManager->loadModel("UH60", "assets/blackhawk/uh60.lwo", shader);
+    m_model = m_modelManager->loadModel("GTAV", "assets/blackhawk/uh60.lwo", shader);
 }
 
 void Scene::update(float t)
@@ -144,29 +145,28 @@ void Scene::render(double currentTime)
         m_object.rotateY(static_cast<float>(currentTime)/0.02f);
     }
 
-    QMatrix4x4 modelMatrix = m_object.modelMatrix();
-    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * modelMatrix;
-    QMatrix3x3 normalMatrix = modelMatrix.normalMatrix();
-    QMatrix4x4 mvpMatrix = m_camera->projectionMatrix() * modelViewMatrix;
+    QMatrix4x4 modelViewMatrix = m_camera->viewMatrix() * m_object.modelMatrix();
+    QMatrix3x3 normalMatrix = modelViewMatrix.normalMatrix();
 
     QOpenGLShaderProgramPtr shader = m_shader->shader();
 
     shader->bind();
-    shader->setUniformValue("modelMatrix", modelMatrix);
+    shader->setUniformValue("viewMatrix", m_camera->viewMatrix());
     shader->setUniformValue("normalMatrix", normalMatrix);
     shader->setUniformValue("modelViewMatrix", modelViewMatrix);
-    shader->setUniformValue("modelViewProjectionMatrix", mvpMatrix);
+    shader->setUniformValue("projectionMatrix", m_camera->projectionMatrix());
 
     m_model->render();
 
 //    PointLight* pointLight = dynamic_cast<PointLight*>(m_light);
 //    pointLight->render(shader);
 
-//     const float scale = cosf(currentTime) * 3.0f;
+//    qDebug() << "pos:" << m_camera->position();
+//    qDebug() << "vie:" << m_camera->viewCenter();
 
     SpotLight* spotLight = dynamic_cast<SpotLight*>(m_light);
-    spotLight->setPosition(m_camera->position());
-    spotLight->setDirection(m_camera->viewCenter());
+    spotLight->setPosition(QVector3D(-3.96738f, 3.88487f, -4.84672f));
+    spotLight->setDirection(QVector3D(3.72189f, -4.00069f, 0.415481f));
     spotLight->render(shader);
 
     emit renderCycleDone();

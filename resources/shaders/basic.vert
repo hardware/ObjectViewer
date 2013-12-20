@@ -20,14 +20,13 @@ out VS_OUT
 } vs_out;
 
 uniform mat3 normalMatrix;
-uniform mat4 modelMatrix;
 uniform mat4 modelViewMatrix;
-uniform mat4 modelViewProjectionMatrix;
+uniform mat4 projectionMatrix;
 
 void main()
 {
     // Calculate position vector in view-space coordinate
-    vs_out.P = modelMatrix * vec4(position, 1.0);
+    vs_out.P = modelViewMatrix * vec4(position, 1.0);
 
     // Calculate normal vector in view-space coordinate
     // normalMatrix is the transpose of the inverse of the modelView matrix
@@ -42,5 +41,5 @@ void main()
     vs_out.color    = color;
 
     // Calculate the clip-space position of each vertex
-    gl_Position = modelViewProjectionMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * vs_out.P;
 }
