@@ -75,7 +75,9 @@ HEADERS += \
     src/objects/directionallight.h \
     src/objects/abstractlight.h \
     src/objects/spotlight.h \
-    src/helpers/opengluniformbuffer.h
+    src/helpers/opengluniformbuffer.h \
+    src/objects/light.h \
+    src/helpers/MathUtils.h
 
 SOURCES += \
     src/helpers/shaders.cpp \
@@ -104,7 +106,8 @@ SOURCES += \
     src/objects/directionallight.cpp \
     src/objects/abstractlight.cpp \
     src/objects/spotlight.cpp \
-    src/helpers/opengluniformbuffer.cpp
+    src/helpers/opengluniformbuffer.cpp \
+    src/objects/light.cpp
 
 RESOURCES += \
     shaders.qrc \

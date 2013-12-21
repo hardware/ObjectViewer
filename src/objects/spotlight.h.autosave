@@ -32,10 +32,6 @@ private:
 
     float m_cutOff;
 
-    static const QVector3D ZERO;
-
-    const SpotLight SpotLight::ZERO(0.0f, 0.0f, 0.0f);
-
 };
 
 #endif // SPOTLIGHT_H

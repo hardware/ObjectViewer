@@ -290,7 +290,6 @@ void OpenGLUniformBuffer::assignBindingPoint(GLuint bindingPoint)
 
     Q_D(OpenGLUniformBuffer);
 
-
     d->m_funcs->glUniformBlockBinding(d->m_programHandle, d->m_blockIndex, bindingPoint);
 }
 
