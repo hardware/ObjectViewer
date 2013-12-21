@@ -50,16 +50,19 @@ uniform struct LightInfo
     float cutOff;    // Angle of spot light
 } light;
 
-const float cos_outer_cone_angle = 0.76604; // 40 degrees
-const float cos_inner_cone_angle = 0.86602; // 30 degrees
+const float cosOuterAngle = 0.76604; // 40 degrees
+const float cosInnerAngle = 0.86602; // 30 degrees
 
 uniform mat4 viewMatrix;
 uniform vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
 
 // ###############################################################################
 
-vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V, float falloff)
+vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V, float spotFactor, float attenuation)
 {
+    // Normalize L vector
+    L = normalize(L);
+
     // Calculate R by reflecting -L around the plane defined by N
     vec3 R = reflect(-L, N);
 
@@ -69,46 +72,43 @@ vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V, float falloff)
 
     // Compute the emissive / ambient / diffuse / specular components for each fragment
     vec3 emissive = material.Ke.xyz;
-    vec3 ambient  = ( material.Ka.xyz * light.Ka ) + ( material.Ka.xyz * globalAmbient );
-    vec3 diffuse  = material.Kd.xyz * light.Kd * nDotL * falloff;
+    vec3 ambient  = material.Ka.xyz * ( globalAmbient + (attenuation * spotFactor * light.Ka) );
+    vec3 diffuse  = material.Kd.xyz * light.Kd * nDotL * attenuation * spotFactor;
     vec3 specular = vec3(0.0);
 
     if(nDotL > 0.0)
-        specular = material.Ks.xyz * light.Ks * pow(rDotV, material.shininess) * falloff;
+        specular = material.Ks.xyz * light.Ks * pow(rDotV, material.shininess) * attenuation * spotFactor;
 
     return ( ambient + diffuse + specular + emissive ) * light.intensity;
 }
 
-vec3 calculatePointLight(vec3 L, vec3 N, vec3 V, float falloff)
+vec3 calculatePointLight(vec3 L, vec3 N, vec3 V, float spotFactor)
 {
     // Calculate the length of model-space light vector
     float lightDistance = length(L);
 
-    // Calculate light attenuation
-    float attenuation = light.constantAttenuation +
-                        light.linearAttenuation * lightDistance +
-                        light.quadraticAttenuation * lightDistance * lightDistance;
-
-    L = normalize(L);
+    // Calculate light attenuation , see : RTR3 p219 (7.14)
+    float attenuation = 1 / (light.constantAttenuation +
+                             light.linearAttenuation * lightDistance +
+                             light.quadraticAttenuation * lightDistance * lightDistance);
 
     // Calculate final light divided by attenuation
-    vec3 color = calculateLightComponents(L, N, V, falloff) / attenuation;
-
-    return color;
+    return calculateLightComponents(L, N, V, spotFactor, attenuation);
 }
 
 vec3 calculateSpotLight(vec3 L, vec3 N, vec3 V)
 {
-    vec3 spotDirection = mat3(viewMatrix) * light.direction;
+    // Calculate the spot direction vector in view-space
+    vec3 D = mat3(viewMatrix) * light.direction;
 
-    float cos_cur_angle = dot(normalize(-L), normalize(spotDirection));
-    float cos_inner_minus_outer_angle = cos_inner_cone_angle - cos_outer_cone_angle;
+    // Calculate spot factor, see : RTR3 p221 (7.18)
+    float spotFactor = clamp(
+        (dot(normalize(-L), normalize(D)) - cosOuterAngle) / (cosInnerAngle - cosOuterAngle),
+        0.0,
+        1.0
+    );
 
-    float falloff = 0.0;
-
-    falloff = clamp((cos_cur_angle - cos_outer_cone_angle) / cos_inner_minus_outer_angle, 0.0, 1.0);
-
-    return calculatePointLight(L, N, V, falloff);
+    return calculatePointLight(L, N, V, spotFactor);
 }
 
 // ###############################################################################

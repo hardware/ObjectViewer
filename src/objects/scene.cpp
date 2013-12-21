@@ -165,8 +165,10 @@ void Scene::render(double currentTime)
 //    qDebug() << "vie:" << m_camera->viewCenter();
 
     SpotLight* spotLight = dynamic_cast<SpotLight*>(m_light);
-    spotLight->setPosition(QVector3D(-3.96738f, 3.88487f, -4.84672f));
-    spotLight->setDirection(QVector3D(3.72189f, -4.00069f, 0.415481f));
+//    spotLight->setPosition(QVector3D(-3.96738f, 3.88487f, -4.84672f));
+//    spotLight->setDirection(QVector3D(3.72189f, -4.00069f, 0.415481f));
+    spotLight->setPosition(m_camera->position());
+    spotLight->setDirection(m_camera->viewCenter());
     spotLight->render(shader);
 
     emit renderCycleDone();
