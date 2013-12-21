@@ -50,7 +50,8 @@ uniform struct LightInfo
     float cutOff;    // Angle of spot light
 } light;
 
-const float cos_outer_cone_angle = 0.76604; // 30 degrees
+const float cos_outer_cone_angle = 0.76604; // 40 degrees
+const float cos_inner_cone_angle = 0.86602; // 30 degrees
 
 uniform mat4 viewMatrix;
 uniform vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
@@ -100,8 +101,7 @@ vec3 calculateSpotLight(vec3 L, vec3 N, vec3 V)
 {
     vec3 spotDirection = mat3(viewMatrix) * light.direction;
 
-    float cos_cur_angle = acos(dot(normalize(-L), normalize(spotDirection)));
-    float cos_inner_cone_angle = radians(light.cutOff);
+    float cos_cur_angle = dot(normalize(-L), normalize(spotDirection));
     float cos_inner_minus_outer_angle = cos_inner_cone_angle - cos_outer_cone_angle;
 
     float falloff = 0.0;

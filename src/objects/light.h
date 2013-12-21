@@ -35,35 +35,36 @@ public:
     ~Light();
 
     void setType(LightType type);
-    LightType getType() const;
+    LightType type() const;
 
     void setIntensity(float intensity);
 
-    void setColors(const QVector3D& ambientColor,
-                   const QVector3D& diffuseColor,
-                   const QVector3D& specularColor);
+    void setUniqueColor(const QColor& color);
 
-    void setUniqueColor(const QVector3D& color);
+    void setColors(const QColor& ambientColor,
+                   const QColor& diffuseColor,
+                   const QColor& specularColor);
 
-    void setAmbientColor(float red, float green, float blue);
-    void setDiffuseColor(float red, float green, float blue);
-    void setSpecularColor(float red, float green, float blue);
+    void setAmbientColor(const QColor& color);
+    void setAmbientColor(float r, float g, float b);
 
-    void setAmbientColor(const QVector3D& color);
-    void setDiffuseColor(const QVector3D& color);
-    void setSpecularColor(const QVector3D& color);
+    void setDiffuseColor(const QColor& color);
+    void setDiffuseColor(float r, float g, float b);
 
-    const QVector3D& ambientColor() const;
-    const QVector3D& diffuseColor() const;
-    const QVector3D& specularColor() const;
+    void setSpecularColor(const QColor& color);
+    void setSpecularColor(float r, float g, float b);
 
-    void setDirection(float x, float y, float z);
+    const QColor& ambientColor() const;
+    const QColor& diffuseColor() const;
+    const QColor& specularColor() const;
+
     void setDirection(const QVector3D& direction);
+    void setDirection(float x, float y, float z);
 
     const QVector3D& direction() const;
 
-    void setPosition(float x, float y, float z);
     void setPosition(const QVector3D& position);
+    void setPosition(float x, float y, float z);
 
     const QVector3D& position() const;
 
@@ -84,13 +85,9 @@ public:
 
     void setSpotInnerAngle(float innerAngle);
     void setSpotOuterAngle(float outerAngle);
-    void setSpotFalloff(float falloff);
-
-    void setSpotlightRange(float innerAngle, float outerAngle, float falloff = 1.0f);
 
     float spotInnerAngle() const;
     float spotOuterAngle() const;
-    float spotFalloff() const;
 
     void render(const QOpenGLShaderProgramPtr& shader);
 
@@ -111,7 +108,6 @@ private:
     float m_quadraticAttenuation;
     float m_spotInnerAngle;
     float m_spotOuterAngle;
-    float m_spotFalloff;
     float m_intensity;
 
 };
