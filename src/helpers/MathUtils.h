@@ -1,6 +1,8 @@
 #ifndef MATHUTILS_H
 #define MATHUTILS_H
 
+#include <math.h>
+
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>

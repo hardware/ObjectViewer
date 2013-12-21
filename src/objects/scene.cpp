@@ -87,7 +87,7 @@ void Scene::initialize()
     spotLight->setAmbientColor(1.0f, 1.0f, 1.0f);
     spotLight->setSpecularColor(1.0f, 1.0f, 1.0f);
     spotLight->setDiffuseColor(1.0f, 1.0f, 1.0f);
-    spotLight->setLinearAttenuation(0.1f);
+    spotLight->setAttenuation(1.0f, 0.14f, 0.07f);
     spotLight->setIntensity(3.0f);
     spotLight->setCutOff(20.0f);
 

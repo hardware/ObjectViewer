@@ -15,20 +15,11 @@ class Light
 {
 
 public:
-
     enum LightType
     {
-        /// Point light sources give off light equally in all directions,
-        /// so require only position not direction
-        PointLight = 0,
-
-        /// Directional lights simulate parallel light beams from a distant source,
-        /// hence have direction but no position
+        PointLight       = 0,
         DirectionalLight = 1,
-
-        /// Spotlights simulate a cone of light from a source so require position
-        /// and direction, plus extra values for falloff
-        SpotLight = 2
+        SpotLight        = 2
     };
 
     Light(const string& name);
@@ -68,28 +59,27 @@ public:
 
     const QVector3D& position() const;
 
-    void setAttenuation(float range,
-                        float constantFactor,
+    void setAttenuation(float constantFactor,
                         float linearFactor,
                         float quadraticFactor);
 
-    void setRangeAttenuation(float range);
     void setConstantAttenuation(float constantFactor);
     void setLinearAttenuation(float linearFactor);
     void setQuadraticAttenuation(float quadraticFactor);
 
-    float rangeAttenuation() const;
     float constantAttenuation() const;
     float linearAttenuation() const;
     float quadraticAttenuation() const;
 
+    void setSpotFalloff(float falloff);
     void setSpotInnerAngle(float innerAngle);
     void setSpotOuterAngle(float outerAngle);
 
+    float spotFallOff() const;
     float spotInnerAngle() const;
     float spotOuterAngle() const;
 
-    void render(const QOpenGLShaderProgramPtr& shader);
+    void render(const QOpenGLShaderProgramPtr& shader, const QMatrix4x4& viewMatrix);
 
 private:
     string    m_name;
@@ -102,10 +92,10 @@ private:
     QColor m_diffuseColor;
     QColor m_specularColor;
 
-    float m_rangeAttenuation;
     float m_constantAttenuation;
     float m_linearAttenuation;
     float m_quadraticAttenuation;
+    float m_spotFalloff;
     float m_spotInnerAngle;
     float m_spotOuterAngle;
     float m_intensity;

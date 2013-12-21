@@ -47,11 +47,13 @@ uniform struct LightInfo
     float quadraticAttenuation; // Quadratic light attenuation factor
 
     float intensity; // Power scale of light source
-    float cutOff;    // Angle of spot light
+    // float falloff;
+    // float cosOuterAngle; // Angle of outer cone
+    // float cosInnerAngle; // Angle of inner cone
 } light;
 
-const float cosOuterAngle = 0.76604; // 40 degrees
-const float cosInnerAngle = 0.86602; // 30 degrees
+const float cosOuterAngle = 0.76604;
+const float cosInnerAngle = 0.86602;
 
 uniform mat4 viewMatrix;
 uniform vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
@@ -70,7 +72,7 @@ vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V, float spotFactor, float at
     float nDotL = max(dot(N, L), 0.0);
     float rDotV = max(dot(R, V), 0.0);
 
-    // Compute the emissive / ambient / diffuse / specular components for each fragment
+    // Compute the ambient / diffuse / specular / emissive components for each fragment
     vec3 emissive = material.Ke.xyz;
     vec3 ambient  = material.Ka.xyz * ( globalAmbient + (attenuation * spotFactor * light.Ka) );
     vec3 diffuse  = material.Kd.xyz * light.Kd * nDotL * attenuation * spotFactor;
@@ -99,11 +101,11 @@ vec3 calculatePointLight(vec3 L, vec3 N, vec3 V, float spotFactor)
 vec3 calculateSpotLight(vec3 L, vec3 N, vec3 V)
 {
     // Calculate the spot direction vector in view-space
-    vec3 D = mat3(viewMatrix) * light.direction;
+    vec3 D = vec3(viewMatrix * vec4(light.direction, 1.0));
 
     // Calculate spot factor, see : RTR3 p221 (7.18)
     float spotFactor = clamp(
-        (dot(normalize(-L), normalize(D)) - cosOuterAngle) / (cosInnerAngle - cosOuterAngle),
+        pow((dot(normalize(-L), normalize(D)) - cosOuterAngle) / (cosInnerAngle - cosOuterAngle), 1.0),
         0.0,
         1.0
     );

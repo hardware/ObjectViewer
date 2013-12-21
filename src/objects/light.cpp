@@ -1,8 +1,6 @@
 #include "light.h"
 #include "../helpers/MathUtils.h"
 
-#include <math.h>
-
 using namespace Math;
 
 const float INNER_ANGLE = 30.0f; // 30deg = 0.6981rad = cos(2PI/9) = 0.76604;
@@ -16,10 +14,10 @@ Light::Light(const string& name) :
     m_ambientColor(Qt::black),
     m_diffuseColor(Qt::white),
     m_specularColor(Qt::black),
-    m_rangeAttenuation(100000),
     m_constantAttenuation(1.0f),
     m_linearAttenuation(0.0f),
     m_quadraticAttenuation(0.0f),
+    m_spotFalloff(1.0f),
     m_spotInnerAngle(cosf(static_cast<float>(M_PI)*(INNER_ANGLE/180.0f))),
     m_spotOuterAngle(cosf(static_cast<float>(M_PI)*(OUTER_ANGLE/180.0f))),
     m_intensity(1.0f)
@@ -137,20 +135,13 @@ const QVector3D& Light::direction() const
     return m_direction;
 }
 
-void Light::setAttenuation(float range,
-                           float constantFactor,
+void Light::setAttenuation(float constantFactor,
                            float linearFactor,
                            float quadraticFactor)
 {
-    m_rangeAttenuation     = range;
     m_constantAttenuation  = constantFactor;
     m_linearAttenuation    = linearFactor;
     m_quadraticAttenuation = quadraticFactor;
-}
-
-void Light::setRangeAttenuation(float range)
-{
-    m_rangeAttenuation = range;
 }
 
 void Light::setConstantAttenuation(float constantFactor)
@@ -168,11 +159,6 @@ void Light::setQuadraticAttenuation(float quadraticFactor)
     m_quadraticAttenuation = quadraticFactor;
 }
 
-float Light::rangeAttenuation() const
-{
-    return m_rangeAttenuation;
-}
-
 float Light::constantAttenuation() const
 {
     return m_constantAttenuation;
@@ -188,14 +174,24 @@ float Light::quadraticAttenuation() const
     return m_quadraticAttenuation;
 }
 
+void Light::setSpotFalloff(float falloff)
+{
+    m_spotFalloff = falloff;
+}
+
 void Light::setSpotInnerAngle(float innerAngle)
 {
-    m_spotInnerAngle = innerAngle;
+    m_spotInnerAngle = cosf(static_cast<float>(M_PI)*(innerAngle/180.0f));
 }
 
 void Light::setSpotOuterAngle(float outerAngle)
 {
-    m_spotOuterAngle = outerAngle;
+    m_spotOuterAngle = cosf(static_cast<float>(M_PI)*(outerAngle/180.0f));
+}
+
+float Light::spotFallOff() const
+{
+    return m_spotFalloff;
 }
 
 float Light::spotInnerAngle() const
@@ -208,10 +204,10 @@ float Light::spotOuterAngle() const
     return m_spotOuterAngle;
 }
 
-void Light::render(const QOpenGLShaderProgramPtr& shader)
+void Light::render(const QOpenGLShaderProgramPtr& shader, const QMatrix4x4& viewMatrix)
 {
-    shader->setUniformValue("light.position", m_position);
-    shader->setUniformValue("light.direction", m_direction);
+    shader->setUniformValue("light.position", viewMatrix * QVector4D(m_position, 1.0f));
+    shader->setUniformValue("light.direction", viewMatrix * QVector4D(m_direction, 1.0f));
 
     shader->setUniformValue("light.Ka", m_ambientColor);
     shader->setUniformValue("light.Kd", m_diffuseColor);
@@ -222,6 +218,10 @@ void Light::render(const QOpenGLShaderProgramPtr& shader)
     shader->setUniformValue("light.quadraticAttenuation", m_quadraticAttenuation);
 
     shader->setUniformValue("light.intensity", m_intensity);
+
+    shader->setUniformValue("light.spotFalloff",    m_spotFalloff);
+    shader->setUniformValue("light.spotInnerAngle", m_spotInnerAngle);
+    shader->setUniformValue("light.spotOuterAngle", m_spotOuterAngle);
 }
 
 
