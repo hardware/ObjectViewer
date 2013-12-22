@@ -42,15 +42,28 @@ void Light::setIntensity(float intensity)
 
 void Light::setUniqueColor(const QColor& color)
 {
+    if(color.alpha())
+        qWarning("The alpha channel of light colors should be equal to 0");
+
     m_ambientColor  = color;
     m_diffuseColor  = color;
     m_specularColor = color;
+}
+
+void Light::setUniqueColor(float r, float g, float b)
+{
+    m_ambientColor.setRgbF(r, g, b, 0.0);
+    m_diffuseColor.setRgbF(r, g, b, 0.0);
+    m_specularColor.setRgbF(r, g, b, 0.0);
 }
 
 void Light::setColors(const QColor& ambientColor,
                       const QColor& diffuseColor,
                       const QColor& specularColor)
 {
+    if(ambientColor.alpha() || diffuseColor.alpha() || specularColor.alpha())
+        qWarning("The alpha channel of light colors should be equal to 0");
+
     m_ambientColor = ambientColor;
     m_diffuseColor = diffuseColor;
     m_specularColor = specularColor;
@@ -58,32 +71,41 @@ void Light::setColors(const QColor& ambientColor,
 
 void Light::setAmbientColor(const QColor& color)
 {
+    if(color.alpha())
+        qWarning("The alpha channel of ambient light color should be equal to 0");
+
     m_ambientColor = color;
 }
 
 void Light::setAmbientColor(float r, float g, float b)
 {
-    m_ambientColor.setRgbF(r, g, b);
+    m_ambientColor.setRgbF(r, g, b, 0.0);
 }
 
 void Light::setDiffuseColor(const QColor& color)
 {
+    if(color.alpha())
+        qWarning("The alpha channel of diffuse light color should be equal to 0");
+
     m_diffuseColor = color;
 }
 
 void Light::setDiffuseColor(float r, float g, float b)
 {
-    m_diffuseColor.setRgbF(r, g, b);
+    m_diffuseColor.setRgbF(r, g, b, 0.0);
 }
 
 void Light::setSpecularColor(const QColor& color)
 {
+    if(color.alpha())
+        qWarning("The alpha channel of specular light color should be equal to 0");
+
     m_specularColor = color;
 }
 
 void Light::setSpecularColor(float r, float g, float b)
 {
-    m_specularColor.setRgbF(r, g, b);
+    m_specularColor.setRgbF(r, g, b, 0.0);
 }
 
 const QColor& Light::ambientColor() const
@@ -103,11 +125,17 @@ const QColor& Light::specularColor() const
 
 void Light::setPosition(const QVector3D& position)
 {
+    if(m_type == DirectionalLight)
+        qWarning("Directional lights not use position property");
+
     m_position = position;
 }
 
 void Light::setPosition(float x, float y, float z)
 {
+    if(m_type == DirectionalLight)
+        qWarning("Directional lights not use position property");
+
     m_position.setX(x);
     m_position.setY(y);
     m_position.setZ(z);
@@ -120,11 +148,17 @@ const QVector3D& Light::position() const
 
 void Light::setDirection(const QVector3D& direction)
 {
+    if(m_type == PointLight)
+        qWarning("Point lights not use direction property");
+
     m_direction = direction;
 }
 
 void Light::setDirection(float x, float y, float z)
 {
+    if(m_type == PointLight)
+        qWarning("Point lights not use direction property");
+
     m_direction.setX(x);
     m_direction.setY(y);
     m_direction.setZ(z);
@@ -139,6 +173,9 @@ void Light::setAttenuation(float constantFactor,
                            float linearFactor,
                            float quadraticFactor)
 {
+    if(m_type == DirectionalLight)
+        qWarning("Directional lights not use attenuation property");
+
     m_constantAttenuation  = constantFactor;
     m_linearAttenuation    = linearFactor;
     m_quadraticAttenuation = quadraticFactor;
@@ -146,16 +183,25 @@ void Light::setAttenuation(float constantFactor,
 
 void Light::setConstantAttenuation(float constantFactor)
 {
+    if(m_type == DirectionalLight)
+        qWarning("Directional lights not use constant attenuation property");
+
     m_constantAttenuation = constantFactor;
 }
 
 void Light::setLinearAttenuation(float linearFactor)
 {
+    if(m_type == DirectionalLight)
+        qWarning("Directional lights not use linear attenuation property");
+
     m_linearAttenuation = linearFactor;
 }
 
 void Light::setQuadraticAttenuation(float quadraticFactor)
 {
+    if(m_type == DirectionalLight)
+        qWarning("Directional lights not use quadratic attenuation property");
+
     m_quadraticAttenuation = quadraticFactor;
 }
 
@@ -176,16 +222,25 @@ float Light::quadraticAttenuation() const
 
 void Light::setSpotFalloff(float falloff)
 {
+    if(m_type != SpotLight)
+        qWarning("Only spotlights can set falloff property");
+
     m_spotFalloff = falloff;
 }
 
 void Light::setSpotInnerAngle(float innerAngle)
 {
+    if(m_type != SpotLight)
+        qWarning("Only spotlights can set inner angle value");
+
     m_spotInnerAngle = cosf(static_cast<float>(M_PI)*(innerAngle/180.0f));
 }
 
 void Light::setSpotOuterAngle(float outerAngle)
 {
+    if(m_type != SpotLight)
+        qWarning("Only spotlights can set outer angle value");
+
     m_spotOuterAngle = cosf(static_cast<float>(M_PI)*(outerAngle/180.0f));
 }
 
@@ -206,37 +261,37 @@ float Light::spotOuterAngle() const
 
 void Light::render(const QOpenGLShaderProgramPtr& shader, const QMatrix4x4& viewMatrix)
 {
-    shader->setUniformValue("light.position", viewMatrix * QVector4D(m_position, 1.0f));
-    shader->setUniformValue("light.direction", viewMatrix * QVector4D(m_direction, 1.0f));
+    shader->setUniformValue("light.intensity", m_intensity);
 
     shader->setUniformValue("light.Ka", m_ambientColor);
     shader->setUniformValue("light.Kd", m_diffuseColor);
     shader->setUniformValue("light.Ks", m_specularColor);
 
-    shader->setUniformValue("light.constantAttenuation",  m_constantAttenuation);
-    shader->setUniformValue("light.linearAttenuation",    m_linearAttenuation);
-    shader->setUniformValue("light.quadraticAttenuation", m_quadraticAttenuation);
+    switch(m_type)
+    {
+    case PointLight:
+        shader->setUniformValue("light.position", viewMatrix * QVector4D(m_position, 1.0f));
 
-    shader->setUniformValue("light.intensity", m_intensity);
+        shader->setUniformValue("light.constantAttenuation",  m_constantAttenuation);
+        shader->setUniformValue("light.linearAttenuation",    m_linearAttenuation);
+        shader->setUniformValue("light.quadraticAttenuation", m_quadraticAttenuation);
+        break;
 
-    shader->setUniformValue("light.spotFalloff",    m_spotFalloff);
-    shader->setUniformValue("light.spotInnerAngle", m_spotInnerAngle);
-    shader->setUniformValue("light.spotOuterAngle", m_spotOuterAngle);
+    case SpotLight:
+        shader->setUniformValue("light.position", viewMatrix * QVector4D(m_position, 1.0f));
+        shader->setUniformValue("light.direction", viewMatrix * QVector4D(m_direction, 1.0f));
+
+        shader->setUniformValue("light.constantAttenuation",  m_constantAttenuation);
+        shader->setUniformValue("light.linearAttenuation",    m_linearAttenuation);
+        shader->setUniformValue("light.quadraticAttenuation", m_quadraticAttenuation);
+
+        shader->setUniformValue("light.spotFalloff",    m_spotFalloff);
+        shader->setUniformValue("light.spotInnerAngle", m_spotInnerAngle);
+        shader->setUniformValue("light.spotOuterAngle", m_spotOuterAngle);
+        break;
+
+    case DirectionalLight:
+        shader->setUniformValue("light.direction", viewMatrix * QVector4D(m_direction, 1.0f));
+        break;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

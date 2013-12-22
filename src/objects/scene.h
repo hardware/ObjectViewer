@@ -3,6 +3,7 @@
 
 #include "abstractscene.h"
 #include "object3d.h"
+#include "light.h"
 
 #include <memory>
 
@@ -15,7 +16,6 @@ class Camera;
 class Shaders;
 class Model;
 
-class AbstractLight;
 class AbstractMeshManager;
 class AbstractMaterialManager;
 class AbstractTextureManager;
@@ -85,7 +85,6 @@ signals:
 
 private:
     Camera* m_camera;
-    AbstractLight* m_light;
 
     shared_ptr<Model> m_model;
 
@@ -96,6 +95,7 @@ private:
 
     ShadersPtr m_shader;
     Object3D   m_object;
+    Light      m_light;
     QVector3D  m_v;
 
     bool m_viewCenterFixed;

@@ -292,33 +292,3 @@ void OpenGLUniformBuffer::assignBindingPoint(GLuint bindingPoint)
 
     d->m_funcs->glUniformBlockBinding(d->m_programHandle, d->m_blockIndex, bindingPoint);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

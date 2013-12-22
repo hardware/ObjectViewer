@@ -35,32 +35,29 @@ uniform MaterialInfo
 // Light properties
 uniform struct LightInfo
 {
-    vec3 position;  // Position of light source
-    vec3 direction; // Direction vector of the light source
+    vec4 position;  // Position of light source
+    vec4 direction; // Direction vector of the light source
 
-    vec3 Ka; // Ambient light color
-    vec3 Kd; // Diffuse light color
-    vec3 Ks; // Specular light color
+    vec4 Ka; // Ambient light color
+    vec4 Kd; // Diffuse light color
+    vec4 Ks; // Specular light color
 
     float constantAttenuation;  // Constant light attenuation factor
     float linearAttenuation;    // Linear light attenuation factor
     float quadraticAttenuation; // Quadratic light attenuation factor
 
     float intensity; // Power scale of light source
-    // float falloff;
-    // float cosOuterAngle; // Angle of outer cone
-    // float cosInnerAngle; // Angle of inner cone
+
+    float spotFalloff; // The tightness of falloff between the inner and outer cones
+    float spotInnerAngle; // Angle of outer cone (cosinus)
+    float spotOuterAngle; // Angle of inner cone (cosinus)
 } light;
 
-const float cosOuterAngle = 0.76604;
-const float cosInnerAngle = 0.86602;
-
-uniform mat4 viewMatrix;
-uniform vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
+uniform vec4 globalAmbient = vec4(0.1, 0.1, 0.1, 0.0);
 
 // ###############################################################################
 
-vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V, float spotFactor, float attenuation)
+vec4 calculateLightComponents(vec3 L, vec3 N, vec3 V, float spotFactor, float attenuation)
 {
     // Normalize L vector
     L = normalize(L);
@@ -73,18 +70,18 @@ vec3 calculateLightComponents(vec3 L, vec3 N, vec3 V, float spotFactor, float at
     float rDotV = max(dot(R, V), 0.0);
 
     // Compute the ambient / diffuse / specular / emissive components for each fragment
-    vec3 emissive = material.Ke.xyz;
-    vec3 ambient  = material.Ka.xyz * ( globalAmbient + (attenuation * spotFactor * light.Ka) );
-    vec3 diffuse  = material.Kd.xyz * light.Kd * nDotL * attenuation * spotFactor;
-    vec3 specular = vec3(0.0);
+    vec4 emissive = material.Ke;
+    vec4 ambient  = material.Ka * (globalAmbient + (light.Ka * attenuation * spotFactor));
+    vec4 diffuse  = material.Kd * light.Kd * nDotL * attenuation * spotFactor;
+    vec4 specular = vec4(0.0);
 
     if(nDotL > 0.0)
-        specular = material.Ks.xyz * light.Ks * pow(rDotV, material.shininess) * attenuation * spotFactor;
+        specular = material.Ks * light.Ks * pow(rDotV, material.shininess) * attenuation * spotFactor;
 
     return ( ambient + diffuse + specular + emissive ) * light.intensity;
 }
 
-vec3 calculatePointLight(vec3 L, vec3 N, vec3 V, float spotFactor)
+vec4 calculatePointLight(vec3 L, vec3 N, vec3 V, float spotFactor)
 {
     // Calculate the length of model-space light vector
     float lightDistance = length(L);
@@ -98,14 +95,11 @@ vec3 calculatePointLight(vec3 L, vec3 N, vec3 V, float spotFactor)
     return calculateLightComponents(L, N, V, spotFactor, attenuation);
 }
 
-vec3 calculateSpotLight(vec3 L, vec3 N, vec3 V)
+vec4 calculateSpotLight(vec3 L, vec3 N, vec3 V)
 {
-    // Calculate the spot direction vector in view-space
-    vec3 D = vec3(viewMatrix * vec4(light.direction, 1.0));
-
     // Calculate spot factor, see : RTR3 p221 (7.18)
     float spotFactor = clamp(
-        pow((dot(normalize(-L), normalize(D)) - cosOuterAngle) / (cosInnerAngle - cosOuterAngle), 1.0),
+        pow((dot(normalize(-L), normalize(light.direction.xyz)) - light.spotOuterAngle) / (light.spotInnerAngle - light.spotOuterAngle), light.spotFalloff),
         0.0,
         1.0
     );
@@ -117,10 +111,8 @@ vec3 calculateSpotLight(vec3 L, vec3 N, vec3 V)
 
 void main()
 {
-    vec4 lightPosition = viewMatrix * vec4(light.position, 1.0);
-
     // Calculate view-space light unit vector (light direction)
-    vec3 L = lightPosition.xyz - fs_in.P.xyz;
+    vec3 L = light.position.xyz - fs_in.P.xyz;
 
     // Normalize the incoming N and V vectors
     vec3 N = normalize(fs_in.N);
@@ -133,5 +125,5 @@ void main()
     else
         textureColor = material.Kd;
 
-    FragColor = textureColor * fs_in.color * vec4(calculateSpotLight(L, N, V), 1.0);
+    FragColor = textureColor * fs_in.color * calculateSpotLight(L, N, V);
 }

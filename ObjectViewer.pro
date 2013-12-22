@@ -71,10 +71,6 @@ HEADERS += \
     src/objects/modelmanager.h \
     src/objects/model.h \
     src/objects/modelloader.h \
-    src/objects/pointlight.h \
-    src/objects/directionallight.h \
-    src/objects/abstractlight.h \
-    src/objects/spotlight.h \
     src/helpers/opengluniformbuffer.h \
     src/objects/light.h \
     src/helpers/MathUtils.h
@@ -102,10 +98,6 @@ SOURCES += \
     src/objects/modelmanager.cpp \
     src/objects/model.cpp \
     src/objects/modelloader.cpp \
-    src/objects/pointlight.cpp \
-    src/objects/directionallight.cpp \
-    src/objects/abstractlight.cpp \
-    src/objects/spotlight.cpp \
     src/helpers/opengluniformbuffer.cpp \
     src/objects/light.cpp
 

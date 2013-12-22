@@ -17,9 +17,9 @@ class Light
 public:
     enum LightType
     {
-        PointLight       = 0,
-        DirectionalLight = 1,
-        SpotLight        = 2
+        PointLight,
+        DirectionalLight,
+        SpotLight
     };
 
     Light(const string& name);
@@ -31,6 +31,7 @@ public:
     void setIntensity(float intensity);
 
     void setUniqueColor(const QColor& color);
+    void setUniqueColor(float r, float g, float b);
 
     void setColors(const QColor& ambientColor,
                    const QColor& diffuseColor,
