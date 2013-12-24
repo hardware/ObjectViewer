@@ -32,8 +32,8 @@ Scene::Scene(QObject* parent)
       m_funcs(nullptr)
 {
     // Initialisation de la position et de l'orientation de la camera
-    m_camera->setPosition(QVector3D(0.674403f, 3.58379f, -4.49476f));
-    m_camera->setViewCenter(QVector3D(-3.64862f, -1.92781f, 5.50186f));
+    m_camera->setPosition(QVector3D(-8.0f, 0.0f, -7.0f));
+    m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
     m_camera->setUpVector(QVector3D(0.0f, 1.0f, 0.0f));
 
     for(int i = 1; i < LightModeCount; i++)

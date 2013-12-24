@@ -460,10 +460,10 @@ void Camera::resetCamera()
 {
     Q_D(Camera);
 
-    d->m_position = QVector3D(0.0f, 0.0f, 1.0f);
-    d->m_upVector = QVector3D(0.0f, 1.0f, 0.0f);
-    d->m_viewCenter = QVector3D(0.0f, 0.0f, 0.0f);
-    d->m_cameraToCenter = QVector3D(0.0f, 0.0f, -1.0f);
+    d->m_position = QVector3D(Vector3D::UNIT_Z);
+    d->m_upVector = QVector3D(Vector3D::UNIT_Y);
+    d->m_viewCenter = QVector3D(Vector3D::ZERO);
+    d->m_cameraToCenter = QVector3D(Vector3D::NEGATIVE_UNIT_Z);
 
     d->m_viewMatrixDirty = true;
 }

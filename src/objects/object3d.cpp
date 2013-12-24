@@ -1,9 +1,12 @@
 #include "object3d.h"
+#include "../helpers/MathUtils.h"
+
+using namespace Math;
 
 Object3D::Object3D()
-    : m_position(0.0f, 0.0f, 0.0f),
-      m_rotation(0.0f, 0.0f, 0.0f),
-      m_scale(1.0f, 1.0f, 1.0f),
+    : m_position(Vector3D::ZERO),
+      m_rotation(Vector3D::ZERO),
+      m_scale(Vector3D::UNIT_SCALE),
       m_modelMatrixDirty(true)
 {}
 
@@ -140,9 +143,9 @@ const QMatrix4x4& Object3D::modelMatrix()
         m_modelMatrix.setToIdentity();
 
         m_modelMatrix.translate(m_position);
-        m_modelMatrix.rotate(m_rotation.x(), 1.0f, 0.0f, 0.0f);
-        m_modelMatrix.rotate(m_rotation.y(), 0.0f, 1.0f, 0.0f);
-        m_modelMatrix.rotate(m_rotation.z(), 0.0f, 0.0f, 1.0f);
+        m_modelMatrix.rotate(m_rotation.x(), Vector3D::UNIT_X);
+        m_modelMatrix.rotate(m_rotation.y(), Vector3D::UNIT_Y);
+        m_modelMatrix.rotate(m_rotation.z(), Vector3D::UNIT_Z);
         m_modelMatrix.scale(m_scale);
 
         m_modelMatrixDirty = false;
@@ -189,7 +192,7 @@ void Object3D::setObjectZRotation(int z)
 
 void Object3D::reset()
 {
-    setPosition(0.0f, 0.0f, 0.0f);
-    setRotation(0.0f, 0.0f, 0.0f);
-    setScale(1.0f, 1.0f, 1.0f);
+    setPosition(Vector3D::ZERO);
+    setRotation(Vector3D::ZERO);
+    setScale(Vector3D::UNIT_SCALE);
 }

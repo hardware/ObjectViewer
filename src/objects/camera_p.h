@@ -4,16 +4,20 @@
 #include <QMatrix4x4>
 #include <QVector3D>
 
+#include "../helpers/MathUtils.h"
+
+using namespace Math;
+
 class CameraPrivate
 {
 
 public:
     CameraPrivate(Camera* c)
         : q_ptr(c),
-          m_position(0.0f, 0.0f, 1.0f),
-          m_upVector(0.0f, 1.0f, 0.0f),
-          m_viewCenter(0.0f, 0.0f, 0.0f),
-          m_cameraToCenter(0.0f, 0.0f, -1.0f),
+          m_position(Vector3D::UNIT_Z),
+          m_upVector(Vector3D::UNIT_Y),
+          m_viewCenter(Vector3D::ZERO),
+          m_cameraToCenter(Vector3D::NEGATIVE_UNIT_Z),
           m_projectionType(Camera::PerspectiveProjection),
           m_nearPlane(0.1f),
           m_farPlane(1024.0f),

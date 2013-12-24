@@ -35,8 +35,8 @@ uniform MaterialInfo
 // Light properties
 uniform struct LightInfo
 {
-    vec4 position;  // Position of light source
-    vec4 direction; // Direction vector of the light source
+    vec4 position;  // Position of light source in view-space
+    vec4 direction; // Direction vector of the light source in view-space
 
     vec4 Ka; // Ambient light color
     vec4 Kd; // Diffuse light color
